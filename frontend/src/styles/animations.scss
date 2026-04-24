@@ -1,0 +1,102 @@
+// ============================================
+// 回声 - 动画样式
+// 文件：src/styles/animations.scss
+// 说明：全局动画定义，尊重用户减少动画偏好
+// ============================================
+
+// ==================== 主题切换过渡 ====================
+
+.theme-fade-enter-active,
+.theme-fade-leave-active {
+  transition: opacity var(--transition-base) ease;
+}
+
+.theme-fade-enter-from,
+.theme-fade-leave-to {
+  opacity: 0;
+}
+
+// ==================== 页面切换动画 ====================
+
+.page-slide-enter-active {
+  transition: transform var(--transition-base) ease;
+}
+
+.page-slide-leave-active {
+  transition: transform var(--transition-fast) ease;
+}
+
+.page-slide-enter-from {
+  transform: translateX(100%);
+}
+
+.page-slide-leave-to {
+  transform: translateX(-30%);
+}
+
+// ==================== 列表项入场动画 ====================
+
+.list-item-enter-active {
+  transition: all var(--transition-base) ease;
+}
+
+.list-item-leave-active {
+  transition: all var(--transition-fast) ease;
+}
+
+.list-item-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.list-item-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+// ==================== 打字动画 ====================
+
+@keyframes typing-cursor {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.typing-cursor {
+  animation: typing-cursor 1s infinite;
+  color: var(--brand-primary);
+}
+
+// ==================== 脉冲动画 ====================
+
+@keyframes pulse-soft {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+// ==================== 呼吸灯效果 ====================
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+// ==================== 尊重用户减少动画偏好 ====================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

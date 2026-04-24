@@ -1,0 +1,124 @@
+// ============================================
+// 回声 - 主题切换核心样式
+// 文件：src/styles/theme.scss
+// 说明：主题切换逻辑、全局主题类、wot-design-uni 主题覆盖
+// ============================================
+
+// ==================== 全局主题基础样式 ====================
+
+page {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+// ==================== wot-design-uni 主题覆盖 ====================
+// 将 wot-design-uni 的 CSS 变量映射到我们的主题变量
+
+:root {
+  // 主色调映射为品牌色
+  --wd-color-theme: var(--brand-primary);
+  --wd-color-theme-light: var(--brand-light);
+  --wd-color-theme-dark: var(--brand-dark);
+
+  // 功能色映射
+  --wd-color-success: var(--color-success);
+  --wd-color-warning: var(--color-warning);
+  --wd-color-danger: var(--color-error);
+  --wd-color-info: var(--color-info);
+
+  // 背景色映射
+  --wd-bg: var(--bg-primary);
+  --wd-bg-card: var(--bg-secondary);
+  --wd-bg-popup: var(--bg-tertiary);
+
+  // 文字色映射
+  --wd-text: var(--text-primary);
+  --wd-text-secondary: var(--text-secondary);
+  --wd-text-placeholder: var(--text-tertiary);
+
+  // 边框色映射
+  --wd-border: var(--border-primary);
+}
+
+// 日间模式 wot-design-uni 覆盖
+.theme-light,
+.light {
+  --wd-color-theme: var(--brand-primary);
+  --wd-color-theme-light: var(--brand-light);
+  --wd-color-theme-dark: var(--brand-dark);
+  --wd-bg: var(--bg-primary);
+  --wd-bg-card: var(--bg-secondary);
+  --wd-bg-popup: var(--bg-tertiary);
+  --wd-text: var(--text-primary);
+  --wd-text-secondary: var(--text-secondary);
+  --wd-text-placeholder: var(--text-tertiary);
+  --wd-border: var(--border-primary);
+}
+
+// ==================== 主题过渡动画 ====================
+
+.theme-transition {
+  transition: background-color var(--transition-base) ease,
+              color var(--transition-base) ease,
+              border-color var(--transition-base) ease,
+              box-shadow var(--transition-base) ease;
+}
+
+// ==================== 通用背景类 ====================
+
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+// ==================== 通用文字类 ====================
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.text-brand {
+  color: var(--brand-primary);
+}
+
+// ==================== 特殊场景主题覆盖 ====================
+
+// 情绪日记 - 不受主题影响，始终使用情绪色调背景
+.diary-emotion-override {
+  background-color: var(--mood-warm-bg) !important;
+}
+
+// 树洞区 - 夜间模式默认启用，不可关闭
+.treehole-force-dark {
+  --bg-primary: #121212;
+  --bg-secondary: #1E1E1E;
+  --bg-tertiary: #2A2A2A;
+  --text-primary: #F5F5F5;
+  --text-secondary: #B3B3B3;
+  --text-tertiary: #808080;
+  --border-primary: #333333;
+}
+
+// AI对话 - 夜间模式对话气泡更柔和
+.chat-bubble-soft {
+  --bg-secondary: rgba(30, 30, 30, 0.6);
+}

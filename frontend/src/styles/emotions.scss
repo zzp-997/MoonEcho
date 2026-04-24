@@ -1,0 +1,85 @@
+// ============================================
+// 回声 - 情绪色彩系统
+// 文件：src/styles/emotions.scss
+// 说明：情绪色彩工具类，用于情绪标签、情绪选择器、情绪日记等场景
+// ============================================
+
+// ==================== 情绪色调工具类 ====================
+
+// 情绪主色
+.mood-warm { color: var(--mood-warm); }
+.mood-calm { color: var(--mood-calm); }
+.mood-low  { color: var(--mood-low); }
+.mood-sad  { color: var(--mood-sad); }
+.mood-chaos { color: var(--mood-chaos); }
+
+// 情绪文字色（柔和版本，用于长文本阅读）
+.mood-warm-text { color: var(--mood-warm-text); }
+.mood-calm-text { color: var(--mood-calm-text); }
+.mood-low-text  { color: var(--mood-low-text); }
+.mood-sad-text  { color: var(--mood-sad-text); }
+.mood-chaos-text { color: var(--mood-chaos-text); }
+
+// 情绪背景色（半透明，用于卡片、标签等）
+.mood-warm-bg { background-color: var(--mood-warm-bg); }
+.mood-calm-bg { background-color: var(--mood-calm-bg); }
+.mood-low-bg  { background-color: var(--mood-low-bg); }
+.mood-sad-bg  { background-color: var(--mood-sad-bg); }
+.mood-chaos-bg { background-color: var(--mood-chaos-bg); }
+
+// 情绪边框色
+.mood-warm-border { border-color: var(--mood-warm); }
+.mood-calm-border { border-color: var(--mood-calm); }
+.mood-low-border  { border-color: var(--mood-low); }
+.mood-sad-border  { border-color: var(--mood-sad); }
+.mood-chaos-border { border-color: var(--mood-chaos); }
+
+// ==================== 情绪标签样式 ====================
+
+.emotion-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  line-height: 1;
+
+  &--warm  { color: var(--mood-warm); background-color: var(--mood-warm-bg); }
+  &--calm  { color: var(--mood-calm); background-color: var(--mood-calm-bg); }
+  &--low   { color: var(--mood-low); background-color: var(--mood-low-bg); }
+  &--sad   { color: var(--mood-sad); background-color: var(--mood-sad-bg); }
+  &--chaos { color: var(--mood-chaos); background-color: var(--mood-chaos-bg); }
+}
+
+// ==================== 情绪卡片样式 ====================
+
+.emotion-card {
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+  }
+
+  &--warm::before  { background-color: var(--mood-warm); }
+  &--calm::before  { background-color: var(--mood-calm); }
+  &--low::before   { background-color: var(--mood-low); }
+  &--sad::before   { background-color: var(--mood-sad); }
+  &--chaos::before { background-color: var(--mood-chaos); }
+}
+
+// ==================== AI 角色色 ====================
+
+.ai-xiaowen { color: var(--ai-xiaowen); }
+.ai-xiaowen-bg { background-color: var(--ai-xiaowen-bg); }
+.ai-laohei { color: var(--ai-laohei); }
+.ai-laohei-bg { background-color: var(--ai-laohei-bg); }
+.ai-ali { color: var(--ai-ali); }
+.ai-ali-bg { background-color: var(--ai-ali-bg); }

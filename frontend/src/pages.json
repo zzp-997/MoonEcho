@@ -1,0 +1,140 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue",
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "回声",
+        "navigationStyle": "custom",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/chat/index",
+      "style": {
+        "navigationBarTitleText": "AI朋友",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/diary/index",
+      "style": {
+        "navigationBarTitleText": "情绪日记",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/diary/edit",
+      "style": {
+        "navigationBarTitleText": "记录心情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/treehole/index",
+      "style": {
+        "navigationBarTitleText": "树洞",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/square/index",
+      "style": {
+        "navigationBarTitleText": "广场",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/mine/index",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/auth/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/message/index",
+      "style": {
+        "navigationBarTitleText": "消息",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "回声",
+    "navigationBarBackgroundColor": "#121212",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#121212",
+    "backgroundColorTop": "#121212",
+    "backgroundColorBottom": "#121212",
+    "backgroundTextStyle": "light",
+    "app-plus": {
+      "titleNView": false,
+      "background": "#121212",
+      "scrollIndicator": "none"
+    },
+    "h5": {
+      "titleNView": false
+    }
+  },
+  "tabBar": {
+    "color": "#808080",
+    "selectedColor": "#7C6FE0",
+    "borderStyle": "black",
+    "backgroundColor": "#121212",
+    "list": [
+      {
+        "pagePath": "pages/chat/index",
+        "text": "对话",
+        "iconPath": "static/images/icons/tab-chat.png",
+        "selectedIconPath": "static/images/icons/tab-chat-active.png"
+      },
+      {
+        "pagePath": "pages/diary/index",
+        "text": "日记",
+        "iconPath": "static/images/icons/tab-diary.png",
+        "selectedIconPath": "static/images/icons/tab-diary-active.png"
+      },
+      {
+        "pagePath": "pages/treehole/index",
+        "text": "树洞",
+        "iconPath": "static/images/icons/tab-treehole.png",
+        "selectedIconPath": "static/images/icons/tab-treehole-active.png"
+      },
+      {
+        "pagePath": "pages/square/index",
+        "text": "广场",
+        "iconPath": "static/images/icons/tab-square.png",
+        "selectedIconPath": "static/images/icons/tab-square-active.png"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的",
+        "iconPath": "static/images/icons/tab-mine.png",
+        "selectedIconPath": "static/images/icons/tab-mine-active.png"
+      }
+    ]
+  },
+  "condition": {
+    "current": 0,
+    "list": [
+      {
+        "name": "首页",
+        "path": "pages/index/index"
+      }
+    ]
+  }
+}

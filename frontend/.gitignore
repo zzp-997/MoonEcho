@@ -1,0 +1,9 @@
+node_modules/
+dist/
+unpackage/
+.hbuilderx/
+*.local
+.env
+!.env.example
+!.env.development
+!.env.production

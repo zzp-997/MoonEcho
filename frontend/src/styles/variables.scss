@@ -1,0 +1,189 @@
+// ============================================
+// 回声 - CSS 变量主题系统
+// 文件：src/styles/variables.scss
+// 说明：所有颜色必须使用 CSS 变量，禁止硬编码
+// 参考：modules_design.md 9.2-9.3 | ui_design.md 1.2 | PRD 核心规则
+// ============================================
+
+// ==================== 主题变量定义 ====================
+
+// 夜间模式（默认）- 深夜情绪场景
+:root {
+  // ========== 背景色系统 ==========
+  // 一级背景 - 页面底色
+  --bg-primary: #121212;
+  // 二级背景 - 卡片、输入框
+  --bg-secondary: #1E1E1E;
+  // 三级背景 - 弹窗、浮层
+  --bg-tertiary: #2A2A2A;
+  // 透明背景变体
+  --bg-secondary-80: rgba(30, 30, 30, 0.8);
+  --bg-tertiary-90: rgba(42, 42, 42, 0.9);
+
+  // ========== 文字色系统 ==========
+  // 主文字 - 标题、重要正文
+  --text-primary: #F5F5F5;
+  // 次文字 - 辅助说明、时间戳
+  --text-secondary: #B3B3B3;
+  // 弱文字 - 占位符、禁用状态
+  --text-tertiary: #808080;
+
+  // ========== 边框色系统 ==========
+  // 分割线
+  --border-primary: #333333;
+  // 输入框边框
+  --border-input: #404040;
+  // 焦点边框
+  --border-focus: #5C5CFF;
+
+  // ========== 品牌色系统 ==========
+  // 品牌主色
+  --brand-primary: #7C6FE0;
+  // 品牌浅色 - 渐变起始、hover状态
+  --brand-light: #A89CF5;
+  // 品牌暗色 - 按下状态
+  --brand-dark: #5B4FC4;
+
+  // ========== 情绪色调系统 ==========
+  // 暖橘 - 充满能量、开心
+  --mood-warm: #FF9A5C;
+  --mood-warm-bg: rgba(255, 154, 92, 0.1);
+  --mood-warm-text: #FFB88A;
+  // 浅绿 - 平静、安稳
+  --mood-calm: #8FCCA0;
+  --mood-calm-bg: rgba(143, 204, 160, 0.1);
+  --mood-calm-text: #A8D9B5;
+  // 灰蓝 - 低落、沉闷
+  --mood-low: #8BA7C4;
+  --mood-low-bg: rgba(139, 167, 196, 0.1);
+  --mood-low-text: #A5C0D6;
+  // 深蓝 - 难过、忧伤
+  --mood-sad: #4A6FA5;
+  --mood-sad-bg: rgba(74, 111, 165, 0.1);
+  --mood-sad-text: #6B8FC0;
+  // 暗紫 - 崩溃、混乱
+  --mood-chaos: #6B4C7A;
+  --mood-chaos-bg: rgba(107, 76, 122, 0.1);
+  --mood-chaos-text: #8B6C9A;
+
+  // ========== AI 角色色系统 ==========
+  // 小温 - 温柔姐姐感
+  --ai-xiaowen: #FFB5BA;
+  --ai-xiaowen-bg: rgba(255, 181, 186, 0.15);
+  // 老黑 - 冷静损友感
+  --ai-laohei: #8B9DC3;
+  --ai-laohei-bg: rgba(139, 157, 195, 0.15);
+  // 阿理 - 可靠大哥感
+  --ai-ali: #7CB9A0;
+  --ai-ali-bg: rgba(124, 185, 160, 0.15);
+
+  // ========== 功能色系统 ==========
+  --color-success: #4ADE80;
+  --color-success-bg: rgba(74, 222, 128, 0.1);
+  --color-warning: #FBBF24;
+  --color-warning-bg: rgba(251, 191, 36, 0.1);
+  --color-error: #F87171;
+  --color-error-bg: rgba(248, 113, 113, 0.1);
+  --color-info: #60A5FA;
+  --color-info-bg: rgba(96, 165, 250, 0.1);
+
+  // ========== 间距系统（8px 网格）==========
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  // ========== 圆角系统 ==========
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  // ========== 阴影系统 ==========
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  // ========== 字体系统 ==========
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 32px;
+
+  // ========== 动画系统 ==========
+  --transition-fast: 0.15s;
+  --transition-base: 0.3s;
+  --transition-slow: 0.5s;
+
+  // ========== Z-Index 层级系统 ==========
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-toast: 700;
+}
+
+// ==================== 日间模式（浅色主题）====================
+// 通过在根元素添加 .theme-light 类来切换
+
+.theme-light,
+.light {
+  // ========== 背景色系统（日间）==========
+  --bg-primary: #F5F5F7;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #EEEEEE;
+  --bg-secondary-80: rgba(255, 255, 255, 0.8);
+  --bg-tertiary-90: rgba(238, 238, 238, 0.9);
+
+  // ========== 文字色系统（日间）==========
+  --text-primary: #1A1A2E;
+  --text-secondary: #6B7280;
+  --text-tertiary: #9CA3AF;
+
+  // ========== 边框色系统（日间）==========
+  --border-primary: #E5E7EB;
+  --border-input: #D9D9D9;
+  --border-focus: #5C5CFF;
+
+  // ========== 品牌色系统（日间）==========
+  --brand-primary: #6C63FF;
+  --brand-light: #8B85FF;
+  --brand-dark: #5850E3;
+
+  // ========== 阴影系统（日间）==========
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+// ==================== 情绪色调变体 ====================
+
+.mood-warm-bg {
+  background-color: var(--mood-warm-bg);
+}
+.mood-calm-bg {
+  background-color: var(--mood-calm-bg);
+}
+.mood-low-bg {
+  background-color: var(--mood-low-bg);
+}
+.mood-sad-bg {
+  background-color: var(--mood-sad-bg);
+}
+.mood-chaos-bg {
+  background-color: var(--mood-chaos-bg);
+}
