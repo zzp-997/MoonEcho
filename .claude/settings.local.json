@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:wot-design-uni.pages.dev)",
+      "WebFetch(domain:uview-plus.jiangruyi.com)",
+      "WebFetch(domain:vue.tuniaokj.com)",
+      "Bash(npm -v)",
+      "Bash(pnpm -v)",
+      "Bash(npx degit *)",
+      "Bash(npx @dcloudio/uvm@latest frontend)"
+    ]
+  }
+}
