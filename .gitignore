@@ -1,0 +1,146 @@
+# ============================================================
+# 回声（Echo Meet）Git 忽略文件
+# ============================================================
+
+# ----------------------
+# Python
+# ----------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ----------------------
+# Virtual Environment
+# ----------------------
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ----------------------
+# IDE
+# ----------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# ----------------------
+# Node.js
+# ----------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ----------------------
+# 打包输出
+# ----------------------
+dist/
+dist-ssr/
+unpackage/
+*.local
+
+# ----------------------
+# 测试相关
+# ----------------------
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# ----------------------
+# 日志
+# ----------------------
+logs/
+*.log
+
+# ----------------------
+# 系统文件
+# ----------------------
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.temp
+
+# ----------------------
+# Docker 数据卷（本地）
+# ----------------------
+mysql_data/
+redis_data/
+minio_data/
+uptime_kuma_data/
+
+# ----------------------
+# SSL 证书（敏感）
+# ----------------------
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+!nginx/ssl/README.md
+
+# ----------------------
+# 环境配置
+# ----------------------
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ----------------------
+# Claude Code
+# ----------------------
+.claude/
+
+# ----------------------
+# 其他
+# ----------------------
+*.bak
+*.orig
+
+# ----------------------
+# 后端特定
+# ----------------------
+backend/.env
+backend/.env.*.local
+!backend/.env.example
+
+# ----------------------
+# 前端特定
+# ----------------------
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/node_modules/
+frontend/unpackage/

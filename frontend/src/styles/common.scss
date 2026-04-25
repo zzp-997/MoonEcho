@@ -129,7 +129,7 @@ view, text {
   right: 0;
   z-index: var(--z-toast);
   background-color: var(--color-error);
-  color: #FFFFFF;
+  color: var(--text-on-brand);
   text-align: center;
   padding: var(--space-xs) 0;
   font-size: var(--font-size-sm);

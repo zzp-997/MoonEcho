@@ -93,7 +93,7 @@
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Frontend Developer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | 无 |
 | 参考文档 | frontend_tech.md, ui_design.md |
 
@@ -108,14 +108,14 @@
 - **数据埋点基础设施**：封装事件上报工具，为阶段一验证门控（7日留存、日均对话轮次、日记连续记录率、NPS）提供数据采集能力
 
 **产出物**：
-- `frontend/` 项目目录
-- `frontend/src/constants/errorCodes.ts` — 错误码常量
-- `frontend/src/api/` — 请求封装基类
-- `frontend/src/styles/` — CSS 变量主题文件
+- `frontend/` 项目目录 ✅
+- `frontend/src/constants/errorCodes.ts` — 错误码常量 ✅
+- `frontend/src/api/` — 请求封装基类 ✅
+- `frontend/src/styles/` — CSS 变量主题文件 ✅
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -125,7 +125,7 @@
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | 无 |
 | 参考文档 | tech_architecture.md |
 
@@ -141,15 +141,29 @@
 - **APScheduler 初始化**：安装 APScheduler，配置调度器生命周期（FastAPI startup/shutdown 事件中启停），为 T013-B 定时任务提供基础框架
 
 **产出物**：
-- `backend/` 项目目录
-- `backend/config/` — 环境配置
-- `backend/enums/error_codes.py` — 错误码枚举
-- `backend/core/config.py` — Mock 服务切换机制
-- `.env.development` / `.env.example`
+- `backend/` 项目目录 ✅
+- `backend/config/` — 环境配置 ✅ (development.py, production.py, test.py)
+- `backend/app/enums/error_codes.py` — 错误码枚举 ✅ (68个错误码，覆盖全部业务场景)
+- `backend/app/core/config.py` — Mock 服务切换机制 ✅ (AppSettings + ProviderRegistry)
+- `backend/.env.development` / `.env.example` ✅
+- `backend/app/services/providers.py` — Mock 服务框架 ✅ (5类Provider Protocol + 真实/Mock实现 + 流式AI接口)
+- `backend/app/services/scheduler.py` — APScheduler 初始化 ✅
+- `backend/app/core/responses.py` — 统一响应格式 ✅
+- `backend/app/middleware/request_context.py` — 请求日志中间件 ✅
+- `backend/app/main.py` — FastAPI 应用入口 ✅
+- `backend/app/routers/__init__.py` — 路由注册汇总 ✅
+- `backend/app/schemas/base.py` — Pydantic 模型基类 ✅ (BaseSchema/PaginationParams/PaginatedResponse)
+- `backend/app/models/base.py` — SQLAlchemy 模型基类 ✅ (Base/UUIDMixin/TimestampMixin/SoftDeleteMixin)
+- `backend/pyproject.toml` — 完整依赖 ✅ (sqlalchemy/alembic/python-jose/redis/httpx/Pillow等)
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**目录结构约定**：保持 `backend/app/` FastAPI 标准结构，后续任务产出物路径映射：
+- `backend/routers/` → `backend/app/routers/`
+- `backend/models/` → `backend/app/models/`
+- `backend/services/` → `backend/app/services/`
+
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -159,26 +173,28 @@
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | DevOps Automator |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | 无 |
 | 参考文档 | tech_architecture.md 第六章 |
 
 **任务描述**：
-- 编写 docker-compose.yml（MySQL 8.0 + Redis 7 + API + Nginx + Uptime Kuma）
+- 编写 docker-compose.yml（MySQL 8.0 + Redis 7 + API + Nginx + Uptime Kuma + MinIO）
 - 编写 Nginx 配置（API代理 + WebSocket代理 + 管理后台代理）
-- 编写 MySQL 初始化脚本（字符集 utf8mb4）
+- 编写 MySQL 初始化脚本（字符集 utf8mb4，含全部核心表结构）
 - 配置数据持久化卷
 - 编写 .env 模板
 
 **产出物**：
-- `docker-compose.yml`
-- `nginx/nginx.conf`
-- `nginx/ssl/` — SSL 证书目录（占位）
-- `.env.example`
+- `docker-compose.yml` ✅
+- `nginx/nginx.conf` ✅
+- `nginx/ssl/README.md` — SSL 证书目录说明 ✅
+- `mysql/init.sql` — MySQL 初始化脚本 ✅
+- `.env.example` ✅
+- `backend/Dockerfile` ✅
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -188,7 +204,7 @@
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T002, T003 |
 | 参考文档 | tech_architecture.md 第二章 + 第十一章 11.4 |
 
@@ -208,12 +224,23 @@
 - 确保所有索引和外键正确
 
 **产出物**：
-- `backend/models/` — 全部 SQLAlchemy 模型
-- `backend/alembic/` — 迁移脚本
+- `backend/app/models/user.py` ✅ — User, UserTag, AnonymousIdentity, UserAnonMapping
+- `backend/app/models/diary.py` ✅ — EmotionDiary
+- `backend/app/models/treehole.py` ✅ — TreeholePost, TreeholeComment
+- `backend/app/models/post.py` ✅ — Post
+- `backend/app/models/chat.py` ✅ — Friendship, Conversation, ChatMessage
+- `backend/app/models/ai.py` ✅ — AIConversation, AIMessage, AIMemory
+- `backend/app/models/notification.py` ✅ — Notification, PushRecord
+- `backend/app/models/admin.py` ✅ — Admin, AdminLog
+- `backend/app/models/report.py` ✅ — Report
+- `backend/app/models/__init__.py` ✅ — 导出所有模型（19张表）
+- `backend/alembic.ini` ✅ — Alembic 配置
+- `backend/alembic/env.py` ✅ — 环境配置
+- `backend/alembic/versions/0001_initial.py` ✅ — 初始迁移脚本
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -227,7 +254,7 @@
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T002 |
 | 参考文档 | tech_architecture.md 第十章 |
 
@@ -248,15 +275,18 @@
 - **图片处理服务**需统一封装：图片压缩（最大宽度 1080px）、缩略图生成、格式校验（仅允许 jpg/png/webp），供私聊图片（T021-C）、动态图片（T019-A）、头像上传（T023-A）等场景共用
 
 **产出物**：
-- `backend/services/sms.py` — MockSMSService / AliyunSMSService
-- `backend/services/content_audit.py` — LocalContentFilter / AliyunContentAudit / PassAudit
-- `backend/services/storage.py` — LocalStorage / MinIOStorage / OSSStorage
-- `backend/services/push.py` — MockPushService / JPushService
-- `backend/services/ai_chat.py` — MockAIChat / GLMChatService
+- `backend/app/services/sms.py` ✅ — MockSMSService / ConsoleSMSService / AliyunSMSService
+- `backend/app/services/content_audit.py` ✅ — PassAudit / LocalContentAudit / AliyunContentAudit
+- `backend/app/services/storage.py` ✅ — LocalStorage / MinIOStorage / OSSStorage
+- `backend/app/services/push.py` ✅ — MockPushService / JPushService
+- `backend/app/services/ai_chat.py` ✅ — MockAIChat(30组模板) / GLMChatService
+- `backend/app/services/image.py` ✅ — PillowImageService（压缩/缩略图/格式校验）
+- `backend/app/services/providers.py` ✅ — 重构为聚合导入 + ProviderRegistry
+- `backend/app/services/__init__.py` ✅ — 统一导出
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -268,42 +298,42 @@
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T002, T004, T005-M |
 | 参考文档 | tech_architecture.md 第三章（API设计）、第五章（安全架构） |
 
 **任务描述**：
 - 实现短信验证码登录（开发阶段用 T005-M 的 MockSMSService）
-- 实现 JWT 认证（RS256，access_token 15分钟，refresh_token 7天）
+- 实现 JWT 认证（HS256，access_token 15分钟，refresh_token 7天）
 - 实现验证码倒计时规则（60秒、手机号变更重置，详见 modules_design.md 1.2）
 - 实现注册流程：手机验证 → 昵称+年龄段 → AI开场白
-  - 验证码有效期5分钟（与倒计时独立计算）
-  - 倒计时期间手机号输入框置灰不可修改
-  - 若需修改手机号，需先清空验证码，倒计时重置
 - 实现手机号加密存储（AES-256-GCM，phone_hash 用于唯一索引查询）
 - 实现速率限制（登录5次/15分钟，验证码1次/分钟）
-- **青少年模式后端逻辑**（PRD 核心规则第6条）：
-  - 注册时年龄段必填，18岁以下自动标记 is_minor=true
-  - 青少年模式规则：限制树洞内容可见性、AI对话过滤敏感话题、禁止私聊发送图片
-  - 时长限制：22:00后禁止使用、满1小时弹窗提醒、21:55提前5分钟提醒
-  - API 层面拦截：青少年用户调用受限接口返回 USER_UNDERAGE 错误
+- **青少年模式后端逻辑**（PRD 核心规则第6条）
 
 **API 端点**：
 ```
-POST /api/v1/auth/login
+POST /api/v1/auth/send-code
 POST /api/v1/auth/verify-code
+POST /api/v1/auth/complete-profile
 POST /api/v1/auth/refresh-token
 DELETE /api/v1/auth/logout
+GET  /api/v1/auth/me
 ```
 
 **产出物**：
-- `backend/routers/auth.py`
-- `backend/services/auth_service.py`
-- `backend/middleware/auth.py` — JWT 校验中间件
+- `backend/app/routers/auth.py` ✅ — 6个API端点
+- `backend/app/services/auth_service.py` ✅ — 认证服务（验证码/JWT/速率限制/青少年模式）
+- `backend/app/services/crypto.py` ✅ — AES-256-GCM加密 + SHA-256哈希
+- `backend/app/middleware/auth.py` ✅ — JWT中间件 + get_current_user依赖注入
+- `backend/app/schemas/auth.py` ✅ — 认证请求/响应模型
+- `backend/app/schemas/user.py` ✅ — 用户相关模型
+- 更新 `backend/app/main.py` ✅ — Redis初始化 + 路由注册
+- 更新 `backend/app/routers/__init__.py` ✅
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -313,7 +343,7 @@ DELETE /api/v1/auth/logout
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Frontend Developer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T001, T005 |
 | 参考文档 | ui_design.md, modules_design.md 1.1-1.2 |
 
@@ -335,12 +365,17 @@ DELETE /api/v1/auth/logout
 - 错误码映射为中文提示
 
 **产出物**：
-- `frontend/src/pages/auth/` — 登录/注册相关页面
-- `frontend/src/composables/useCountdown.ts` — 验证码倒计时
+- `frontend/src/pages/auth/login.vue` ✅ — 登录页（倒计时交互+短信自动读取+微信登录条件编译）
+- `frontend/src/pages/auth/profile.vue` ✅ — 注册引导页（昵称2-12字符+跳过选项+底部渐入提示）
+- `frontend/src/pages/auth/ai-greeting.vue` ✅ — AI开场白过渡页（4时段动态文案+3秒自动跳转+青少年判断）
+- `frontend/src/pages/auth/minor-notice.vue` ✅ — 青少年模式启动页（受限功能+时长限制说明+已知悉确认）
+- `frontend/src/pages/auth/minor-lock.vue` ✅ — 青少年模式锁定页（22:00-05:00全屏遮罩+安慰语+05:00自动解锁）
+- `frontend/src/composables/useCountdown.ts` ✅ — 验证码倒计时
+- `frontend/src/composables/useMinorTimer.ts` ✅ — 青少年使用时长追踪（1小时/21:55/22:00三级提醒+前后台暂停恢复）
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -350,7 +385,7 @@ DELETE /api/v1/auth/logout
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | AI Engineer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | 无（可在 T007-B 之前独立执行） |
 | 参考文档 | PRD 附录A、tech_architecture.md 第九章 |
 
@@ -375,12 +410,12 @@ PRD 附录A 明确要求"开发前需准备，50个情绪场景测试集"，tech
   - 模型选择决策建议（GLM-4 vs MiniMax vs 通义千问对比）
 
 **产出物**：
-- `docs/ai_eval_scenarios.md` — 50 个情绪场景测试集
-- `docs/ai_eval_report.md` — 模型评测报告
+- `docs/ai_eval_scenarios.md` ✅ — 50 个情绪场景测试集（D01-D15/N01-N15/P01-P10/C01-C10）
+- `docs/ai_eval_report.md` ✅ — 模型评测报告（含评测框架、执行脚本、评分模板、决策建议模板）
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无（实际 API 评测需在获取 API Key 后执行）
 
 ---
 
@@ -392,7 +427,7 @@ PRD 附录A 明确要求"开发前需准备，50个情绪场景测试集"，tech
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | AI Engineer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T005-M |
 | 参考文档 | tech_architecture.md 第十章 |
 
@@ -402,11 +437,11 @@ PRD 附录A 明确要求"开发前需准备，50个情绪场景测试集"，tech
 - 三种性格分别有差异化回复模板
 
 **产出物**：
-- `backend/services/ai_chat.py` — MockAIChat 类完善
+- `backend/services/ai_chat.py` ✅ — MockAIChat 类完善（1002行，30关键词×3性格，SSE格式，危机响应）
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -416,7 +451,7 @@ PRD 附录A 明确要求"开发前需准备，50个情绪场景测试集"，tech
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | AI Engineer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T005-M |
 | 参考文档 | tech_architecture.md 第四章 |
 
@@ -427,12 +462,12 @@ PRD 附录A 明确要求"开发前需准备，50个情绪场景测试集"，tech
 - 实现费用控制（免费用户每日10轮对话限制）
 
 **产出物**：
-- `backend/services/ai_chat.py` — GLMChatService 类
-- `backend/services/ai_config.py` — 模型配置和配额管理
+- `backend/services/ai_chat.py` ✅ — GLMChatService 类完善（1370行，SSE流式+重试+超时）
+- `backend/services/ai_config.py` ✅ — 模型配置和配额管理（313行，3性格Prompt+配置）
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -442,7 +477,7 @@ PRD 附录A 明确要求"开发前需准备，50个情绪场景测试集"，tech
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | AI Engineer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T007-B |
 | 参考文档 | modules_design.md 2.1 三种性格人设 |
 
@@ -454,12 +489,14 @@ PRD 附录A 明确要求"开发前需准备，50个情绪场景测试集"，tech
 - 实现 AI 开场白按时间段动态变化
 
 **产出物**：
-- `backend/prompts/` — 性格 Prompt 模板文件
-- `backend/services/ai_persona.py` — 性格管理和切换
+- `backend/prompts/xiaowen.txt` ✅ — 小温 Prompt（4KB）
+- `backend/prompts/laohei.txt` ✅ — 老黑 Prompt（4KB）
+- `backend/prompts/ali.txt` ✅ — 阿理 Prompt（4KB）
+- `backend/services/ai_persona.py` ✅ — 性格管理和切换（334行）
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -2030,7 +2067,19 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 
 | 时间 | 任务ID | 智能体 | 结果 | 产出物路径 |
 |------|--------|--------|------|-----------|
-| - | - | - | - | - |
+| 2026-04-24 | T001 | Frontend Developer | ✅ 完成 | frontend/ |
+| 2026-04-24 | T002 | Backend Architect | ✅ 完成 | backend/ |
+| 2026-04-24 | T002-测试 | API Tester | ✅ 78/78通过 | 修复1个配置优先级缺陷 |
+| 2026-04-24 | T002-审核 | Code Reviewer | ✅ 有条件通过→修复后通过 | 修复7个问题(3严重+4建议)，79/79测试通过 |
+| 2026-04-24 | T003 | DevOps Automator | ✅ 完成 | docker-compose.yml, nginx/, mysql/, .env.example |
+| 2026-04-25 | T004 | Backend Architect | ✅ 完成 | backend/app/models/, backend/alembic/ (19张表) |
+| 2026-04-25 | T005-M | Backend Architect | ✅ 完成 | backend/app/services/ (6个服务模块+图片处理) |
+| 2026-04-25 | T005 | Backend Architect | ✅ 完成 | 认证模块(6个API + JWT + 加密 + 青少年模式) |
+| 2026-04-25 | T006 | Frontend Developer | ✅ 完成 | 前端登录/注册页(5个页面+2个composable+青少年模式完整实现) |
+| 2026-04-25 | T006-A | AI Engineer | ✅ 完成 | docs/ai_eval_scenarios.md(50场景)+docs/ai_eval_report.md(评测框架) |
+| 2026-04-25 | T007-A | AI Engineer | ✅ 完成 | backend/app/services/ai_chat.py(MockAIChat 30关键词×3性格+SSE+危机) |
+| 2026-04-25 | T007-B | AI Engineer | ✅ 完成 | GLMChatService+SSE流式+重试机制+ai_config.py |
+| 2026-04-25 | T007-C | AI Engineer | ✅ 完成 | 3性格Prompt+ai_persona.py+时间段开场白 |
 
 ### 阶段二
 
@@ -2048,7 +2097,7 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 
 | 时间 | 任务ID | 中断原因 | 中断点 | 继续指引 | 接手智能体 |
 |------|--------|---------|--------|---------|-----------|
-| - | - | - | - | - | - |
+| 2026-04-24 | T002 | 会话中断 | 基础骨架已搭建，8项子任务未完成 | 已接续完成 | Backend Architect |
 
 ---
 

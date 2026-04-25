@@ -107,18 +107,19 @@ page {
   background-color: var(--mood-warm-bg) !important;
 }
 
-// 树洞区 - 夜间模式默认启用，不可关闭
+// 树洞区 - 强制使用暗色主题（不受日间/夜间切换影响）
+// 使用 --dark-* 变量确保在亮色模式下也显示暗色
 .treehole-force-dark {
-  --bg-primary: #121212;
-  --bg-secondary: #1E1E1E;
-  --bg-tertiary: #2A2A2A;
-  --text-primary: #F5F5F5;
-  --text-secondary: #B3B3B3;
-  --text-tertiary: #808080;
-  --border-primary: #333333;
+  --bg-primary: var(--dark-bg-primary);
+  --bg-secondary: var(--dark-bg-secondary);
+  --bg-tertiary: var(--dark-bg-tertiary);
+  --text-primary: var(--dark-text-primary);
+  --text-secondary: var(--dark-text-secondary);
+  --text-tertiary: var(--dark-text-tertiary);
+  --border-primary: var(--dark-border-primary);
 }
 
 // AI对话 - 夜间模式对话气泡更柔和
 .chat-bubble-soft {
-  --bg-secondary: rgba(30, 30, 30, 0.6);
+  --bg-secondary: var(--bg-secondary-60);
 }

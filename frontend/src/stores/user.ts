@@ -14,6 +14,7 @@ export interface UserInfo {
   nickname: string
   avatarUrl?: string
   ageRange?: string
+  is_minor?: boolean
   city?: string
   occupation?: string
   createdAt?: string

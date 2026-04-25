@@ -37,6 +37,20 @@
       }
     },
     {
+      "path": "pages/add/index",
+      "style": {
+        "navigationBarTitleText": "快捷入口",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/community/index",
+      "style": {
+        "navigationBarTitleText": "动态",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/treehole/index",
       "style": {
         "navigationBarTitleText": "树洞",
@@ -65,6 +79,37 @@
       }
     },
     {
+      "path": "pages/auth/profile",
+      "style": {
+        "navigationBarTitleText": "完善资料",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/auth/ai-greeting",
+      "style": {
+        "navigationBarTitleText": "欢迎",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/auth/minor-notice",
+      "style": {
+        "navigationBarTitleText": "青少年模式",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/auth/minor-lock",
+      "style": {
+        "navigationBarTitleText": "休息时间",
+        "navigationStyle": "custom",
+        "app-plus": {
+          "popGesture": false
+        }
+      }
+    },
+    {
       "path": "pages/message/index",
       "style": {
         "navigationBarTitleText": "消息",
@@ -76,7 +121,6 @@
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "回声",
     "navigationBarBackgroundColor": "#121212",
-    "navigationBarTextStyle": "white",
     "backgroundColor": "#121212",
     "backgroundColorTop": "#121212",
     "backgroundColorBottom": "#121212",
@@ -109,16 +153,16 @@
         "selectedIconPath": "static/images/icons/tab-diary-active.png"
       },
       {
-        "pagePath": "pages/treehole/index",
-        "text": "树洞",
-        "iconPath": "static/images/icons/tab-treehole.png",
-        "selectedIconPath": "static/images/icons/tab-treehole-active.png"
+        "pagePath": "pages/add/index",
+        "text": "+",
+        "iconPath": "static/images/icons/tab-add.png",
+        "selectedIconPath": "static/images/icons/tab-add-active.png"
       },
       {
-        "pagePath": "pages/square/index",
-        "text": "广场",
-        "iconPath": "static/images/icons/tab-square.png",
-        "selectedIconPath": "static/images/icons/tab-square-active.png"
+        "pagePath": "pages/community/index",
+        "text": "动态",
+        "iconPath": "static/images/icons/tab-community.png",
+        "selectedIconPath": "static/images/icons/tab-community-active.png"
       },
       {
         "pagePath": "pages/mine/index",

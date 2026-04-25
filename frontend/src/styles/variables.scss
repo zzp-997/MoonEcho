@@ -3,6 +3,10 @@
 // 文件：src/styles/variables.scss
 // 说明：所有颜色必须使用 CSS 变量，禁止硬编码
 // 参考：modules_design.md 9.2-9.3 | ui_design.md 1.2 | PRD 核心规则
+// 注意：pages.json 中的 globalStyle 和 tabBar 颜色因 uni-app 平台限制
+//       无法使用 CSS 变量，必须使用实际颜色值，其值应与此文件定义一致：
+//       #121212 = --bg-primary (暗色) / #F5F5F7 = --bg-primary (亮色)
+//       #808080 = --text-tertiary / #7C6FE0 = --brand-primary
 // ============================================
 
 // ==================== 主题变量定义 ====================
@@ -17,8 +21,19 @@
   // 三级背景 - 弹窗、浮层
   --bg-tertiary: #2A2A2A;
   // 透明背景变体
+  --bg-secondary-60: rgba(30, 30, 30, 0.6);
   --bg-secondary-80: rgba(30, 30, 30, 0.8);
   --bg-tertiary-90: rgba(42, 42, 42, 0.9);
+
+  // ========== 暗色主题固定变量（用于强制暗色区域如树洞） ==========
+  // 这些变量始终是暗色值，不受主题切换影响
+  --dark-bg-primary: #121212;
+  --dark-bg-secondary: #1E1E1E;
+  --dark-bg-tertiary: #2A2A2A;
+  --dark-text-primary: #F5F5F5;
+  --dark-text-secondary: #B3B3B3;
+  --dark-text-tertiary: #808080;
+  --dark-border-primary: #333333;
 
   // ========== 文字色系统 ==========
   // 主文字 - 标题、重要正文
@@ -27,6 +42,8 @@
   --text-secondary: #B3B3B3;
   // 弱文字 - 占位符、禁用状态
   --text-tertiary: #808080;
+  // 品牌色上的文字 - 用户气泡等
+  --text-on-brand: #FFFFFF;
 
   // ========== 边框色系统 ==========
   // 分割线
@@ -153,6 +170,7 @@
   --text-primary: #1A1A2E;
   --text-secondary: #6B7280;
   --text-tertiary: #9CA3AF;
+  --text-on-brand: #FFFFFF;
 
   // ========== 边框色系统（日间）==========
   --border-primary: #E5E7EB;

@@ -14,9 +14,12 @@ export function useTheme() {
 
   /**
    * 应用主题到页面
+   * 注意：uni.setPageStyle 在部分平台不支持 CSS 变量
+   * 此处使用实际颜色值，颜色来源与 variables.scss 中的 CSS 变量定义一致：
+   * --bg-primary: 暗色 #121212, 亮色 #F5F5F7
    */
   function applyTheme(dark: boolean) {
-    // 设置页面背景色
+    // 设置页面背景色（颜色值与 variables.scss --bg-primary 对应）
     try {
       const pageStyle = dark
         ? { backgroundColor: '#121212' }

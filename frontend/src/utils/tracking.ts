@@ -276,7 +276,7 @@ export function track(name: EventNameType, properties?: EventProperties) {
   enqueueEvent(event)
 
   // 立即发送关键事件
-  const immediateEvents = [
+  const immediateEvents: EventNameType[] = [
     EventName.USER_REGISTER,
     EventName.USER_LOGIN,
     EventName.NPS_SUBMIT,

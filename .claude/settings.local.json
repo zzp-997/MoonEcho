@@ -9,7 +9,21 @@
       "Bash(npm -v)",
       "Bash(pnpm -v)",
       "Bash(npx degit *)",
-      "Bash(npx @dcloudio/uvm@latest frontend)"
+      "Bash(npx @dcloudio/uvm@latest frontend)",
+      "Bash(npm install *)",
+      "Bash(npm view *)",
+      "Bash(npx uni *)",
+      "Bash(git *)",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(npm ls *)",
+      "Bash(node scripts/generate-icons.js)",
+      "Bash(python *)",
+      "Read(//dev/**)",
+      "Bash(pip install *)",
+      "Bash(alembic current *)",
+      "Bash(pip list *)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }
