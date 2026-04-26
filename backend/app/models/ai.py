@@ -90,6 +90,24 @@ class AIMessage(Base, UUIDMixin, TimestampMixin):
     token_count: Mapped[int | None] = mapped_column(
         Integer, comment="token 消耗数",
     )
+    crisis_level: Mapped[str | None] = mapped_column(
+        String(10), comment="危机级别：low/medium/high，检测到危机关键词时标记",
+    )
+    crisis_keywords: Mapped[str | None] = mapped_column(
+        String(200), comment="匹配到的危机关键词（逗号分隔）",
+    )
+    crisis_status: Mapped[str | None] = mapped_column(
+        String(20), default="pending", server_default="pending", comment="危机状态：pending/intervening/resolved/false_positive",
+    )
+    crisis_resolved_by: Mapped[str | None] = mapped_column(
+        CHAR(36), ForeignKey("admins.id", ondelete="SET NULL"), comment="处理人ID",
+    )
+    crisis_resolution_note: Mapped[str | None] = mapped_column(
+        Text, comment="处理备注",
+    )
+    crisis_resolved_at: Mapped[datetime | None] = mapped_column(
+        DateTime, comment="处理时间",
+    )
 
     # ---- 关系 ----
     conversation: Mapped["AIConversation"] = relationship(back_populates="messages")
@@ -97,6 +115,8 @@ class AIMessage(Base, UUIDMixin, TimestampMixin):
     __table_args__ = (
         Index("idx_ai_messages_conversation_id", "conversation_id"),
         Index("idx_ai_messages_created", "created_at"),
+        Index("idx_ai_messages_crisis_level", "crisis_level"),
+        Index("idx_ai_messages_crisis_status", "crisis_status"),
     )
 
 

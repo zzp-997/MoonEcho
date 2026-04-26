@@ -44,6 +44,20 @@ export const EventName = {
   /** 用户返回（次日/7日） */
   USER_RETURN: 'user_return',
 
+  // ========== 首页相关 ==========
+  /** 首页访问 */
+  HOME_VIEW: 'home_view',
+  /** 情绪色调条点击 */
+  HOME_EMOTION_BAR_TAP: 'home_emotion_bar_tap',
+  /** AI对话入口点击 */
+  HOME_AI_ENTRY_TAP: 'home_ai_entry_tap',
+  /** 通知入口点击 */
+  HOME_NOTIFICATION_TAP: 'home_notification_tap',
+  /** 快捷功能点击 */
+  HOME_QUICK_ACTION_TAP: 'home_quick_action_tap',
+  /** 发布选择弹窗打开 */
+  HOME_ACTION_SHEET_OPEN: 'home_action_sheet_open',
+
   // ========== AI对话相关（验证门控：日均对话轮次）==========
   /** 发送消息 */
   CHAT_SEND: 'chat_send',
@@ -53,10 +67,28 @@ export const EventName = {
   CHAT_NEW_SESSION: 'chat_new_session',
   /** AI性格选择 */
   CHAT_PERSONALITY_SELECT: 'chat_personality_select',
+  /** AI性格切换 */
+  CHAT_PERSONALITY_SWITCH: 'chat_personality_switch',
+  /** 跳过性格选择 */
+  CHAT_PERSONALITY_SKIP: 'chat_personality_skip',
+  /** 确认性格选择 */
+  CHAT_PERSONALITY_CONFIRM: 'chat_personality_confirm',
   /** 对话消息复制 */
   CHAT_MESSAGE_COPY: 'chat_message_copy',
   /** 对话消息分享 */
   CHAT_MESSAGE_SHARE: 'chat_message_share',
+  /** 对话错误 */
+  CHAT_ERROR: 'chat_error',
+
+  // ========== 危机干预相关 ==========
+  /** 危机检测触发 */
+  CRISIS_DETECTED: 'crisis_detected',
+  /** 危机干预弹窗显示 */
+  CRISIS_DIALOG_SHOW: 'crisis_dialog_show',
+  /** 危机干预确认 */
+  CRISIS_CONFIRM: 'crisis_confirm',
+  /** 危机热线拨打 */
+  CRISIS_HOTLINE_CALL: 'crisis_hotline_call',
 
   // ========== 日记相关（验证门控：日记连续记录率）==========
   /** 记录日记 */
@@ -71,12 +103,46 @@ export const EventName = {
   DIARY_DETAIL_VIEW: 'diary_detail_view',
   /** 日记连续记录里程碑 */
   DIARY_STREAK_MILESTONE: 'diary_streak_milestone',
+  /** 导出日记 */
+  DIARY_EXPORT: 'diary_export',
+
+  // ========== 周报相关 ==========
+  /** 查看周报 */
+  REPORT_VIEW: 'report_view',
+  /** 周报刷新 */
+  REPORT_REFRESH: 'report_refresh',
+  /** 查看周报历史 */
+  REPORT_HISTORY_VIEW: 'report_history_view',
+  /** 展开温和建议 */
+  REPORT_SUGGESTION_EXPAND: 'report_suggestion_expand',
+  /** 关闭温和建议 */
+  REPORT_SUGGESTION_COLLAPSE: 'report_suggestion_collapse',
 
   // ========== 树洞/社交相关 ==========
   /** 发布树洞 */
   TREEHOLE_PUBLISH: 'treehole_publish',
   /** 查看树洞列表 */
   TREEHOLE_LIST_VIEW: 'treehole_list_view',
+  /** 树洞话题筛选 */
+  TREEHOLE_TOPIC_FILTER: 'treehole_topic_filter',
+  /** 查看树洞帖子详情 */
+  TREEHOLE_POST_VIEW: 'treehole_post_view',
+  /** 创建共鸣（我懂你） */
+  TREEHOLE_RESONANCE: 'treehole_resonance',
+  /** 查看评论区 */
+  TREEHOLE_COMMENT_VIEW: 'treehole_comment_view',
+  /** 创建树洞评论 */
+  TREEHOLE_COMMENT_CREATE: 'treehole_comment_create',
+  /** 开始发布树洞 */
+  TREEHOLE_CREATE_START: 'treehole_create_start',
+  /** 发布树洞成功 */
+  TREEHOLE_CREATE_SUCCESS: 'treehole_create_success',
+  /** 发布树洞被拦截 */
+  TREEHOLE_CREATE_BLOCKED: 'treehole_create_blocked',
+  /** AI润色 */
+  TREEHOLE_AI_REWRITE: 'treehole_ai_rewrite',
+  /** 删除树洞帖子 */
+  TREEHOLE_DELETE: 'treehole_delete',
   /** 树洞点赞 */
   TREEHOLE_LIKE: 'treehole_like',
   /** 树洞评论 */
@@ -107,6 +173,22 @@ export const EventName = {
   TEEN_MODE_ENABLE: 'teen_mode_enable',
   /** 设置修改 */
   SETTINGS_CHANGE: 'settings_change',
+
+  // ========== 通知相关 ==========
+  /** 查看通知列表 */
+  NOTIFICATION_LIST_VIEW: 'notification_list_view',
+  /** 点击通知 */
+  NOTIFICATION_CLICK: 'notification_click',
+  /** 标记单条已读 */
+  NOTIFICATION_MARK_READ: 'notification_mark_read',
+  /** 全部标记已读 */
+  NOTIFICATION_MARK_ALL_READ: 'notification_mark_all_read',
+  /** 删除通知 */
+  NOTIFICATION_DELETE: 'notification_delete',
+  /** 查看通知设置 */
+  NOTIFICATION_SETTINGS_VIEW: 'notification_settings_view',
+  /** 更新通知设置 */
+  NOTIFICATION_SETTINGS_CHANGE: 'notification_settings_change',
 } as const
 
 export type EventNameType = (typeof EventName)[keyof typeof EventName]

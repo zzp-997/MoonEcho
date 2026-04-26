@@ -121,6 +121,7 @@ function handleAuthExpired() {
 /**
  * 青少年模式错误处理
  * 显示提示并阻止页面渲染
+ * 返回上一页或首页
  */
 function handleTeenModeError() {
   uni.showModal({
@@ -128,6 +129,15 @@ function handleTeenModeError() {
     content: '青少年模式下无法使用此功能',
     showCancel: false,
     confirmText: '我知道了',
+    success: () => {
+      // 返回上一页或首页
+      const pages = getCurrentPages()
+      if (pages.length > 1) {
+        uni.navigateBack()
+      } else {
+        uni.switchTab({ url: '/pages/home/index' })
+      }
+    },
   })
 }
 
@@ -341,6 +351,11 @@ export const api = {
   /** PUT 请求 */
   put<T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> {
     return request<T>(url, 'PUT', data, config)
+  },
+
+  /** PATCH 请求 */
+  patch<T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> {
+    return request<T>(url, 'PATCH', data, config)
   },
 
   /** DELETE 请求 */

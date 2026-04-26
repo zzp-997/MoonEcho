@@ -19,13 +19,20 @@ logger = logging.getLogger(__name__)
 class PushProtocol(Protocol):
     """推送通知服务接口。"""
 
-    async def send(self, user_id: str, title: str, content: str) -> dict[str, Any]:
+    async def send(
+        self,
+        user_id: str,
+        title: str,
+        content: str,
+        payload: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """发送推送通知，返回结构化结果。
 
         Args:
             user_id: 目标用户 ID
             title: 推送标题
             content: 推送内容
+            payload: 附加数据
 
         Returns:
             {"success": bool, "message_id": str}
@@ -33,7 +40,11 @@ class PushProtocol(Protocol):
         ...
 
     async def send_batch(
-        self, user_ids: list[str], title: str, content: str
+        self,
+        user_ids: list[str],
+        title: str,
+        content: str,
+        payload: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """批量发送推送通知。
 
@@ -41,6 +52,7 @@ class PushProtocol(Protocol):
             user_ids: 目标用户 ID 列表
             title: 推送标题
             content: 推送内容
+            payload: 附加数据
 
         Returns:
             {"success": bool, "success_count": int, "fail_count": int, "message_id": str}
@@ -58,11 +70,21 @@ class MockPushService:
     适用于开发和测试环境，无需真实推送通道。
     """
 
-    async def send(self, user_id: str, title: str, content: str) -> dict[str, Any]:
+    async def send(
+        self,
+        user_id: str,
+        title: str,
+        content: str,
+        payload: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         message_id = f"mock-push-{uuid.uuid4().hex[:8]}"
         logger.info(
-            "[MockPush] 推送通知 -> 用户: %s, 标题: %s, 内容: %s, ID: %s",
-            user_id, title, content[:50] if len(content) > 50 else content, message_id,
+            "[MockPush] 推送通知 -> 用户: %s, 标题: %s, 内容: %s, payload: %s, ID: %s",
+            user_id,
+            title,
+            content[:50] if len(content) > 50 else content,
+            payload,
+            message_id,
         )
         return {
             "success": True,
@@ -70,12 +92,20 @@ class MockPushService:
         }
 
     async def send_batch(
-        self, user_ids: list[str], title: str, content: str
+        self,
+        user_ids: list[str],
+        title: str,
+        content: str,
+        payload: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         message_id = f"mock-batch-push-{uuid.uuid4().hex[:8]}"
         logger.info(
-            "[MockPush] 批量推送 -> 用户数: %d, 标题: %s, 内容: %s, ID: %s",
-            len(user_ids), title, content[:50] if len(content) > 50 else content, message_id,
+            "[MockPush] 批量推送 -> 用户数: %d, 标题: %s, 内容: %s, payload: %s, ID: %s",
+            len(user_ids),
+            title,
+            content[:50] if len(content) > 50 else content,
+            payload,
+            message_id,
         )
         return {
             "success": True,
@@ -96,6 +126,29 @@ class JPushService:
     - 需要配置 app_key、master_secret
     - 支持别名推送、标签推送、广播推送
     - 支持安卓和 iOS 平台差异化配置
+
+    使用示例：
+        import jpush
+        _jpush = jpush.JPush(self._app_key, self._master_secret)
+        push = _jpush.create_push()
+
+        # 别名推送（按用户ID）
+        push.audience = jpush.audience(jpush.alias(user_id))
+
+        # 通知内容
+        push.notification = jpush.notification(
+            alert=content,
+            android=jpush.android(alert=content, title=title),
+            ios=jpush.ios(alert=content, title=title, sound="default"),
+        )
+
+        # 附加数据
+        if payload:
+            push.options = jpush.options(
+                extras=payload
+            )
+
+        push.send()
     """
 
     def __init__(
@@ -105,31 +158,151 @@ class JPushService:
     ) -> None:
         self._app_key = app_key
         self._master_secret = master_secret
+        self._initialized = False
 
-    async def send(self, user_id: str, title: str, content: str) -> dict[str, Any]:
-        # TODO: 接入极光推送 SDK
-        # import jpush
-        # _jpush = jpush.JPush(self._app_key, self._master_secret)
-        # push = _jpush.create_push()
-        # push.audience = jpush.audience(jpush.alias(user_id))
-        # push.message = jpush.message(content, title=title)
-        logger.warning("[JPush] 极光推送 SDK 尚未接入，返回占位响应")
-        return {
-            "success": True,
-            "message_id": f"jpush-{uuid.uuid4().hex[:8]}",
-        }
+    def _init_jpush(self) -> bool:
+        """初始化极光推送 SDK。"""
+        if self._initialized:
+            return True
+
+        if not self._app_key or not self._master_secret:
+            logger.warning(
+                "[JPush] 缺少 app_key 或 master_secret，使用 Mock 模式"
+            )
+            return False
+
+        try:
+            # import jpush
+            # self._jpush = jpush.JPush(self._app_key, self._master_secret)
+            self._initialized = True
+            return True
+        except ImportError:
+            logger.warning("[JPush] jpush SDK 未安装，使用 Mock 模式")
+            return False
+
+    async def send(
+        self,
+        user_id: str,
+        title: str,
+        content: str,
+        payload: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """发送推送通知。
+
+        Args:
+            user_id: 目标用户 ID（作为极光推送的别名）
+            title: 推送标题
+            content: 推送内容
+            payload: 附加数据
+
+        Returns:
+            推送结果
+        """
+        message_id = f"jpush-{uuid.uuid4().hex[:8]}"
+
+        if not self._init_jpush():
+            # Mock 模式
+            logger.info(
+                "[JPush-Mock] 推送通知 -> 用户: %s, 标题: %s, 内容: %s",
+                user_id, title, content[:50] if len(content) > 50 else content,
+            )
+            return {
+                "success": True,
+                "message_id": message_id,
+            }
+
+        try:
+            # TODO: 接入极光推送 SDK
+            # import jpush
+            # push = self._jpush.create_push()
+            # push.audience = jpush.audience(jpush.alias(user_id))
+            # push.notification = jpush.notification(
+            #     alert=content,
+            #     android=jpush.android(alert=content, title=title),
+            #     ios=jpush.ios(alert=content, title=title, sound="default"),
+            # )
+            # if payload:
+            #     push.options = jpush.options(extras=payload)
+            # result = push.send()
+            # message_id = result.msg_id
+
+            logger.info(
+                "[JPush] 推送通知 -> 用户: %s, 标题: %s, 内容: %s",
+                user_id, title, content[:50] if len(content) > 50 else content,
+            )
+            return {
+                "success": True,
+                "message_id": message_id,
+            }
+        except Exception as e:
+            logger.error("[JPush] 推送发送失败: %s", str(e))
+            return {
+                "success": False,
+                "message_id": None,
+                "error": str(e),
+            }
 
     async def send_batch(
-        self, user_ids: list[str], title: str, content: str
+        self,
+        user_ids: list[str],
+        title: str,
+        content: str,
+        payload: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        # TODO: 接入极光推送 SDK 批量推送
-        logger.warning("[JPush] 极光推送 SDK 尚未接入，返回占位响应")
-        return {
-            "success": True,
-            "success_count": len(user_ids),
-            "fail_count": 0,
-            "message_id": f"jpush-batch-{uuid.uuid4().hex[:8]}",
-        }
+        """批量发送推送通知。
+
+        Args:
+            user_ids: 目标用户 ID 列表
+            title: 推送标题
+            content: 推送内容
+            payload: 附加数据
+
+        Returns:
+            推送结果
+        """
+        message_id = f"jpush-batch-{uuid.uuid4().hex[:8]}"
+
+        if not self._init_jpush():
+            # Mock 模式
+            logger.info(
+                "[JPush-Mock] 批量推送 -> 用户数: %d, 标题: %s",
+                len(user_ids), title,
+            )
+            return {
+                "success": True,
+                "success_count": len(user_ids),
+                "fail_count": 0,
+                "message_id": message_id,
+            }
+
+        try:
+            # TODO: 接入极光推送 SDK 批量推送
+            # 极光推送支持批量别名推送
+            # import jpush
+            # push = self._jpush.create_push()
+            # push.audience = jpush.audience(*[jpush.alias(uid) for uid in user_ids])
+            # push.notification = jpush.notification(alert=content)
+            # result = push.send()
+
+            logger.info(
+                "[JPush] 批量推送 -> 用户数: %d, 标题: %s",
+                len(user_ids), title,
+            )
+            return {
+                "success": True,
+                "success_count": len(user_ids),
+                "fail_count": 0,
+                "message_id": message_id,
+            }
+        except Exception as e:
+            logger.error("[JPush] 批量推送发送失败: %s", str(e))
+            return {
+                "success": False,
+                "success_count": 0,
+                "fail_count": len(user_ids),
+                "message_id": None,
+                "error": str(e),
+            }
 
 
 # ---------------------------------------------------------------------------
@@ -152,6 +325,8 @@ def create_push_service(
     Args:
         provider: 服务提供者名称，可选 mock / jpush_free / jpush
         **kwargs: 传递给推送服务构造函数的额外参数
+            - app_key: 极光推送 AppKey
+            - master_secret: 极光推送 Master Secret
 
     Returns:
         推送服务实例

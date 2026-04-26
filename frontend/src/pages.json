@@ -8,6 +8,14 @@
   },
   "pages": [
     {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "回声",
+        "navigationStyle": "custom",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
       "path": "pages/index/index",
       "style": {
         "navigationBarTitleText": "回声",
@@ -37,6 +45,13 @@
       }
     },
     {
+      "path": "pages/diary/weekly-report",
+      "style": {
+        "navigationBarTitleText": "情绪周报",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/add/index",
       "style": {
         "navigationBarTitleText": "快捷入口",
@@ -54,6 +69,20 @@
       "path": "pages/treehole/index",
       "style": {
         "navigationBarTitleText": "树洞",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/treehole/detail",
+      "style": {
+        "navigationBarTitleText": "详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/treehole/publish",
+      "style": {
+        "navigationBarTitleText": "发布",
         "navigationStyle": "custom"
       }
     },
@@ -115,6 +144,27 @@
         "navigationBarTitleText": "消息",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/notification/list",
+      "style": {
+        "navigationBarTitleText": "通知",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/notification/settings",
+      "style": {
+        "navigationBarTitleText": "通知设置",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/chat/personality",
+      "style": {
+        "navigationBarTitleText": "AI性格",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "globalStyle": {
@@ -141,6 +191,12 @@
     "backgroundColor": "#121212",
     "list": [
       {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "static/images/icons/tab-home.png",
+        "selectedIconPath": "static/images/icons/tab-home-active.png"
+      },
+      {
         "pagePath": "pages/chat/index",
         "text": "对话",
         "iconPath": "static/images/icons/tab-chat.png",
@@ -151,12 +207,6 @@
         "text": "日记",
         "iconPath": "static/images/icons/tab-diary.png",
         "selectedIconPath": "static/images/icons/tab-diary-active.png"
-      },
-      {
-        "pagePath": "pages/add/index",
-        "text": "+",
-        "iconPath": "static/images/icons/tab-add.png",
-        "selectedIconPath": "static/images/icons/tab-add-active.png"
       },
       {
         "pagePath": "pages/community/index",

@@ -1019,13 +1019,22 @@ class GLMChatService:
 
         Args:
             prompt: 用户输入内容
-            context: 可选的上下文信息，包含对话历史等
+            context: 可选的上下文信息，包含对话历史、记忆等
 
         Returns:
             messages 列表
         """
+        # 基础 System Prompt
+        system_content = self._system_prompt
+
+        # 如果有记忆上下文，追加到 System Prompt
+        if context and "memory" in context:
+            memory_text = context["memory"]
+            if memory_text and isinstance(memory_text, str):
+                system_content += f"\n\n{memory_text}"
+
         messages = [
-            {"role": "system", "content": self._system_prompt}
+            {"role": "system", "content": system_content}
         ]
 
         # 如果有对话历史，添加到 messages 中

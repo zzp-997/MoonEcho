@@ -50,7 +50,7 @@ class GreetingRequest(BaseModel):
 # 依赖注入
 # ---------------------------------------------------------------------------
 
-def _get_db(request: Request) -> Any:
+def _get_db_session(request: Request) -> Any:
     """从应用状态获取数据库会话工厂。"""
     return request.app.state.db_session
 
@@ -60,15 +60,22 @@ def _get_settings(request: Request) -> Any:
     return request.app.state.settings
 
 
+def _get_redis(request: Request) -> Any:
+    """从应用状态获取 Redis 客户端。"""
+    return request.app.state.redis
+
+
 def _create_conversation_service(
     db: AsyncSession,
     settings: Any,
+    redis_client: Any = None,
 ) -> AIConversationService:
     """创建 AI 对话服务实例。
 
     Args:
         db: 数据库会话
         settings: 应用配置
+        redis_client: Redis 客户端（可选）
 
     Returns:
         AIConversationService 实例
@@ -79,6 +86,7 @@ def _create_conversation_service(
         zhipu_api_key=settings.zhipu_api_key,
         daily_limit=settings.ai_daily_limit,
         daily_limit_vip=settings.ai_daily_limit_vip,
+        redis_client=redis_client,
     )
 
 
@@ -125,12 +133,13 @@ async def chat(
     _validate_personality(body.personality)
 
     # 获取数据库会话和服务
-    session_factory = _get_db(request)
+    session_factory = _get_db_session(request)
     settings = _get_settings(request)
+    redis_client = _get_redis(request)
 
     async with session_factory() as db:
         try:
-            service = _create_conversation_service(db, settings)
+            service = _create_conversation_service(db, settings, redis_client)
             result = await service.chat(
                 user_id=user.id,
                 message=body.message,
@@ -172,14 +181,15 @@ async def chat_stream(
     _validate_personality(body.personality)
 
     # 获取数据库会话和服务
-    session_factory = _get_db(request)
+    session_factory = _get_db_session(request)
     settings = _get_settings(request)
+    redis_client = _get_redis(request)
 
     async def event_generator():
         """SSE 事件生成器。"""
         async with session_factory() as db:
             try:
-                service = _create_conversation_service(db, settings)
+                service = _create_conversation_service(db, settings, redis_client)
                 async for chunk in service.chat_stream(
                     user_id=user.id,
                     message=body.message,
@@ -231,12 +241,13 @@ async def get_conversations(
     """
     request_id = getattr(request.state, "request_id", "")
 
-    session_factory = _get_db(request)
+    session_factory = _get_db_session(request)
     settings = _get_settings(request)
+    redis_client = _get_redis(request)
 
     async with session_factory() as db:
         try:
-            service = _create_conversation_service(db, settings)
+            service = _create_conversation_service(db, settings, redis_client)
             result = await service.get_conversations(
                 user_id=user.id,
                 page=page,
@@ -282,12 +293,13 @@ async def get_greeting(
     if body.personality:
         _validate_personality(body.personality)
 
-    session_factory = _get_db(request)
+    session_factory = _get_db_session(request)
     settings = _get_settings(request)
+    redis_client = _get_redis(request)
 
     async with session_factory() as db:
         try:
-            service = _create_conversation_service(db, settings)
+            service = _create_conversation_service(db, settings, redis_client)
             result = await service.get_greeting(
                 user_id=user.id,
                 personality=body.personality,

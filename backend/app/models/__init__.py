@@ -34,6 +34,12 @@ from .admin import Admin, AdminLog
 # 举报模块
 from .report import Report
 
+# 情绪周报模块
+from .weekly_report import WeeklyReport
+
+# 节日模块
+from .holiday import Holiday, UserHoliday
+
 __all__ = [
     # 基类
     "Base",
@@ -68,4 +74,9 @@ __all__ = [
     "AdminLog",
     # 举报
     "Report",
+    # 情绪周报
+    "WeeklyReport",
+    # 节日
+    "Holiday",
+    "UserHoliday",
 ]

@@ -33,11 +33,19 @@ def _load_or_generate_key() -> bytes:
 
     优先级：
     1. 环境变量 CRYPTO_KEY（Base64 编码的 32 字节密钥）
-    2. 自动生成临时密钥（仅开发环境使用，每次重启会变化）
+    2. 自动生成临时密钥（仅开发/测试环境使用，每次重启会变化）
+
+    生产环境强制要求配置 CRYPTO_KEY，否则启动时抛出异常。
+    这是为了防止重启后无法解密已有数据，同时避免攻击者通过临时密钥解密窃取的数据。
 
     Returns:
         32 字节 AES-256 密钥
+
+    Raises:
+        RuntimeError: 生产环境未配置 CRYPTO_KEY 时抛出
     """
+    from app.core.config import _environment_name
+
     env_value = os.getenv(_CRYPTO_KEY_ENV)
     if env_value:
         try:
@@ -49,11 +57,21 @@ def _load_or_generate_key() -> bytes:
             logger.error("CRYPTO_KEY 环境变量解析失败: %s", exc)
             raise
 
-    # 自动生成临时密钥（仅用于开发环境）
+    # 检查是否为生产环境
+    env = _environment_name()
+    if env == "production":
+        raise RuntimeError(
+            "生产环境必须配置 CRYPTO_KEY 环境变量！"
+            "请生成一个 32 字节的随机密钥，使用 Base64 编码后配置到环境变量中。"
+            "示例（Python）: import os; import base64; print(base64.b64encode(os.urandom(32)).decode())"
+        )
+
+    # 自动生成临时密钥（仅用于开发/测试环境）
     key = AESGCM.generate_key(bit_length=256)
     logger.warning(
         "未配置 CRYPTO_KEY 环境变量，已自动生成临时密钥。"
-        "生产环境务必配置，否则重启后无法解密已有数据！"
+        "此密钥仅用于开发/测试环境，重启后无法解密已有数据。"
+        "生产环境务必配置，否则将导致数据永久丢失！"
     )
     return key
 
@@ -140,3 +158,84 @@ def phone_hash(plaintext: str) -> str:
     salt = os.getenv(_HASH_SALT_ENV, _DEFAULT_SALT)
     data = f"{salt}:{plaintext}".encode("utf-8")
     return hashlib.sha256(data).hexdigest()
+
+
+# ---------------------------------------------------------------------------
+# 通用数据加密 / 解密
+# ---------------------------------------------------------------------------
+
+
+def encrypt_data(plaintext: str, key: str | None = None) -> str:
+    """使用 AES-256-GCM 加密任意字符串数据。
+
+    用于加密敏感数据如匿名身份映射关系。
+
+    Args:
+        plaintext: 明文数据
+        key: 加密密钥（可选，默认使用全局密钥）
+
+    Returns:
+        Base64 编码的密文（含 nonce）
+    """
+    aes_key = _get_key() if key is None else _derive_key(key)
+    aesgcm = AESGCM(aes_key)
+    nonce = os.urandom(12)
+    ciphertext = aesgcm.encrypt(nonce, plaintext.encode("utf-8"), None)
+    payload = nonce + ciphertext
+    return base64.b64encode(payload).decode("ascii")
+
+
+def decrypt_data(ciphertext_b64: str, key: str | None = None) -> str:
+    """使用 AES-256-GCM 解密数据。
+
+    Args:
+        ciphertext_b64: Base64 编码的密文（含 nonce）
+        key: 解密密钥（可选，默认使用全局密钥）
+
+    Returns:
+        明文数据
+
+    Raises:
+        ValueError: 解密失败时抛出
+    """
+    aes_key = _get_key() if key is None else _derive_key(key)
+    aesgcm = AESGCM(aes_key)
+    try:
+        payload = base64.b64decode(ciphertext_b64)
+        nonce = payload[:12]
+        ciphertext = payload[12:]
+        plaintext = aesgcm.decrypt(nonce, ciphertext, None)
+        return plaintext.decode("utf-8")
+    except Exception as exc:
+        logger.error("数据解密失败: %s", exc)
+        raise ValueError("数据解密失败") from exc
+
+
+def _derive_key(key: str) -> bytes:
+    """从字符串密钥派生 32 字节 AES 密钥。
+
+    Args:
+        key: 字符串密钥
+
+    Returns:
+        32 字节密钥
+    """
+    # 使用 SHA-256 派生固定长度密钥
+    return hashlib.sha256(key.encode("utf-8")).digest()
+
+
+# ---------------------------------------------------------------------------
+# 内容哈希
+# ---------------------------------------------------------------------------
+
+
+def compute_content_hash(content: str) -> str:
+    """计算内容哈希值，用于完整性校验。
+
+    Args:
+        content: 内容字符串
+
+    Returns:
+        SHA-256 哈希值
+    """
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()

@@ -16,6 +16,7 @@ from app.routers import register_routers
 from app.services.auth_service import AuthService
 from app.services.providers import build_provider_registry
 from app.services.scheduler import SchedulerManager
+from app.services.admin.admin_service import AdminAuthService
 
 logger = logging.getLogger("echo.app")
 
@@ -60,6 +61,12 @@ def create_app(settings: AppSettings | None = None) -> FastAPI:
             redis=redis_client,
         )
 
+        # 初始化管理员认证服务（独立 secret/issuer）
+        app.state.admin_auth_service = AdminAuthService(
+            settings=resolved_settings,
+            redis=redis_client,
+        )
+
         # 初始化数据库会话工厂
         engine = create_async_engine(
             resolved_settings.database_url,
@@ -72,6 +79,14 @@ def create_app(settings: AppSettings | None = None) -> FastAPI:
         app.state.async_session_factory = session_factory
         app.state.db_session = session_factory
         app.state.db_engine = engine
+
+        # 配置定时任务
+        scheduler_manager: SchedulerManager = app.state.scheduler
+        scheduler_manager.add_weekly_report_job(
+            settings=resolved_settings,
+            db_session_factory=session_factory,
+            redis_client=redis_client,
+        )
 
         try:
             app.state.scheduler.start()
@@ -141,6 +156,8 @@ class MockRedis:
     def __init__(self) -> None:
         self._data: dict[str, tuple[str, int | None]] = {}  # key -> (value, expire_at_timestamp or None)
         self._counter: dict[str, int] = {}
+        self._lists: dict[str, list[str]] = {}  # List 数据结构
+        self._list_expires: dict[str, int | None] = {}  # List TTL 管理
         import time
         self._time = time.time
 
@@ -154,6 +171,17 @@ class MockRedis:
             return True
         return False
 
+    def _is_list_expired(self, key: str) -> bool:
+        """检查 List key 是否已过期。"""
+        if key not in self._lists:
+            return True
+        expire_at = self._list_expires.get(key)
+        if expire_at is not None and self._time() > expire_at:
+            del self._lists[key]
+            del self._list_expires[key]
+            return True
+        return False
+
     async def get(self, key: str) -> str | None:
         if self._is_expired(key):
             return None
@@ -163,9 +191,20 @@ class MockRedis:
         expire_at = self._time() + ttl
         self._data[key] = (value, expire_at)
 
-    async def delete(self, key: str) -> None:
-        self._data.pop(key, None)
-        self._counter.pop(key, None)
+    async def delete(self, key: str) -> int:
+        """删除 key，返回被删除的数量。"""
+        count = 0
+        if key in self._data:
+            del self._data[key]
+            count += 1
+        if key in self._counter:
+            del self._counter[key]
+        if key in self._lists:
+            del self._lists[key]
+            count += 1
+        if key in self._list_expires:
+            del self._list_expires[key]
+        return count
 
     async def incr(self, key: str) -> int:
         self._is_expired(key)
@@ -174,22 +213,92 @@ class MockRedis:
         return val
 
     async def expire(self, key: str, ttl: int) -> None:
+        """设置 key 的过期时间。"""
+        expire_at = self._time() + ttl
+        # 处理 string 类型
+        if key in self._data:
+            value, _ = self._data[key]
+            self._data[key] = (value, expire_at)
+        # 处理 counter 类型（可能在 _data 或 _counter 中）
         if key in self._counter:
-            expire_at = self._time() + ttl
             self._data[key] = (str(self._counter[key]), expire_at)
+        # 处理 list 类型
+        if key in self._lists:
+            self._list_expires[key] = expire_at
 
     async def ttl(self, key: str) -> int:
-        if self._is_expired(key):
+        if self._is_expired(key) and self._is_list_expired(key):
             return -2
         _, expire_at = self._data.get(key, (None, None))
         if expire_at is None:
-            return -1
+            # 检查 List TTL
+            list_expire = self._list_expires.get(key)
+            if list_expire is None:
+                return -1
+            remaining = int(list_expire - self._time())
+            return max(0, remaining)
         remaining = int(expire_at - self._time())
         return max(0, remaining)
 
     async def exists(self, key: str) -> int:
-        return 0 if self._is_expired(key) else 1
+        """检查 key 是否存在。"""
+        # 检查 string 类型
+        if key in self._data and not self._is_expired(key):
+            return 1
+        # 检查 counter 类型
+        if key in self._counter:
+            return 1
+        # 检查 list 类型
+        if key in self._lists and not self._is_list_expired(key):
+            return 1
+        return 0
+
+    # List 操作
+    async def rpush(self, key: str, value: str) -> int:
+        """向列表尾部添加元素。"""
+        self._is_list_expired(key)
+        if key not in self._lists:
+            self._lists[key] = []
+        self._lists[key].append(value)
+        return len(self._lists[key])
+
+    async def ltrim(self, key: str, start: int, stop: int) -> None:
+        """裁剪列表，保留指定范围内的元素。"""
+        self._is_list_expired(key)
+        if key in self._lists:
+            # 处理负索引
+            lst = self._lists[key]
+            length = len(lst)
+
+            # 转换负索引为正索引
+            if start < 0:
+                start = max(0, length + start)
+            if stop < 0:
+                stop = length + stop
+
+            # Redis 的 stop 是包含的
+            self._lists[key] = lst[start:stop + 1]
+
+    async def lrange(self, key: str, start: int, stop: int) -> list[str]:
+        """获取列表指定范围内的元素。"""
+        self._is_list_expired(key)
+        if key not in self._lists:
+            return []
+
+        lst = self._lists[key]
+        length = len(lst)
+
+        # 转换负索引
+        if start < 0:
+            start = max(0, length + start)
+        if stop < 0:
+            stop = length + stop
+
+        # Redis 的 stop 是包含的
+        return lst[start:stop + 1]
 
     async def close(self) -> None:
         self._data.clear()
         self._counter.clear()
+        self._lists.clear()
+        self._list_expires.clear()

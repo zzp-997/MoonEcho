@@ -19,6 +19,7 @@ from app.services.content_audit import (
     ContentAuditProtocol,
     LocalContentAudit,
     PassAudit,
+    TreeholeContentAudit,
     create_content_audit_service,
 )
 from app.services.crypto import decrypt_phone, encrypt_phone, phone_hash
@@ -47,6 +48,33 @@ from app.services.storage import (
     StorageProtocol,
     create_storage_service,
 )
+from app.services.notification_service import NotificationService
+from app.services.weekly_report_service import WeeklyReportService
+from app.services.care_service import CareService
+from app.services.care_triggers import (
+    CareEventType,
+    CareTriggerService,
+    create_care_trigger_service,
+)
+from app.services.treehole_care import (
+    TreeholeCareService,
+    create_treehole_care_service,
+)
+from app.services.harassment_detector import (
+    HarassmentDetector,
+    HarassmentDetectionResult,
+    HarassmentLevel,
+    HarassmentRuleType,
+    HarassmentThresholds,
+    create_harassment_detector,
+)
+from app.services.identity_detector import (
+    IdentityDetector,
+    IdentityDetectionResult,
+    IdentityInfoType,
+    create_identity_detector,
+)
+from app.services.scheduler import SchedulerManager, create_scheduler_manager
 
 __all__ = [
     # SMS 短信服务
@@ -65,6 +93,7 @@ __all__ = [
     "ContentAuditProtocol",
     "PassAudit",
     "LocalContentAudit",
+    "TreeholeContentAudit",
     "AliyunContentAudit",
     "create_content_audit_service",
     # 文件存储服务
@@ -90,4 +119,32 @@ __all__ = [
     "ImageServiceProtocol",
     "PillowImageService",
     "create_image_service",
+    # 周报服务
+    "WeeklyReportService",
+    # 通知服务
+    "NotificationService",
+    # 关怀服务
+    "CareService",
+    # 事件驱动关怀触发
+    "CareEventType",
+    "CareTriggerService",
+    "create_care_trigger_service",
+    # 树洞联动关怀
+    "TreeholeCareService",
+    "create_treehole_care_service",
+    # 骚扰规则引擎
+    "HarassmentDetector",
+    "HarassmentDetectionResult",
+    "HarassmentLevel",
+    "HarassmentRuleType",
+    "HarassmentThresholds",
+    "create_harassment_detector",
+    # 脱敏提醒服务
+    "IdentityDetector",
+    "IdentityDetectionResult",
+    "IdentityInfoType",
+    "create_identity_detector",
+    # 调度器
+    "SchedulerManager",
+    "create_scheduler_manager",
 ]

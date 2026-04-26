@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import Any
-
 from sqlalchemy import (
     Boolean,
     CHAR,
@@ -37,7 +35,7 @@ class EmotionDiary(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     emotion_tone: Mapped[str | None] = mapped_column(
         String(30), comment="情绪基调：happy/sad/anxious/angry/calm 等",
     )
-    emotion_labels: Mapped[dict[str, Any] | None] = mapped_column(
+    emotion_labels: Mapped[list[str] | None] = mapped_column(
         comment="情绪标签列表（JSON），如 ['焦虑', '疲惫']",
     )
     content_text: Mapped[str | None] = mapped_column(

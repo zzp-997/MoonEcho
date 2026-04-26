@@ -31,15 +31,21 @@ class User(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     存储用户核心信息，包括认证字段、画像属性和社交能量值。
     手机号通过 phone_hash 建立唯一索引，支持按哈希快速查找。
+
+    安全设计：
+    - phone 字段存储 AES-256-GCM 加密后的手机号，每次加密结果不同
+    - phone 字段不再有唯一约束（密文不可比较）
+    - phone_hash 字段存储 HMAC-SHA256 哈希值，用于唯一性校验
+    - phone 字段长度扩大到 200 字节以容纳加密后的密文
     """
 
     __tablename__ = "users"
 
     phone: Mapped[str] = mapped_column(
-        String(20), unique=True, nullable=False, comment="手机号",
+        String(200), nullable=False, comment="手机号（AES-256-GCM 加密）",
     )
     phone_hash: Mapped[str] = mapped_column(
-        String(64), unique=True, nullable=False, comment="手机号哈希",
+        String(64), unique=True, nullable=False, comment="手机号哈希（用于唯一索引）",
     )
     nickname: Mapped[str | None] = mapped_column(
         String(50), comment="昵称",
@@ -61,6 +67,18 @@ class User(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     )
     is_minor: Mapped[bool] = mapped_column(
         Boolean, default=False, server_default="0", comment="是否未成年人",
+    )
+    guardian_phone: Mapped[str | None] = mapped_column(
+        String(20), comment="监护人手机号",
+    )
+    is_banned: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default="0", comment="是否被封禁",
+    )
+    ban_reason: Mapped[str | None] = mapped_column(
+        String(500), comment="封禁原因",
+    )
+    ban_until: Mapped[datetime | None] = mapped_column(
+        DateTime, comment="封禁结束时间（null表示永久封禁）",
     )
     social_energy: Mapped[Decimal | None] = mapped_column(
         DECIMAL(5, 2), default=None, comment="社交能量值 0.00~100.00",
@@ -106,12 +124,20 @@ class User(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     notifications: Mapped[list["Notification"]] = relationship(
         back_populates="user", cascade="all, delete-orphan", lazy="noload",
     )
+    weekly_reports: Mapped[list["WeeklyReport"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan", lazy="noload",
+    )
+    user_holidays: Mapped[list["UserHoliday"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan", lazy="noload",
+    )
 
     __table_args__ = (
         Index("idx_users_phone_hash", "phone_hash"),
         Index("idx_users_created", "created_at"),
         Index("idx_users_last_active", "last_active_at"),
         Index("idx_users_is_active", "is_active"),
+        Index("idx_users_is_banned", "is_banned"),
+        Index("idx_users_is_minor", "is_minor"),
     )
 
 

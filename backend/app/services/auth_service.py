@@ -96,13 +96,30 @@ class AuthService:
 
     @staticmethod
     def _load_jwt_secret() -> str:
-        """从环境变量加载 JWT 密钥。"""
+        """从环境变量加载 JWT 密钥。
+
+        生产环境强制要求配置 JWT_SECRET_KEY，否则启动时抛出异常。
+        这是为了防止攻击者使用已知的默认密钥伪造 JWT Token。
+
+        Raises:
+            RuntimeError: 生产环境未配置 JWT_SECRET_KEY 时抛出
+        """
         import os
+
+        from app.core.config import _environment_name
+
         secret = os.getenv("JWT_SECRET_KEY")
         if not secret:
+            env = _environment_name()
+            if env == "production":
+                # 生产环境强制要求配置 JWT 密钥
+                raise RuntimeError(
+                    "生产环境必须配置 JWT_SECRET_KEY 环境变量！"
+                    "请生成一个高强度的随机密钥（建议 32 字节以上）并配置到环境变量中。"
+                )
             logger.warning(
                 "未配置 JWT_SECRET_KEY 环境变量，使用默认密钥。"
-                "生产环境务必配置！"
+                "此密钥仅用于开发/测试环境，生产环境务必配置独立密钥！"
             )
             secret = "echo-jwt-secret-key-dev-only-2024"
         return secret

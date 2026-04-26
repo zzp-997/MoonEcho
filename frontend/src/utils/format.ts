@@ -46,3 +46,63 @@ export function formatDuration(seconds: number): string {
   if (remainingMinutes === 0) return `${hours}小时`
   return `${hours}小时${remainingMinutes}分钟`
 }
+
+/**
+ * 格式化相对时间
+ * 将 ISO 时间字符串转换为相对时间描述
+ * @param time ISO 格式时间字符串
+ * @returns 相对时间描述（刚刚、几分钟前、几小时前、昨天、几天前、具体日期）
+ */
+export function formatRelativeTime(time: string | Date): string {
+  if (!time) return ''
+
+  // 解析时间
+  const date = typeof time === 'string' ? new Date(time) : time
+  const now = new Date()
+
+  // 计算时间差（毫秒）
+  const diff = now.getTime() - date.getTime()
+
+  // 1分钟内
+  if (diff < 60 * 1000) {
+    return '刚刚'
+  }
+
+  // 1小时内
+  if (diff < 60 * 60 * 1000) {
+    const minutes = Math.floor(diff / (60 * 1000))
+    return `${minutes}分钟前`
+  }
+
+  // 今天内
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  if (date >= todayStart) {
+    const hours = Math.floor(diff / (60 * 60 * 1000))
+    return `${hours}小时前`
+  }
+
+  // 昨天
+  const yesterdayStart = new Date(todayStart.getTime() - 24 * 60 * 60 * 1000)
+  if (date >= yesterdayStart) {
+    return '昨天'
+  }
+
+  // 7天内
+  if (diff < 7 * 24 * 60 * 60 * 1000) {
+    const days = Math.floor(diff / (24 * 60 * 60 * 1000))
+    return `${days}天前`
+  }
+
+  // 今年内
+  if (date.getFullYear() === now.getFullYear()) {
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${month}-${day}`
+  }
+
+  // 更早
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
