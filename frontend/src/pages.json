@@ -52,48 +52,6 @@
       }
     },
     {
-      "path": "pages/add/index",
-      "style": {
-        "navigationBarTitleText": "快捷入口",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/community/index",
-      "style": {
-        "navigationBarTitleText": "动态",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/treehole/index",
-      "style": {
-        "navigationBarTitleText": "树洞",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/treehole/detail",
-      "style": {
-        "navigationBarTitleText": "详情",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/treehole/publish",
-      "style": {
-        "navigationBarTitleText": "发布",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/square/index",
-      "style": {
-        "navigationBarTitleText": "广场",
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/mine/index",
       "style": {
         "navigationBarTitleText": "我的",
@@ -167,6 +125,70 @@
       }
     }
   ],
+  "subPackages": [
+    {
+      "root": "pagesSocial",
+      "name": "social",
+      "pages": [
+        {
+          "path": "add/index",
+          "style": {
+            "navigationBarTitleText": "快捷入口",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "community/index",
+          "style": {
+            "navigationBarTitleText": "动态",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "square/index",
+          "style": {
+            "navigationBarTitleText": "广场",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "treehole/index",
+          "style": {
+            "navigationBarTitleText": "树洞",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "treehole/detail",
+          "style": {
+            "navigationBarTitleText": "详情",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "treehole/publish",
+          "style": {
+            "navigationBarTitleText": "发布",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "square/publish",
+          "style": {
+            "navigationBarTitleText": "发布动态",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "square/detail",
+          "style": {
+            "navigationBarTitleText": "动态详情",
+            "navigationStyle": "custom"
+          }
+        }
+      ]
+    }
+  ],
   "globalStyle": {
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "回声",
@@ -209,7 +231,7 @@
         "selectedIconPath": "static/images/icons/tab-diary-active.png"
       },
       {
-        "pagePath": "pages/community/index",
+        "pagePath": "pagesSocial/community/index",
         "text": "动态",
         "iconPath": "static/images/icons/tab-community.png",
         "selectedIconPath": "static/images/icons/tab-community-active.png"

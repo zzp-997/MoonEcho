@@ -106,6 +106,10 @@ class User(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     posts: Mapped[list["Post"]] = relationship(
         back_populates="user", cascade="all, delete-orphan", lazy="noload",
     )
+    square_posts: Mapped[list["Post"]] = relationship(
+        back_populates="anon_identity", cascade="all, delete-orphan", lazy="noload",
+        foreign_keys="Post.anon_identity_id",
+    )
     initiated_friendships: Mapped[list["Friendship"]] = relationship(
         back_populates="initiator",
         foreign_keys="Friendship.initiator_id",
@@ -206,6 +210,9 @@ class AnonymousIdentity(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
         back_populates="anonymous_identity", cascade="all, delete-orphan", uselist=False,
     )
     treehole_posts: Mapped[list["TreeholePost"]] = relationship(
+        back_populates="anon_identity", lazy="noload",
+    )
+    square_posts: Mapped[list["Post"]] = relationship(
         back_populates="anon_identity", lazy="noload",
     )
 

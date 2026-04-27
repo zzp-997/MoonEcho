@@ -15,10 +15,12 @@ from fastapi.routing import APIRouter
 from app.routers.auth import router as auth_router
 from app.routers.system import router as system_router
 from app.routers.ai import router as ai_router
+from app.routers.ai_polish import router as ai_polish_router
 from app.routers.diaries import router as diaries_router
 from app.routers.notifications import router as notifications_router
 from app.routers.reports import router as reports_router
 from app.routers.treehole import router as treehole_router
+from app.routers.posts import router as posts_router
 from app.routers.admin.auth import router as admin_auth_router
 from app.routers.admin.users import router as admin_users_router
 from app.routers.admin.reports import router as admin_reports_router
@@ -32,10 +34,12 @@ ROUTER_REGISTRY: list[tuple[APIRouter, str, list[str]]] = [
     (system_router, "", ["system"]),
     (auth_router, "", ["auth"]),
     (ai_router, "", ["ai"]),
+    (ai_polish_router, "", ["ai-polish"]),
     (diaries_router, "", ["diaries"]),
     (notifications_router, "", ["notifications"]),
     (reports_router, "", ["reports"]),
     (treehole_router, "", ["treehole"]),
+    (posts_router, "", ["posts"]),
     (admin_auth_router, "", ["admin-auth"]),
     (admin_users_router, "", ["admin-users"]),
     (admin_reports_router, "", ["admin-reports"]),

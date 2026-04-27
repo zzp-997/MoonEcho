@@ -1530,7 +1530,7 @@ POST /api/v1/treehole/posts/:id/appeal
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Frontend Developer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T001, T008, T017-A |
 | 参考文档 | PRD 1.2 多端输出策略 |
 
@@ -1557,14 +1557,18 @@ POST /api/v1/treehole/posts/:id/appeal
   - 禁止诱导分享（不强制用户分享才能使用功能）
 
 **产出物**：
-- `frontend/src/pages.json` — 分包配置
-- `frontend/src/composables/useAIStream.ts` — 流式输出跨端封装
-- `frontend/src/platform/miniprogram/` — 小程序平台适配代码
-- `frontend/src/platform/mp-storage.ts` — 小程序存储适配
+- `frontend/src/pages.json` ✅ — 分包配置（主包 + social 分包）
+- `frontend/src/composables/useAIStream.ts` ✅ — 流式输出跨端封装（H5/App/小程序三端适配）
+- `frontend/src/platform/miniprogram/push.ts` ✅ — 推送降级模块
+- `frontend/src/platform/miniprogram/privacy.ts` ✅ — 审核要点适配
+- `frontend/src/platform/miniprogram/index.ts` ✅ — 小程序模块统一导出
+- `frontend/src/platform/mp-storage.ts` ✅ — 小程序存储适配
+- `frontend/src/platform/index.ts` ✅ — 平台适配统一导出
+- `frontend/src/pagesSocial/` ✅ — 分包页面目录（树洞/广场/快捷入口）
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成，可继续 T019-A（动态广场 API）
+**未决问题**：无
 
 ---
 
@@ -1576,7 +1580,7 @@ POST /api/v1/treehole/posts/:id/appeal
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T005 |
 | 参考文档 | modules_design.md 5.1-5.4 |
 
@@ -1589,17 +1593,29 @@ POST /api/v1/treehole/posts/:id/appeal
 
 **API 端点**：
 ```
-GET  /api/v1/posts
-POST /api/v1/posts
+GET    /api/v1/posts              # 获取动态列表
+POST   /api/v1/posts              # 发布动态
+GET    /api/v1/posts/:id          # 获取单条动态详情
+PUT    /api/v1/posts/:id          # 修改动态
+DELETE /api/v1/posts/:id          # 删除动态
+POST   /api/v1/posts/:id/like     # 共鸣
+DELETE /api/v1/posts/:id/like     # 取消共鸣
+POST   /api/v1/posts/:id/comments # 发表评论
+GET    /api/v1/posts/:id/comments # 获取评论列表
+POST   /api/v1/posts/:id/favorite # 收藏
+DELETE /api/v1/posts/:id/favorite # 取消收藏
+POST   /api/v1/posts/:id/follow   # 悄悄关注
 ```
 
 **产出物**：
-- `backend/routers/posts.py`
-- `backend/services/post_service.py`
+- `backend/app/routers/posts.py` ✅ — 动态路由（12个API端点）
+- `backend/app/services/post_service.py` ✅ — 动态服务（含排序算法）
+- `backend/app/schemas/post.py` ✅ — 动态 Schema
+- `backend/app/models/post.py` ✅ — 完善模型（Post/PostComment/PostLike/PostFavorite/PostFollow）
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成，可继续 T019-B（AI 文案润色 API）
+**未决问题**：无
 
 ---
 
@@ -1609,33 +1625,35 @@ POST /api/v1/posts
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Backend Architect + AI Engineer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T019-A, T007-B |
 | 参考文档 | modules_design.md 5.3, 5.5 |
 
 **任务描述**：
-- 共鸣 API（广场场景显示"共鸣"）
-- 评论 API（支持回复评论）
-- 收藏 API
-- 悄悄关注 API（对方不收到通知）
-- AI 文案润色 API（2-3 个版本，保留原意，字数不超过 1.5 倍）
-- [+] 按钮分流设计（吐槽/动态/日记统一入口）
+- 共鸣 API（广场场景显示"共鸣"）— 已在 T019-A 实现
+- 评论 API（支持回复评论）— 已在 T019-A 实现
+- 收藏 API — 已在 T019-A 实现
+- 悄悄关注 API（对方不收到通知）— 已在 T019-A 实现
+- AI 文案润色 API（2 个版本，保留原意，字数不超过 1.5 倍）— 本次实现
+- [+] 按钮分流设计（吐槽/动态/日记统一入口）— 前端实现
 
 **API 端点**：
 ```
-POST /api/v1/posts/:id/like
-POST /api/v1/posts/:id/comments
-POST /api/v1/ai/polish
-POST /api/v1/posts/:id/follow  # 悄悄关注
+POST /api/v1/posts/:id/like     # 共鸣（T019-A）
+POST /api/v1/posts/:id/comments # 评论（T019-A）
+POST /api/v1/ai/polish          # AI 文案润色（本次新增）
+POST /api/v1/posts/:id/follow   # 悄悄关注（T019-A）
 ```
 
 **产出物**：
-- `backend/services/post_interaction.py`
-- `backend/services/ai_polish.py`
+- `backend/app/services/ai_polish.py` ✅ — AI 润色服务（GLM-4-Flash + 3风格Prompt）
+- `backend/app/routers/ai_polish.py` ✅ — 润色 API 路由
+- `backend/app/schemas/ai_polish.py` ✅ — 润色 Schema
+- `backend/app/routers/__init__.py` ✅ — 路由注册更新
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成，可继续 T021-A（好友申请流程）
+**未决问题**：无
 
 ---
 
@@ -1645,7 +1663,7 @@ POST /api/v1/posts/:id/follow  # 悄悄关注
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Frontend Developer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T001, T019-A |
 | 参考文档 | ui_design.md, modules_design.md 5.0-5.5 |
 
@@ -1659,12 +1677,19 @@ POST /api/v1/posts/:id/follow  # 悄悄关注
 - 好友申请入口（头像/昵称 → 个人主页 → 加好友）
 
 **产出物**：
-- `frontend/src/pages/square/` — 广场页面
-- `frontend/src/components/square/ActionSheet.vue`
+- `frontend/src/pagesSocial/square/index.vue` ✅ — 动态信息流页
+- `frontend/src/pagesSocial/square/publish.vue` ✅ — 动态发布页
+- `frontend/src/pagesSocial/square/detail.vue` ✅ — 动态详情页
+- `frontend/src/components/square/PostCard.vue` ✅ — 动态卡片组件
+- `frontend/src/components/square/AIPolishCard.vue` ✅ — AI 润色卡片组件
+- `frontend/src/components/square/ActionSheet.vue` ✅ — 底部分流组件
+- `frontend/src/api/modules/post.ts` ✅ — 动态 API 封装
+- `frontend/src/pages.json` ✅ — 路由配置更新
+- `frontend/src/utils/tracking.ts` ✅ — 埋点事件更新
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成，可继续 T021-A（好友申请流程）
+**未决问题**：无
 
 ---
 
@@ -2348,10 +2373,14 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 | 2026-04-26 | T016 | Frontend Developer | ✅ 完成 | 首页 + 路由守卫 + 青少年模式拦截 |
 | 2026-04-26 | T017-A | Backend Architect | ✅ 完成 | 树洞核心 API（匿名身份、温度排序） |
 | 2026-04-26 | T017-B | Backend Architect | ✅ 完成 | 树洞互动 + 内容审核 + 脱敏提醒 + 骚扰检测 |
-| 2026-04-26 | T018 | Frontend Developer | ✅ 完成 | 前端树洞页（信息流/详情/发布） |
+| 2026-04-26 | T018 | Frontend Developer | ��� 完成 | 前端树洞页（信息流/详情/发布） |
+| 2026-04-27 | T017-D | Frontend Developer | ✅ 完成 | 微信小程序适配（分包+SSE降级+存储+推送+审核） |
+| 2026-04-27 | T019-A | Backend Architect | ✅ 完成 | 动态广场 API（12端点+排序算法+匿名身份） |
+| 2026-04-27 | T019-B | AI Engineer | ✅ 完成 | AI 文案润色 API（GLM-4-Flash + 3风格） |
+| 2026-04-27 | T020 | Frontend Developer | ✅ 完成 | 动态广场前端（信息流/发布/详情+AI润色卡片） |
 | 2026-04-26 | CP1 | Software Architect | ✅ 通过 | 架构评分 B+，发现 4 个严重问题 |
 | 2026-04-26 | CP2 | Code Reviewer | ✅ 通过 | 发现 13 个安全问题，已修复 P0 |
-| 2026-04-26 | P0修复 | Security Engineer | ✅ 完成 | JWT/加密/IP/Mock短信安全问题 |
+| 2026-04-26 | P0修复 | Security Engineer | ✅ 完成 | JWT/加密/IP/Mock��信安全问题 |
 
 ### 阶段三
 

@@ -151,6 +151,32 @@ export const EventName = {
   SQUARE_PUBLISH: 'square_publish',
   /** 查看广场 */
   SQUARE_LIST_VIEW: 'square_list_view',
+  /** 查看动态详情 */
+  SQUARE_POST_VIEW: 'square_post_view',
+  /** 创建共鸣 */
+  SQUARE_RESONANCE: 'square_resonance',
+  /** 查看评论区 */
+  SQUARE_COMMENT_VIEW: 'square_comment_view',
+  /** 创建评论 */
+  SQUARE_COMMENT_CREATE: 'square_comment_create',
+  /** 开始发布动态 */
+  SQUARE_CREATE_START: 'square_create_start',
+  /** 发布动态成功 */
+  SQUARE_CREATE_SUCCESS: 'square_create_success',
+  /** 发布动态被拦截 */
+  SQUARE_CREATE_BLOCKED: 'square_create_blocked',
+  /** 收藏动态 */
+  SQUARE_BOOKMARK: 'square_bookmark',
+  /** 悄悄关注 */
+  SQUARE_WHISPER_FOLLOW: 'square_whisper_follow',
+  /** 匿名切换 */
+  SQUARE_ANONYMOUS_TOGGLE: 'square_anonymous_toggle',
+  /** 上传图片 */
+  SQUARE_IMAGE_UPLOAD: 'square_image_upload',
+  /** 排序方式变更 */
+  SQUARE_SORT_CHANGE: 'square_sort_change',
+  /** 删除动态 */
+  SQUARE_DELETE: 'square_delete',
 
   // ========== NPS相关（验证门控：NPS）==========
   /** 显示NPS问卷 */

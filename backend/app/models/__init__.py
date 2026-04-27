@@ -17,7 +17,7 @@ from .diary import EmotionDiary
 from .treehole import TreeholePost, TreeholeComment
 
 # 动态广场模块
-from .post import Post
+from .post import Post, PostComment, PostLike, PostFavorite, PostFollow
 
 # 聊天模块
 from .chat import Friendship, Conversation, ChatMessage
@@ -58,6 +58,10 @@ __all__ = [
     "TreeholeComment",
     # 动态广场
     "Post",
+    "PostComment",
+    "PostLike",
+    "PostFavorite",
+    "PostFollow",
     # 聊天
     "Friendship",
     "Conversation",
