@@ -136,13 +136,13 @@ function statusText(status: ContentStatus): string {
   return map[status] || status
 }
 
-function statusType(status: ContentStatus): string {
-  const map: Record<ContentStatus, string> = {
+function statusType(status: ContentStatus): 'success' | 'warning' | 'info' {
+  const map: Record<ContentStatus, 'success' | 'warning' | 'info'> = {
     active: 'success',
     hidden: 'warning',
     deleted: 'info',
   }
-  return map[status] || ''
+  return map[status] || 'info'
 }
 
 function formatDate(date: string): string {

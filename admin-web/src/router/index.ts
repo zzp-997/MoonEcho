@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
         path: 'dashboard',
         name: 'Dashboard',
         component: () => import('@/views/Dashboard.vue'),
-        meta: { title: '工作台', icon: 'HomeFilled' },
+        meta: { title: '数据看板', icon: 'DataBoard' },
       },
       {
         path: 'reports',
@@ -68,6 +68,50 @@ const routes: RouteRecordRaw[] = [
         name: 'UserDetail',
         component: () => import('@/views/users/UserDetail.vue'),
         meta: { title: '用户详情', hidden: true, permission: 'user:view' },
+      },
+      // 管理员管理
+      {
+        path: 'admins',
+        name: 'Admins',
+        component: () => import('@/views/admin/AdminList.vue'),
+        meta: { title: '管理员管理', icon: 'UserFilled', permission: 'admin:view' },
+      },
+      {
+        path: 'admins/:id',
+        name: 'AdminDetail',
+        component: () => import('@/views/admin/AdminDetail.vue'),
+        meta: { title: '管理员详情', hidden: true, permission: 'admin:view' },
+      },
+      {
+        path: 'admins/roles',
+        name: 'Roles',
+        component: () => import('@/views/admin/RoleList.vue'),
+        meta: { title: '角色管理', hidden: true, permission: 'admin:view' },
+      },
+      {
+        path: 'admins/logs',
+        name: 'AdminLogs',
+        component: () => import('@/views/admin/AdminLogs.vue'),
+        meta: { title: '操作日志', hidden: true, permission: 'admin:view' },
+      },
+      // 推送管理
+      {
+        path: 'push',
+        name: 'Push',
+        component: () => import('@/views/push/PushTaskList.vue'),
+        meta: { title: '推送管理', icon: 'Promotion', permission: 'push:view' },
+      },
+      {
+        path: 'push/create',
+        name: 'PushCreate',
+        component: () => import('@/views/push/PushTaskCreate.vue'),
+        meta: { title: '创建推送', hidden: true, permission: 'push:create' },
+      },
+      {
+        path: 'push/:id',
+        name: 'PushDetail',
+        component: () => import('@/views/push/PushTaskDetail.vue'),
+        meta: { title: '推送详情', hidden: true, permission: 'push:view' },
       },
     ],
   },

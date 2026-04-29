@@ -5,6 +5,13 @@
 - POST /api/v1/ai/chat/stream       SSE 流式对话
 - GET  /api/v1/ai/conversations     获取对话列表
 - POST /api/v1/ai/greeting          获取 AI 开场白
+- POST /api/v1/ai/generate-greeting AI 生成打招呼语
+
+AI 聊天辅助端点：
+- POST /api/v1/ai/chat-assist/topic      冷场救急话题建议
+- POST /api/v1/ai/chat-assist/reply      回复建议
+- POST /api/v1/ai/chat-assist/polish     语气优化
+- POST /api/v1/ai/chat-assist/exit       温柔退出结束语
 """
 
 from __future__ import annotations
@@ -23,7 +30,24 @@ from app.core.responses import paginated_response, success_response
 from app.enums.error_codes import ErrorCode
 from app.middleware.auth import CurrentUser
 from app.models.user import User
+from app.schemas.ai_chat_assist import (
+    ExitSuggestionRequest,
+    ExitSuggestionResponse,
+    PolishRequest,
+    PolishResponse,
+    ReplySuggestionRequest,
+    ReplySuggestionResponse,
+    TopicSuggestionRequest,
+    TopicSuggestionResponse,
+)
+from app.schemas.ai_greeting import (
+    GenerateGreetingRequest,
+    GenerateGreetingResponse,
+    GreetingQuotaResponse,
+)
+from app.services.ai_chat_assist import create_ai_chat_assist_service
 from app.services.ai_conversation_service import AIConversationService
+from app.services.ai_greeting import AIGreetingService
 
 logger = logging.getLogger(__name__)
 
@@ -314,3 +338,278 @@ async def get_greeting(
                 message="获取开场白失败，请稍后重试",
                 status_code=503,
             )
+
+
+# ---------------------------------------------------------------------------
+# POST /api/v1/ai/generate-greeting — AI 生成打招呼语
+# ---------------------------------------------------------------------------
+
+@router.post(
+    "/generate-greeting",
+    summary="AI生成打招呼语",
+    response_model=GenerateGreetingResponse,
+)
+async def generate_greeting(
+    body: GenerateGreetingRequest,
+    user: CurrentUser,
+    request: Request,
+) -> dict[str, Any]:
+    """AI 生成打招呼语接口。
+
+    用于好友申请场景，AI 协助生成个性化的打招呼语。
+
+    - 分析目标用户的公开动态（最近10条）
+    - 分析双方的共同点（共同兴趣标签、相似年龄段等）
+    - 生成 3 个版本：温暖型/轻松型/真诚型
+    - 频率限制：每用户每天最多使用 10 次
+    - 打招呼语长度限制在 50-200 字
+
+    触发时机：
+    1. 用户点击"AI帮我想想"按钮
+    2. 输入框停留超 30 秒（前端检测，调用同一 API）
+    """
+    request_id = getattr(request.state, "request_id", "")
+
+    session_factory = _get_db_session(request)
+    settings = _get_settings(request)
+    redis_client = _get_redis(request)
+
+    async with session_factory() as db:
+        try:
+            service = AIGreetingService(
+                db=db,
+                zhipu_api_key=settings.zhipu_api_key,
+                redis_client=redis_client,
+            )
+            result = await service.generate_greeting(
+                sender_id=user.id,
+                target_user_id=body.target_user_id,
+            )
+            return success_response(result, request_id)
+        except AppError:
+            raise
+        except Exception as e:
+            logger.error("[AI Greeting Generator] 生成打招呼语异常: %s", str(e))
+            raise AppError(
+                code=ErrorCode.AI_SERVICE_UNAVAILABLE,
+                message="打招呼语生成服务暂时不可用，请稍后重试",
+                status_code=503,
+            )
+
+
+@router.get(
+    "/greeting-quota",
+    summary="获取招呼语生成配额",
+    response_model=GreetingQuotaResponse,
+)
+async def get_greeting_quota(
+    user: CurrentUser,
+    request: Request,
+) -> dict[str, Any]:
+    """获取用户的招呼语生成配额。
+
+    - 返回每日限制、已使用次数、剩余次数
+    - 用于前端显示配额状态
+    """
+    request_id = getattr(request.state, "request_id", "")
+
+    settings = _get_settings(request)
+    redis_client = _get_redis(request)
+
+    # check_quota 仅需 Redis，无需数据库会话
+    service = AIGreetingService(
+        zhipu_api_key=settings.zhipu_api_key,
+        redis_client=redis_client,
+    )
+
+    try:
+        result = await service.check_quota(user.id)
+        return success_response(result, request_id)
+    except Exception as e:
+        logger.error("[AI Greeting Quota] 获取配额异常: %s", str(e))
+        raise AppError(
+            code=ErrorCode.INTERNAL_ERROR,
+            message="获取配额失败",
+            status_code=500,
+        )
+
+
+# ---------------------------------------------------------------------------
+# AI 聊天辅助端点
+# ---------------------------------------------------------------------------
+
+@router.post(
+    "/chat-assist/topic",
+    summary="冷场救急话题建议",
+    response_model=TopicSuggestionResponse,
+)
+async def suggest_topics(
+    body: TopicSuggestionRequest,
+    user: CurrentUser,
+    request: Request,
+) -> dict[str, Any]:
+    """生成冷场救急话题建议。
+
+    场景：双方超10分钟无人回复时，输入框上方提示"AI帮我想想话题"。
+
+    - 分析对话上下文
+    - 生成3个有趣的话题建议
+    - 频率限制：每用户每2分钟最多3次
+    """
+    request_id = getattr(request.state, "request_id", "")
+
+    settings = _get_settings(request)
+    redis_client = _get_redis(request)
+
+    try:
+        service = create_ai_chat_assist_service(
+            api_key=settings.zhipu_api_key,
+            redis=redis_client,
+        )
+        result = await service.suggest_topics(
+            user_id=user.id,
+            context=body.context,
+        )
+        return success_response(result, request_id)
+    except AppError:
+        raise
+    except Exception as e:
+        logger.error("[AI Chat Assist] 话题建议异常: %s", str(e))
+        raise AppError(
+            code=ErrorCode.AI_SERVICE_UNAVAILABLE,
+            message="AI 服务暂时不可用，请稍后重试",
+            status_code=503,
+        )
+
+
+@router.post(
+    "/chat-assist/reply",
+    summary="回复建议",
+    response_model=ReplySuggestionResponse,
+)
+async def suggest_replies(
+    body: ReplySuggestionRequest,
+    user: CurrentUser,
+    request: Request,
+) -> dict[str, Any]:
+    """生成回复建议。
+
+    场景：停留1分钟未输入时，输入框上方浮层展示2-3个回复建议。
+
+    - 分析对话上下文和对方最后说的话
+    - 生成2-3个回复建议
+    - 频率限制：每用户每分钟最多5次
+    """
+    request_id = getattr(request.state, "request_id", "")
+
+    settings = _get_settings(request)
+    redis_client = _get_redis(request)
+
+    try:
+        service = create_ai_chat_assist_service(
+            api_key=settings.zhipu_api_key,
+            redis=redis_client,
+        )
+        result = await service.suggest_replies(
+            user_id=user.id,
+            context=body.context,
+            last_message=body.last_message,
+        )
+        return success_response(result, request_id)
+    except AppError:
+        raise
+    except Exception as e:
+        logger.error("[AI Chat Assist] 回复建议异常: %s", str(e))
+        raise AppError(
+            code=ErrorCode.AI_SERVICE_UNAVAILABLE,
+            message="AI 服务暂时不可用，请稍后重试",
+            status_code=503,
+        )
+
+
+@router.post(
+    "/chat-assist/polish",
+    summary="语气优化（润色）",
+    response_model=PolishResponse,
+)
+async def polish_message(
+    body: PolishRequest,
+    user: CurrentUser,
+    request: Request,
+) -> dict[str, Any]:
+    """语气优化（润色）。
+
+    场景：用户点击"AI润色"按钮，优化措辞让聊天更融洽。
+
+    - 保持原意，让语气更温和
+    - 适当使用语气词让表达更柔和
+    - 频率限制：每用户每分钟最多10次
+    """
+    request_id = getattr(request.state, "request_id", "")
+
+    settings = _get_settings(request)
+    redis_client = _get_redis(request)
+
+    try:
+        service = create_ai_chat_assist_service(
+            api_key=settings.zhipu_api_key,
+            redis=redis_client,
+        )
+        result = await service.polish_message(
+            user_id=user.id,
+            original_text=body.original_text,
+        )
+        return success_response(result, request_id)
+    except AppError:
+        raise
+    except Exception as e:
+        logger.error("[AI Chat Assist] 语气优化异常: %s", str(e))
+        raise AppError(
+            code=ErrorCode.AI_SERVICE_UNAVAILABLE,
+            message="AI 服务暂时不可用，请稍后重试",
+            status_code=503,
+        )
+
+
+@router.post(
+    "/chat-assist/exit",
+    summary="温柔退出结束语",
+    response_model=ExitSuggestionResponse,
+)
+async def suggest_exits(
+    body: ExitSuggestionRequest,
+    user: CurrentUser,
+    request: Request,
+) -> dict[str, Any]:
+    """生成温柔退出结束语。
+
+    场景：用户想结束聊天但不知道怎么开口，点击右上角"..." → [温柔退出当前对话]。
+
+    - 分析对话上下文
+    - 生成2-3个自然的结束语
+    - 频率限制：每用户每2分钟最多3次
+    """
+    request_id = getattr(request.state, "request_id", "")
+
+    settings = _get_settings(request)
+    redis_client = _get_redis(request)
+
+    try:
+        service = create_ai_chat_assist_service(
+            api_key=settings.zhipu_api_key,
+            redis=redis_client,
+        )
+        result = await service.suggest_exits(
+            user_id=user.id,
+            context=body.context,
+        )
+        return success_response(result, request_id)
+    except AppError:
+        raise
+    except Exception as e:
+        logger.error("[AI Chat Assist] 温柔退出异常: %s", str(e))
+        raise AppError(
+            code=ErrorCode.AI_SERVICE_UNAVAILABLE,
+            message="AI 服务暂时不可用，请稍后重试",
+            status_code=503,
+        )

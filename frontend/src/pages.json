@@ -123,6 +123,55 @@
         "navigationBarTitleText": "AI性格",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/friends/index",
+      "style": {
+        "navigationBarTitleText": "好友",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/friends/request",
+      "style": {
+        "navigationBarTitleText": "发送好友申请",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/friends/requests",
+      "style": {
+        "navigationBarTitleText": "好友申请",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/friends/profile",
+      "style": {
+        "navigationBarTitleText": "个人主页",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/settings/index",
+      "style": {
+        "navigationBarTitleText": "设置",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/edit",
+      "style": {
+        "navigationBarTitleText": "编辑资料",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/profile/ai-tags",
+      "style": {
+        "navigationBarTitleText": "AI画像",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "subPackages": [
@@ -183,6 +232,13 @@
           "path": "square/detail",
           "style": {
             "navigationBarTitleText": "动态详情",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "chat/private",
+          "style": {
+            "navigationBarTitleText": "私聊",
             "navigationStyle": "custom"
           }
         }

@@ -20,7 +20,7 @@ from .treehole import TreeholePost, TreeholeComment
 from .post import Post, PostComment, PostLike, PostFavorite, PostFollow
 
 # 聊天模块
-from .chat import Friendship, Conversation, ChatMessage
+from .chat import Friendship, FriendRequest, UserBlock, Conversation, ChatMessage
 
 # AI 对话模块
 from .ai import AIConversation, AIMessage, AIMemory
@@ -64,6 +64,8 @@ __all__ = [
     "PostFollow",
     # 聊天
     "Friendship",
+    "FriendRequest",
+    "UserBlock",
     "Conversation",
     "ChatMessage",
     # AI 对话

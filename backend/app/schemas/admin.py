@@ -371,3 +371,234 @@ class AdminMinorModeRequest(BaseSchema):
         if v and not v.isdigit():
             raise ValueError("监护人手机号必须是11位数字")
         return v
+
+
+# ---------------------------------------------------------------------------
+# 管理员管理（CRUD）
+# ---------------------------------------------------------------------------
+
+class AdminListRequest(BaseSchema):
+    """管理员列表查询请求模型。"""
+
+    page: int = Field(default=1, ge=1, description="当前页码，从1开始")
+    page_size: int = Field(default=20, ge=1, le=100, description="每页条数，最大100")
+    search: str | None = Field(None, description="搜索关键词（用户名/昵称模糊匹配）")
+    role: str | None = Field(None, description="角色筛选：super_admin/admin/operator")
+    is_active: bool | None = Field(None, description="状态筛选")
+    sort_by: str = Field(default="created_at", description="排序字段：created_at/last_login_at")
+    sort_order: str = Field(default="desc", description="排序方向：asc/desc")
+
+    @field_validator("role")
+    @classmethod
+    def validate_role(cls, v: str | None) -> str | None:
+        """验证角色。"""
+        if v and v not in ADMIN_ROLES:
+            raise ValueError(f"角色必须是: {ADMIN_ROLES}")
+        return v
+
+    @field_validator("sort_by")
+    @classmethod
+    def validate_sort_by(cls, v: str) -> str:
+        """验证排序字段。"""
+        allowed = ["created_at", "last_login_at", "username"]
+        if v not in allowed:
+            raise ValueError(f"排序字段必须是: {allowed}")
+        return v
+
+    @field_validator("sort_order")
+    @classmethod
+    def validate_sort_order(cls, v: str) -> str:
+        """验证排序方向。"""
+        allowed = ["asc", "desc"]
+        if v not in allowed:
+            raise ValueError(f"排序方向必须是: {allowed}")
+        return v
+
+
+class AdminListItem(BaseSchema):
+    """管理员列表项响应模型。"""
+
+    id: str = Field(..., description="管理员ID")
+    username: str = Field(..., description="用户名")
+    nickname: str | None = Field(None, description="昵称")
+    role: str = Field(..., description="角色")
+    is_active: bool = Field(..., description="是否启用")
+    last_login_at: datetime | None = Field(None, description="最后登录时间")
+    last_login_ip: str | None = Field(None, description="最后登录IP")
+    created_at: datetime = Field(..., description="创建时间")
+
+
+class AdminDetailResponse(BaseSchema):
+    """管理员详情响应模型。"""
+
+    id: str = Field(..., description="管理员ID")
+    username: str = Field(..., description="用户名")
+    nickname: str | None = Field(None, description="昵称")
+    role: str = Field(..., description="角色")
+    permissions: list[str] = Field(default_factory=list, description="权限列表")
+    is_active: bool = Field(..., description="是否启用")
+    last_login_at: datetime | None = Field(None, description="最后登录时间")
+    last_login_ip: str | None = Field(None, description="最后登录IP")
+    created_at: datetime = Field(..., description="创建时间")
+    updated_at: datetime = Field(..., description="更新时间")
+
+
+class AdminCreateRequest(BaseSchema):
+    """创建管理员请求模型。"""
+
+    username: str = Field(
+        ...,
+        min_length=3,
+        max_length=50,
+        description="用户名",
+    )
+    password: str = Field(
+        ...,
+        min_length=8,
+        max_length=100,
+        description="密码（至少8位，包含字母和数字）",
+    )
+    nickname: str | None = Field(None, max_length=50, description="昵称")
+    role: str = Field(
+        default="operator",
+        description="角色：super_admin/admin/operator",
+    )
+
+    @field_validator("username")
+    @classmethod
+    def validate_username(cls, v: str) -> str:
+        """验证用户名格式。"""
+        v = v.strip()
+        if not v:
+            raise ValueError("用户名不能为空")
+        if not v.isalnum() and "_" not in v and "-" not in v:
+            raise ValueError("用户名只能包含字母、数字、下划线和连字符")
+        return v
+
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, v: str) -> str:
+        """验证密码强度。"""
+        v = v.strip()
+        if not v:
+            raise ValueError("密码不能为空")
+        if len(v) < 8:
+            raise ValueError("密码长度至少8位")
+        if not any(c.isalpha() for c in v):
+            raise ValueError("密码必须包含字母")
+        if not any(c.isdigit() for c in v):
+            raise ValueError("密码必须包含数字")
+        return v
+
+    @field_validator("role")
+    @classmethod
+    def validate_role(cls, v: str) -> str:
+        """验证角色。"""
+        if v not in ADMIN_ROLES:
+            raise ValueError(f"角色必须是: {ADMIN_ROLES}")
+        return v
+
+
+class AdminUpdateRequest(BaseSchema):
+    """更新管理员请求模型。"""
+
+    nickname: str | None = Field(None, max_length=50, description="昵称")
+    role: str | None = Field(None, description="角色")
+    is_active: bool | None = Field(None, description="是否启用")
+    password: str | None = Field(None, min_length=8, max_length=100, description="新密码")
+
+    @field_validator("role")
+    @classmethod
+    def validate_role(cls, v: str | None) -> str | None:
+        """验证角色。"""
+        if v and v not in ADMIN_ROLES:
+            raise ValueError(f"角色必须是: {ADMIN_ROLES}")
+        return v
+
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, v: str | None) -> str | None:
+        """验证密码强度。"""
+        if v is None:
+            return v
+        v = v.strip()
+        if not v:
+            raise ValueError("密码不能为空")
+        if len(v) < 8:
+            raise ValueError("密码长度至少8位")
+        if not any(c.isalpha() for c in v):
+            raise ValueError("密码必须包含字母")
+        if not any(c.isdigit() for c in v):
+            raise ValueError("密码必须包含数字")
+        return v
+
+
+class AdminLogListRequest(BaseSchema):
+    """操作日志列表查询请求模型。"""
+
+    page: int = Field(default=1, ge=1, description="当前页码，从1开始")
+    page_size: int = Field(default=20, ge=1, le=100, description="每页条数，最大100")
+    admin_id: str | None = Field(None, description="管理员ID筛选")
+    action: str | None = Field(None, description="操作类型筛选")
+    target_type: str | None = Field(None, description="操作对象类型筛选")
+    start_time: datetime | None = Field(None, description="开始时间")
+    end_time: datetime | None = Field(None, description="结束时间")
+
+
+# ---------------------------------------------------------------------------
+# 角色定义
+# ---------------------------------------------------------------------------
+
+class RoleListItem(BaseSchema):
+    """角色列表项响应模型。"""
+
+    name: str = Field(..., description="角色名称")
+    display_name: str = Field(..., description="角色显示名称")
+    permissions: list[str] = Field(default_factory=list, description="权限列表")
+    description: str | None = Field(None, description="角色描述")
+
+
+class RoleListResponse(BaseSchema):
+    """角色列表响应模型。"""
+
+    roles: list[RoleListItem] = Field(default_factory=list, description="角色列表")
+
+
+# ---------------------------------------------------------------------------
+# 权限节点补充
+# ---------------------------------------------------------------------------
+
+# 补充管理后台阶段二的权限节点
+PERMISSION_NODES.update({
+    "dashboard:read": "查看数据看板",
+    "admin:manage": "管理管理员账号、角色、权限",
+    "push:view": "查看推送任务",
+    "push:create": "创建推送任务",
+})
+
+# 更新角色权限映射
+ROLE_PERMISSIONS["super_admin"] = list(PERMISSION_NODES.keys())
+ROLE_PERMISSIONS["admin"].extend([
+    "dashboard:read",
+    "log:view",
+])
+ROLE_PERMISSIONS["operator"].extend([
+    "dashboard:read",
+])
+
+
+# ---------------------------------------------------------------------------
+# 角色展示名称
+# ---------------------------------------------------------------------------
+
+ROLE_DISPLAY_NAMES = {
+    "super_admin": "超级管理员",
+    "admin": "管理员",
+    "operator": "运营人员",
+}
+
+ROLE_DESCRIPTIONS = {
+    "super_admin": "拥有全部权限，包括管理员管理、系统设置等",
+    "admin": "拥有大部分权限，但不能管理其他管理员",
+    "operator": "基础运营权限，用于举报处理、内容审核等",
+}

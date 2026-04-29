@@ -75,6 +75,27 @@ from app.services.identity_detector import (
     create_identity_detector,
 )
 from app.services.scheduler import SchedulerManager, create_scheduler_manager
+from app.services.friend_service import FriendService, create_friend_service
+from app.services.social_energy import (
+    SocialEnergyService,
+    create_social_energy_service,
+)
+from app.services.ai_chat_assist import (
+    AIChatAssistService,
+    create_ai_chat_assist_service,
+)
+from app.services.social_level import (
+    SocialLevelService,
+    create_social_level_service,
+)
+from app.services.ai_profile import (
+    AIProfileService,
+    create_ai_profile_service,
+)
+from app.services.user_service import (
+    UserService,
+    create_user_service,
+)
 
 __all__ = [
     # SMS 短信服务
@@ -147,4 +168,22 @@ __all__ = [
     # 调度器
     "SchedulerManager",
     "create_scheduler_manager",
+    # 好友服务
+    "FriendService",
+    "create_friend_service",
+    # 社交能量服务
+    "SocialEnergyService",
+    "create_social_energy_service",
+    # AI 聊天辅助服务
+    "AIChatAssistService",
+    "create_ai_chat_assist_service",
+    # 社交暴露级别服务
+    "SocialLevelService",
+    "create_social_level_service",
+    # AI画像标签服务
+    "AIProfileService",
+    "create_ai_profile_service",
+    # 用户服务
+    "UserService",
+    "create_user_service",
 ]

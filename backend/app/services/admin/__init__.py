@@ -6,6 +6,8 @@ from app.services.admin.init_admin import init_admin_account
 from app.services.admin.report_service import AdminReportService
 from app.services.admin.crisis_service import AdminCrisisService
 from app.services.admin.content_service import AdminContentService
+from app.services.admin.dashboard_service import DashboardService
+from app.services.admin.admins_service import AdminsService
 
 __all__ = [
     "AdminAuthService",
@@ -14,4 +16,6 @@ __all__ = [
     "AdminReportService",
     "AdminCrisisService",
     "AdminContentService",
+    "DashboardService",
+    "AdminsService",
 ]

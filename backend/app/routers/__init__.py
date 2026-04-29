@@ -21,11 +21,17 @@ from app.routers.notifications import router as notifications_router
 from app.routers.reports import router as reports_router
 from app.routers.treehole import router as treehole_router
 from app.routers.posts import router as posts_router
+from app.routers.friends import router as friends_router
+from app.routers.chat import router as chat_router
+from app.routers.users import router as users_router
 from app.routers.admin.auth import router as admin_auth_router
 from app.routers.admin.users import router as admin_users_router
 from app.routers.admin.reports import router as admin_reports_router
 from app.routers.admin.crisis import router as admin_crisis_router
 from app.routers.admin.contents import router as admin_contents_router
+from app.routers.admin.dashboard import router as admin_dashboard_router
+from app.routers.admin.admins import router as admin_admins_router
+from app.routers.admin.push import router as admin_push_router
 
 
 # 路由注册表 — (router实例, 前缀, 标签列表)
@@ -40,11 +46,17 @@ ROUTER_REGISTRY: list[tuple[APIRouter, str, list[str]]] = [
     (reports_router, "", ["reports"]),
     (treehole_router, "", ["treehole"]),
     (posts_router, "", ["posts"]),
+    (friends_router, "", ["friends"]),
+    (chat_router, "", ["chat"]),
+    (users_router, "", ["users"]),
     (admin_auth_router, "", ["admin-auth"]),
     (admin_users_router, "", ["admin-users"]),
     (admin_reports_router, "", ["admin-reports"]),
     (admin_crisis_router, "", ["admin-crisis"]),
     (admin_contents_router, "", ["admin-contents"]),
+    (admin_dashboard_router, "", ["admin-dashboard"]),
+    (admin_admins_router, "", ["admin-admins"]),
+    (admin_push_router, "", ["admin-push"]),
 ]
 
 

@@ -110,15 +110,30 @@ class User(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
         back_populates="anon_identity", cascade="all, delete-orphan", lazy="noload",
         foreign_keys="Post.anon_identity_id",
     )
-    initiated_friendships: Mapped[list["Friendship"]] = relationship(
-        back_populates="initiator",
-        foreign_keys="Friendship.initiator_id",
+    # 好友申请关系
+    sent_friend_requests: Mapped[list["FriendRequest"]] = relationship(
+        back_populates="sender",
+        foreign_keys="FriendRequest.sender_id",
         cascade="all, delete-orphan",
         lazy="noload",
     )
-    received_friendships: Mapped[list["Friendship"]] = relationship(
+    received_friend_requests: Mapped[list["FriendRequest"]] = relationship(
         back_populates="recipient",
-        foreign_keys="Friendship.recipient_id",
+        foreign_keys="FriendRequest.recipient_id",
+        cascade="all, delete-orphan",
+        lazy="noload",
+    )
+
+    # 拉黑关系
+    blocked_users: Mapped[list["UserBlock"]] = relationship(
+        back_populates="blocker",
+        foreign_keys="UserBlock.blocker_id",
+        cascade="all, delete-orphan",
+        lazy="noload",
+    )
+    blocked_by_users: Mapped[list["UserBlock"]] = relationship(
+        back_populates="blocked",
+        foreign_keys="UserBlock.blocked_id",
         cascade="all, delete-orphan",
         lazy="noload",
     )

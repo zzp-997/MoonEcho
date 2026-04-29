@@ -15,8 +15,8 @@
         <span v-else>回声</span>
       </div>
       <el-menu-item index="/dashboard">
-        <el-icon><HomeFilled /></el-icon>
-        <span>工作台</span>
+        <el-icon><DataBoard /></el-icon>
+        <span>数据看板</span>
       </el-menu-item>
       <el-menu-item index="/reports" v-if="hasPermission('report:view')">
         <el-icon><Warning /></el-icon>
@@ -33,6 +33,14 @@
       <el-menu-item index="/users" v-if="hasPermission('user:view')">
         <el-icon><User /></el-icon>
         <span>用户管理</span>
+      </el-menu-item>
+      <el-menu-item index="/admins" v-if="hasPermission('admin:view')">
+        <el-icon><UserFilled /></el-icon>
+        <span>管理员管理</span>
+      </el-menu-item>
+      <el-menu-item index="/push" v-if="hasPermission('push:view')">
+        <el-icon><Promotion /></el-icon>
+        <span>推送管理</span>
       </el-menu-item>
     </el-menu>
 
@@ -101,6 +109,8 @@ const activeMenu = computed(() => {
   if (path.startsWith('/crisis')) return '/crisis'
   if (path.startsWith('/contents')) return '/contents'
   if (path.startsWith('/users')) return '/users'
+  if (path.startsWith('/admins')) return '/admins'
+  if (path.startsWith('/push')) return '/push'
   return path
 })
 

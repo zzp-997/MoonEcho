@@ -50,12 +50,14 @@ service.interceptors.response.use(
           // Token 过期，尝试刷新 Token
           const adminStore = useAdminStore()
           // 如果不是刷新 Token 的请求本身失败，则尝试刷新
-          if (!config.url?.includes('/auth/refresh')) {
+          if (config && !config.url?.includes('/auth/refresh')) {
             const refreshed = await adminStore.refreshAccessToken()
             if (refreshed) {
               // 刷新成功，重新发起原请求
               const newToken = adminStore.token
-              config.headers.Authorization = `Bearer ${newToken}`
+              if (config.headers) {
+                config.headers.Authorization = `Bearer ${newToken}`
+              }
               return service.request(config)
             }
           }

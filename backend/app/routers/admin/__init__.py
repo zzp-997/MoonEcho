@@ -5,6 +5,9 @@ from app.routers.admin.users import router as admin_users_router
 from app.routers.admin.reports import router as admin_reports_router
 from app.routers.admin.crisis import router as admin_crisis_router
 from app.routers.admin.contents import router as admin_contents_router
+from app.routers.admin.dashboard import router as admin_dashboard_router
+from app.routers.admin.admins import router as admin_admins_router
+from app.routers.admin.push import router as admin_push_router
 
 __all__ = [
     "admin_auth_router",
@@ -12,4 +15,7 @@ __all__ = [
     "admin_reports_router",
     "admin_crisis_router",
     "admin_contents_router",
+    "admin_dashboard_router",
+    "admin_admins_router",
+    "admin_push_router",
 ]

@@ -14,8 +14,12 @@ from app.core.responses import error_response
 from app.middleware.request_context import RequestContextMiddleware
 from app.routers import register_routers
 from app.services.auth_service import AuthService
+from app.services.chat_service import create_chat_service
+from app.services.connection_manager import create_connection_manager
+from app.services.image import create_image_service
 from app.services.providers import build_provider_registry
 from app.services.scheduler import SchedulerManager
+from app.services.storage import create_storage_service
 from app.services.admin.admin_service import AdminAuthService
 
 logger = logging.getLogger("echo.app")
@@ -80,6 +84,26 @@ def create_app(settings: AppSettings | None = None) -> FastAPI:
         app.state.db_session = session_factory
         app.state.db_engine = engine
 
+        # 初始化图片服务
+        app.state.image_service = create_image_service()
+
+        # 初始化存储服务
+        app.state.storage_service = create_storage_service(
+            provider=resolved_settings.storage_provider,
+        )
+
+        # 初始化聊天服务
+        app.state.chat_service = create_chat_service(redis=redis_client)
+
+        # 初始化 WebSocket 连接管理器
+        connection_manager = create_connection_manager(
+            redis=redis_client,
+            auth_service=app.state.auth_service,
+            chat_service=app.state.chat_service,
+        )
+        app.state.connection_manager = connection_manager
+        await connection_manager.start()
+
         # 配置定时任务
         scheduler_manager: SchedulerManager = app.state.scheduler
         scheduler_manager.add_weekly_report_job(
@@ -96,6 +120,8 @@ def create_app(settings: AppSettings | None = None) -> FastAPI:
             )
             yield
         finally:
+            # 停止 WebSocket 连接管理器
+            await connection_manager.stop()
             # 关闭 Redis 连接
             if redis_client:
                 await redis_client.close()

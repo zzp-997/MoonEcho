@@ -160,14 +160,14 @@ function statusText(status: ReportStatus): string {
   return map[status] || status
 }
 
-function statusType(status: ReportStatus): string {
-  const map: Record<ReportStatus, string> = {
+function statusType(status: ReportStatus): 'danger' | 'warning' | 'success' | 'info' {
+  const map: Record<ReportStatus, 'danger' | 'warning' | 'success' | 'info'> = {
     pending: 'danger',
     processing: 'warning',
     approved: 'success',
     rejected: 'info',
   }
-  return map[status] || ''
+  return map[status] || 'info'
 }
 
 function formatDate(date: string): string {

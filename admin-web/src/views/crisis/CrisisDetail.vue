@@ -146,13 +146,13 @@ function levelText(level: CrisisLevel): string {
   return map[level] || level
 }
 
-function levelType(level: CrisisLevel): string {
-  const map: Record<CrisisLevel, string> = {
+function levelType(level: CrisisLevel): 'danger' | 'warning' | 'info' {
+  const map: Record<CrisisLevel, 'danger' | 'warning' | 'info'> = {
     high: 'danger',
     medium: 'warning',
     low: 'info',
   }
-  return map[level] || ''
+  return map[level] || 'info'
 }
 
 function statusText(status: CrisisStatus): string {
@@ -165,14 +165,14 @@ function statusText(status: CrisisStatus): string {
   return map[status] || status
 }
 
-function statusType(status: CrisisStatus): string {
-  const map: Record<CrisisStatus, string> = {
+function statusType(status: CrisisStatus): 'danger' | 'warning' | 'success' | 'info' {
+  const map: Record<CrisisStatus, 'danger' | 'warning' | 'success' | 'info'> = {
     pending: 'danger',
     intervening: 'warning',
     resolved: 'success',
     false_positive: 'info',
   }
-  return map[status] || ''
+  return map[status] || 'info'
 }
 
 function formatDate(date: string): string {

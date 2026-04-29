@@ -215,6 +215,84 @@ export const EventName = {
   NOTIFICATION_SETTINGS_VIEW: 'notification_settings_view',
   /** 更新通知设置 */
   NOTIFICATION_SETTINGS_CHANGE: 'notification_settings_change',
+
+  // ========== 好友系统相关 ==========
+  /** 查看好友列表 */
+  FRIEND_LIST_VIEW: 'friend_list_view',
+  /** 搜索好友 */
+  FRIEND_SEARCH: 'friend_search',
+  /** 发送好友申请 */
+  FRIEND_REQUEST_SEND: 'friend_request_send',
+  /** 查看好友申请列表 */
+  FRIEND_REQUEST_LIST_VIEW: 'friend_request_list_view',
+  /** 同意好友申请 */
+  FRIEND_REQUEST_ACCEPT: 'friend_request_accept',
+  /** 拒绝好友申请 */
+  FRIEND_REQUEST_REJECT: 'friend_request_reject',
+  /** 删除好友 */
+  FRIEND_DELETE: 'friend_delete',
+  /** 拉黑用户 */
+  USER_BLOCK: 'user_block',
+  /** 取消拉黑 */
+  USER_UNBLOCK: 'user_unblock',
+  /** 查看他人主页 */
+  USER_PROFILE_VIEW: 'user_profile_view',
+  /** AI打招呼语生成 */
+  AI_GREETING_GENERATE: 'ai_greeting_generate',
+  /** AI打招呼语使用 */
+  AI_GREETING_USE: 'ai_greeting_use',
+
+  // ========== 私聊相关 ==========
+  /** 查看会话列表 */
+  CONVERSATION_LIST_VIEW: 'conversation_list_view',
+  /** 进入私聊页面 */
+  CHAT_PRIVATE_ENTER: 'chat_private_enter',
+  /** 发送私聊消息 */
+  CHAT_PRIVATE_SEND: 'chat_private_send',
+  /** 发送私聊图片 */
+  CHAT_PRIVATE_IMAGE_SEND: 'chat_private_image_send',
+  /** 接收私聊消息 */
+  CHAT_PRIVATE_RECEIVE: 'chat_private_receive',
+  /** WebSocket 连接 */
+  WEBSOCKET_CONNECT: 'websocket_connect',
+  /** WebSocket 断开 */
+  WEBSOCKET_DISCONNECT: 'websocket_disconnect',
+  /** WebSocket 重连 */
+  WEBSOCKET_RECONNECT: 'websocket_reconnect',
+
+  // ========== AI聊天辅助相关 ==========
+  /** AI话题建议展示 */
+  AI_TOPIC_SHOW: 'ai_topic_show',
+  /** AI话题建议使用 */
+  AI_TOPIC_USE: 'ai_topic_use',
+  /** AI回复建议展示 */
+  AI_REPLY_SHOW: 'ai_reply_show',
+  /** AI回复建议使用 */
+  AI_REPLY_USE: 'ai_reply_use',
+  /** AI语气优化 */
+  AI_POLISH_USE: 'ai_polish_use',
+  /** AI温柔退出展示 */
+  AI_EXIT_SHOW: 'ai_exit_show',
+  /** AI温柔退出使用 */
+  AI_EXIT_USE: 'ai_exit_use',
+
+  // ========== 社交能量相关 ==========
+  /** 查看社交能量 */
+  SOCIAL_ENERGY_VIEW: 'social_energy_view',
+  /** 社交能量休息 */
+  SOCIAL_ENERGY_REST: 'social_energy_rest',
+
+  // ========== 个人中心相关 ==========
+  /** 个人中心访问 */
+  MINE_VIEW: 'mine_view',
+  /** 设置访问 */
+  SETTINGS_VIEW: 'settings_view',
+  /** 设置修改 */
+  SETTING_CHANGE: 'setting_change',
+
+  // ========== 用户登出 ==========
+  /** 用户登出 */
+  USER_LOGOUT: 'user_logout',
 } as const
 
 export type EventNameType = (typeof EventName)[keyof typeof EventName]

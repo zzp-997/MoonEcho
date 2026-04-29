@@ -1701,7 +1701,7 @@ POST /api/v1/posts/:id/follow   # 悄悄关注（T019-A）
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T005 |
 | 参考文档 | modules_design.md 6.1-6.2 |
 
@@ -1726,15 +1726,30 @@ POST /api/v1/friend-requests/:id/accept
 POST /api/v1/friend-requests/:id/reject
 DELETE /api/v1/friends/:id
 POST /api/v1/users/:id/block
+DELETE /api/v1/users/:id/block
+GET  /api/v1/blocks
+POST /api/v1/ai-friends/:id
+GET  /api/v1/friend-requests/cooldown/:target_user_id
 ```
 
 **产出物**：
-- `backend/routers/friends.py`
-- `backend/services/friend_service.py`
+- `backend/app/routers/friends.py` ✅ — 好友路由（11个API端点）
+- `backend/app/services/friend_service.py` ✅ — 好友服务（申请/列表/删除/拉黑/官方AI好友）
+- `backend/app/schemas/friend.py` ✅ — 好友相关 Schema
+- `backend/app/models/chat.py` ✅ — 新增 FriendRequest、UserBlock 模型
+- `backend/app/enums/error_codes.py` ✅ — 新增错误码
+- `backend/alembic/versions/0008_friend_system.py` ✅ — 数据库迁移（含预置官方AI账号）
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**代码审查修复**：
+- 修复 N+1 查询问题：好友列表会话查询改为批量查询
+- 修复并发竞态条件：accept_friend_request 添加 FOR UPDATE 行级锁
+- 修复冷却期计算逻辑：expired/rejected 状态分别计算冷却期起点
+- 修复错误码使用不当：USER_ALREADY_BLOCKED 替代语义不符的错误码
+- 添加数据库迁移 is_active 字段：官方AI账号预置数据补全
+
+**中断点**：无
+**继续指引**：已完成，可继续 T021-C（WebSocket 私聊）
+**未决问题**：无
 
 ---
 
@@ -1744,7 +1759,7 @@ POST /api/v1/users/:id/block
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | AI Engineer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T021-A, T007-B |
 | 参考文档 | modules_design.md 6.1 |
 
@@ -1753,12 +1768,23 @@ POST /api/v1/users/:id/block
 - 输出 3 个版本：温暖型/轻松型/真诚型
 - 触发时机：用户点击"AI帮我想想"/输入框停留超 30 秒
 
-**产出物**：
-- `backend/services/ai_greeting.py`
+**API 端点**：
+```
+POST /api/v1/ai/generate-greeting  # 生成打招呼语
+GET  /api/v1/ai/greeting-quota     # 获取配额状态
+```
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**产出物**：
+- `backend/app/services/ai_greeting.py` ✅ — AI 打招呼语生成服务（GLM-4-Flash + 频率限制 + 降级策略）
+- `backend/app/schemas/ai_greeting.py` ✅ — 打招呼语相关 Schema
+- `backend/app/routers/ai.py` ✅ — 新增打招呼语生成端点
+
+**代码审查修复**：
+- 添加 is_fallback 字段：响应中告知前端是否为降级预设内容
+
+**中断点**：无
+**继续指引**：已完成，可继续 T021-C（WebSocket 私聊）
+**未决问题**：无
 
 ---
 
@@ -1768,7 +1794,7 @@ POST /api/v1/users/:id/block
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T021-A |
 | 参考文档 | tech_architecture.md 第六章（WebSocket 部分） |
 
@@ -1781,9 +1807,35 @@ POST /api/v1/users/:id/block
 - 消息类型：文字 + 图片（压缩存储，90 天过期）
 - 骚扰检测（1 分钟 10 条限速）
 
+**API 端点**：
+```
+WebSocket /api/v1/ws/chat?token={jwt_token}  # WebSocket 连接
+GET  /api/v1/conversations                    # 会话列表
+GET  /api/v1/conversations/:id                # 会话详情
+GET  /api/v1/conversations/:id/messages       # 历史消息
+POST /api/v1/conversations/:id/messages       # 发送消息（HTTP 降级）
+POST /api/v1/conversations/:id/read           # 标记已读
+POST /api/v1/chat/images                      # 上传聊天图片
+```
+
 **产出物**：
-- `backend/services/connection_manager.py`
-- `backend/routers/chat.py`
+- `backend/app/services/connection_manager.py` ✅ — WebSocket 连接管理器（心跳/多设备/僵尸检测）
+- `backend/app/services/chat_service.py` ✅ — 私聊业务服务（消息发送/骚扰检测/离线消息）
+- `backend/app/schemas/chat.py` ✅ — 私聊 Schema
+- `backend/app/routers/chat.py` ✅ — 私聊路由
+- `backend/alembic/versions/0009_chat_message_expires_at.py` ✅ — 数据库迁移（图片过期字段）
+
+**代码审查修复**：
+- 修复竞态条件：消息发送失败后统一断开，避免循环中修改连接列表
+- 修复速率限制时间窗口问题：每次计数都重置 TTL
+- 修复 N+1 查询：会话列表最后消息使用窗口函数批量查询
+- 修复 WebSocket 关闭码：使用标准 1008 关闭码替代自定义 4001
+- 添加文件上传大小限制：最大 10MB
+- 添加 WebSocket 消息大小限制：最大 64KB
+
+**中断点**：无
+**继续指引**：已完成，可继续 T021-D（AI 聊天辅助 + 社交能量系统）
+**未决问题**：无
 
 **中断点**：
 **继续指引**：
@@ -1797,7 +1849,7 @@ POST /api/v1/users/:id/block
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | AI Engineer + Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T021-C, T009-C |
 | 参考文档 | modules_design.md 6.3-6.5 |
 
@@ -1807,15 +1859,42 @@ POST /api/v1/users/:id/block
 - 语气优化（AI 润色按钮）
 - 温柔退出功能（AI 生成 2-3 个自然结束语）
 - 社交能量计算（发送-5%/回复-3%/申请-10%/收到共鸣+5%/AI对话+15%）
-- 社交能量 0 点重置到 50%
+- 社交能量 0 点重置到 50%（已在T013-B实现定时任务）
+- 主动休息恢复能量（+20%，每小时冷却）
+
+**API 端点**：
+```
+# 社交能量
+GET  /api/v1/users/me/social-energy     # 获取当前社交能量
+POST /api/v1/users/me/social-energy/rest  # 主动休息恢复能量
+
+# AI聊天辅助
+POST /api/v1/ai/chat-assist/topic       # 冷场救急话题建议
+POST /api/v1/ai/chat-assist/reply       # 回复建议（2-3个）
+POST /api/v1/ai/chat-assist/polish      # 语气优化（润色）
+POST /api/v1/ai/chat-assist/exit        # 温柔退出结束语
+```
 
 **产出物**：
-- `backend/services/ai_chat_assist.py`
-- `backend/services/social_energy.py`
+- `backend/app/services/social_energy.py` ✅ — 社交能量服务（能量计算/恢复/主动休息）
+- `backend/app/services/ai_chat_assist.py` ✅ — AI聊天辅助服务（话题/回复/润色/退出）
+- `backend/app/schemas/social_energy.py` ✅ — 社交能量Schema
+- `backend/app/schemas/ai_chat_assist.py` ✅ — AI聊天辅助Schema
+- `backend/app/routers/users.py` ✅ — 用户路由（社交能量端点）
+- `backend/app/routers/ai.py` ✅ — AI路由（新增聊天辅助端点）
+- `backend/app/routers/__init__.py` ✅ — 注册users路由
+- `backend/app/schemas/__init__.py` ✅ — 导出新Schema
+- `backend/app/services/__init__.py` ✅ — 导出新服务
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**设计要点**：
+1. 社交能量：范围0%-100%，降到0%提示但不强制限制，达到100%不再增加
+2. 主动休息：+20%能量，每小时冷却期限制
+3. AI聊天辅助：复用GLMChatService，使用GLM-4-Flash降低成本
+4. 频率限制：Redis计数器，不同功能不同限制策略
+
+**中断点**：无
+**继续指引**：已完成，可继续T022（前端好友页+私聊页）
+**未决问题**：无
 
 ---
 
@@ -1825,7 +1904,7 @@ POST /api/v1/users/:id/block
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Frontend Developer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T001, T021-A, T021-C |
 | 参考文档 | ui_design.md, modules_design.md 6.1-6.5 |
 
@@ -1840,14 +1919,35 @@ POST /api/v1/users/:id/block
 - 个人主页（查看他人信息+加好友/删除/拉黑）
 
 **产出物**：
-- `frontend/src/pages/friends/`
-- `frontend/src/pages/chat/private.vue`
-- `frontend/src/composables/useWebSocket.ts`
-- `frontend/src/composables/useSocialEnergy.ts`
+- `frontend/src/pages/friends/index.vue` ✅ — 好友列表页（含AI好友、社交能量）
+- `frontend/src/pages/friends/request.vue` ✅ — 好友申请页（AI帮我想想）
+- `frontend/src/pages/friends/requests.vue` ✅ — 好友申请通知页
+- `frontend/src/pages/friends/profile.vue` ✅ — 查看他人主页
+- `frontend/src/pagesSocial/chat/private.vue` ✅ — 私聊页面（WebSocket+AI辅助）
+- `frontend/src/components/friends/FriendItem.vue` ✅ — 好友列表项组件
+- `frontend/src/components/friends/RequestCard.vue` ✅ — 申请卡片组件
+- `frontend/src/components/friends/SocialEnergyBar.vue` ✅ — 社交能量条组件
+- `frontend/src/components/chat/PrivateMessageBubble.vue` ✅ — 私聊消息气泡
+- `frontend/src/components/chat/ChatInput.vue` ✅ — 聊天输入框（含AI辅助）
+- `frontend/src/components/chat/AIAssistHint.vue` ✅ — AI辅助提示组件
+- `frontend/src/components/chat/GentleExit.vue` ✅ — 温柔退出组件
+- `frontend/src/composables/useWebSocket.ts` ✅ — WebSocket连接管理（心跳/重连/确认）
+- `frontend/src/composables/useSocialEnergy.ts` ✅ — 社交能量状态
+- `frontend/src/composables/useChatAssist.ts` ✅ — AI聊天辅助（话题/回复/润色）
+- `frontend/src/api/modules/friend.ts` ✅ — 好友API封装
+- `frontend/src/api/modules/chat.ts` ✅ — 私聊API封装（更新）
+- `frontend/src/pages.json` ✅ — 路由配置更新
+- `frontend/src/utils/tracking.ts` ✅ — 埋点事件更新
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**设计要点**：
+1. WebSocket实现心跳(30s)、断线重连(指数退避1s-30s)、消息确认
+2. AI聊天辅助非侵入式设计，在输入框上方显示
+3. 社交能量可视化：能量条+活动列表+AI建议
+4. 图片上传压缩后再发送，支持预览
+
+**中断点**：无
+**继续指引**：已完成，可继续T023-A（个人中心API）
+**未决问题**：无
 
 ---
 
@@ -1859,7 +1959,7 @@ POST /api/v1/users/:id/block
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Backend Architect + AI Engineer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T005, T009-C |
 | 参考文档 | modules_design.md 2.3, 6.4-6.5, tech_architecture.md 第三章 |
 
@@ -1903,9 +2003,11 @@ GET   /api/v1/users/:id/public-posts    # 他人的公开动态列表
 - `backend/services/ai_profile.py`
 - `backend/services/social_level.py` — 渐进式社交暴露级别计算
 
-**中断点**：
-**继续指引**：
+**中断点**：无
+**继续指引**：已完成，可继续T023-B（前端个人中心页）
 **未决问题**：
+- browse_count 目前使用 like_count + comment_count 替代，后续需接入埋点数据
+- AI画像标签 is_visible 功能（用户隐藏部分标签）未实现，可作为后续优化
 
 ---
 
@@ -1915,7 +2017,7 @@ GET   /api/v1/users/:id/public-posts    # 他人的公开动态列表
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Frontend Developer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T001, T023-A |
 | 参考文档 | ui_design.md |
 
@@ -1926,12 +2028,18 @@ GET   /api/v1/users/:id/public-posts    # 他人的公开动态列表
 - 查看他人主页（调用 T023-A 新增的 `/api/v1/users/:id` API，展示他人公开信息）
 
 **产出物**：
-- `frontend/src/pages/mine/`
-- `frontend/src/pages/settings/`
+- `frontend/src/pages/mine/index.vue` — 个人中心主页
+- `frontend/src/pages/settings/index.vue` — 设置页
+- `frontend/src/pages/profile/edit.vue` — 编辑资料页
+- `frontend/src/pages/profile/ai-tags.vue` — AI画像详情页
+- `frontend/src/api/modules/user.ts` — 用户API模块（更新）
+- `frontend/src/api/modules/settings.ts` — 设置API模块（新增）
 
-**中断点**：
-**继续指引**：
+**中断点**：无
+**继续指引**：已完成，可继续T024-A（管理后台阶段二）
 **未决问题**：
+- 收藏页、我的动态页待实现
+- 部分数据（好友数量、日记天数）需从对应接口获取
 
 ---
 
@@ -1943,7 +2051,7 @@ GET   /api/v1/users/:id/public-posts    # 他人的公开动态列表
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T014-A |
 | 参考文档 | tech_architecture.md 第十一章 |
 
@@ -1969,13 +2077,18 @@ GET  /api/admin/v1/admin-logs
 ```
 
 **产出物**：
-- `backend/routers/admin/dashboard.py`
-- `backend/routers/admin/admins.py`
-- `backend/services/admin/dashboard_service.py`
+- `backend/routers/admin/dashboard.py` — 数据看板路由
+- `backend/routers/admin/admins.py` — 管理员管理路由
+- `backend/routers/admin/push.py` — 推送管理路由
+- `backend/services/admin/dashboard_service.py` — 数据看板服务
+- `backend/services/admin/admins_service.py` — 管理员管理服务
+- `backend/schemas/admin_dashboard.py` — 数据看板Schema
 
-**中断点**：
-**继续指引**：
+**中断点**：无
+**继续指引**：已完成，可继续T024-B（前端管理后台阶段二页面）
 **未决问题**：
+- 数据看板目前使用Mock数据，后续需接入真实统计
+- 推送管理使用Mock实现，后续需对接真实推送服务
 
 ---
 
@@ -1985,7 +2098,7 @@ GET  /api/admin/v1/admin-logs
 |------|-----|
 | 优先级 | P1 |
 | 负责智能体 | Frontend Developer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T015, T024-A |
 | 参考文档 | tech_architecture.md 第十一章 11.2 |
 
@@ -2378,6 +2491,11 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 | 2026-04-27 | T019-A | Backend Architect | ✅ 完成 | 动态广场 API（12端点+排序算法+匿名身份） |
 | 2026-04-27 | T019-B | AI Engineer | ✅ 完成 | AI 文案润色 API（GLM-4-Flash + 3风格） |
 | 2026-04-27 | T020 | Frontend Developer | ✅ 完成 | 动态广场前端（信息流/发布/详情+AI润色卡片） |
+| 2026-04-29 | T021-A | Backend Architect | ✅ 完成 | 好友申请流程后端（11个API端点+官方AI账号预置） |
+| 2026-04-29 | T021-B | AI Engineer | ✅ 完成 | AI代写打招呼语服务（GLM-4-Flash + 频率限制 + 降级策略） |
+| 2026-04-29 | T021-C | Backend Architect | ✅ 完成 | WebSocket私聊系统（ConnectionManager + 心跳 + 骚扰检测） |
+| 2026-04-29 | T021-D | Backend Architect | ✅ 完成 | AI聊天辅助 + 社交能量系统（6个API端点 + 频率限制） |
+| 2026-04-29 | T022 | Frontend Developer | ✅ 完成 | 好友页+私聊页前端（4页面+7组件+3composable+WebSocket） |
 | 2026-04-26 | CP1 | Software Architect | ✅ 通过 | 架构评分 B+，发现 4 个严重问题 |
 | 2026-04-26 | CP2 | Code Reviewer | ✅ 通过 | 发现 13 个安全问题，已修复 P0 |
 | 2026-04-26 | P0修复 | Security Engineer | ✅ 完成 | JWT/加密/IP/Mock��信安全问题 |
