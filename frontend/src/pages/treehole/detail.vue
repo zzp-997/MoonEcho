@@ -11,6 +11,11 @@
           <text class="action-text">删除</text>
         </view>
       </view>
+      <view v-else class="header-actions">
+        <view class="action-btn" @tap="handleShowMoreActions">
+          <text class="more-icon">...</text>
+        </view>
+      </view>
     </view>
 
     <!-- 加载状态 -->
@@ -104,6 +109,22 @@
         <text class="retry-text">返回</text>
       </view>
     </view>
+
+    <!-- 更多操作弹窗 -->
+    <wd-action-sheet
+      v-model="showMoreActions"
+      :actions="moreActions"
+      cancelText="取消"
+      @select="handleMoreAction"
+    />
+
+    <!-- 举报弹窗 -->
+    <ReportDialog
+      :show="showReportDialog"
+      :target="reportTarget"
+      @update:show="showReportDialog = $event"
+      @success="handleReportSuccess"
+    />
   </view>
 </template>
 
@@ -127,6 +148,8 @@ import {
 } from '@/api/treehole'
 import { track, EventName, trackPageEnter } from '@/utils/tracking'
 import CommentSection from '@/components/treehole/CommentSection.vue'
+import ReportDialog from '@/components/common/ReportDialog.vue'
+import { ReportContentType, type ReportTarget } from '@/api/modules/report'
 
 // ==================== 响应式状态 ====================
 
@@ -147,6 +170,20 @@ let focusComment = false
 
 /** 安全区域底部高度 */
 const safeAreaBottom = ref('0px')
+
+/** 更多操作弹窗 */
+const showMoreActions = ref(false)
+
+/** 更多操作列表 */
+const moreActions = [
+  { name: '举报', value: 'report' },
+]
+
+/** 举报弹窗 */
+const showReportDialog = ref(false)
+
+/** 举报目标 */
+const reportTarget = ref<ReportTarget | null>(null)
 
 // ==================== 方法 ====================
 
@@ -329,6 +366,35 @@ function handleImagePreview(index: number): void {
 }
 
 /**
+ * 显示更多操作
+ */
+function handleShowMoreActions(): void {
+  showMoreActions.value = true
+}
+
+/**
+ * 处理更多操作
+ */
+function handleMoreAction(action: any): void {
+  showMoreActions.value = false
+
+  if (action.value === 'report' && post.value) {
+    reportTarget.value = {
+      contentType: ReportContentType.TREEHOLE_POST,
+      contentId: post.value.id,
+    }
+    showReportDialog.value = true
+  }
+}
+
+/**
+ * 举报成功回调
+ */
+function handleReportSuccess(): void {
+  track(EventName.TREEHOLE_REPORT, { post_id: post.value?.id })
+}
+
+/**
  * 解析页面参数
  */
 function parsePageParams(): void {
@@ -415,6 +481,13 @@ onShow(() => {
 .action-text {
   font-size: var(--font-size-sm);
   color: var(--color-error);
+}
+
+.more-icon {
+  font-size: var(--font-size-lg);
+  font-weight: bold;
+  color: var(--dark-text-primary);
+  letter-spacing: 2rpx;
 }
 
 // ==================== 加载状态 ====================

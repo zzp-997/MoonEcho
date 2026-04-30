@@ -67,7 +67,12 @@
       "Bash(ls /c/Python*/python.exe)",
       "Bash(ls /c/Users/*/AppData/Local/Programs/Python/*/python.exe)",
       "Read(//c/ProgramData/anaconda3/**)",
-      "Read(//c/ProgramData/miniconda3/**)"
+      "Read(//c/ProgramData/miniconda3/**)",
+      "Bash(python3 -m py_compile app/routers/stats.py app/services/stats_service.py app/models/nps.py)",
+      "Bash(python3 -m py_compile alembic/versions/0012_nps_records.py)",
+      "Bash(npm list *)",
+      "Bash(docker --version)",
+      "Bash(docker-compose --version)"
     ]
   }
 }

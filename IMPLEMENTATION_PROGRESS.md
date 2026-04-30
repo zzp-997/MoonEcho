@@ -2131,7 +2131,7 @@ GET  /api/admin/v1/admin-logs
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Security Engineer + Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T008, T017-B, T021-C |
 | 参考文档 | modules_design.md 7.1-7.4, 7.6 |
 
@@ -2150,14 +2150,17 @@ GET  /api/admin/v1/admin-logs
 - 3人以上举报同一内容自动触发下架
 
 **产出物**：
-- `backend/services/audit/` — 分场景审核服务
-- `backend/services/harassment_detector.py` — 完善
-- `backend/services/fake_account_detector.py` — 虚假信息预警
-- 安全审计报告 + 修复代码
+- `backend/app/services/audit/` ✅ — 分场景审核服务目录（treehole/square/chat/ai_chat四场景）
+- `backend/app/services/harassment_detector.py` ✅ — 完善三层防御（1380行）
+- `backend/app/services/fake_account_detector.py` ✅ — 虚假信息预警服务（SimHash+注册检测）
+- `backend/app/models/penalty.py` ✅ — 处罚记录模型（PenaltyRecord/DeviceBan）
+- `backend/app/services/penalty_service.py` ✅ — 处罚梯度服务
+- `backend/alembic/versions/0010_penalty_records.py` ✅ — 数据库迁移
+- `backend/app/services/admin/report_service.py` ✅ — 已包含3人举报自动下架逻辑
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成，可继续T025-B（安全审计：匿名加密+数据脱敏）
+**未决问题**：无
 
 ---
 
@@ -2167,7 +2170,7 @@ GET  /api/admin/v1/admin-logs
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Security Engineer + Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T017-A |
 | 参考文档 | modules_design.md 7.5, tech_architecture.md 第五章 |
 
@@ -2180,12 +2183,38 @@ GET  /api/admin/v1/admin-logs
 - 审查互动链脱钩（匿名互动不推到实名通知流，好友关系与匿名身份完全隔离）
 - 修复发现的安全问题
 
-**产出物**：
-- 安全审计报告 + 修复代码
+**审计发现**（Security Engineer 审计报告）：
+- **严重问题 2 个**：TreeholePost/AnonymousIdentity 明文存储 user_id；管理后台无二次认证
+- **高危问题 2 个**：TreeholeComment 明文存储 user_id；匿名身份加密密钥使用默认值
+- **中危问题 4 个**：默认盐值硬编码；互动链脱钩未验证等
+- **低危问题 2 个**：日志脱敏；昵称缓存
 
-**中断点**：
-**继续指引**：
+**产出物**：
+- `backend/app/models/treehole.py` ✅ — encrypted_user_id 替代 user_id
+- `backend/app/models/user.py` ✅ — AnonymousIdentity/UserAnonMapping 加密存储
+- `backend/app/services/anonymous_identity.py` ✅ — 加密映射和哈希查询
+- `backend/app/services/treehole_service.py` ✅ — 加密存储和解密验证
+- `backend/app/routers/admin/anon_identity.py` ✅ — 二次认证反查接口
+- `backend/alembic/versions/0011_anon_security_fix.py` ✅ — 数据库迁移脚本
+
+**修复内容**：
+1. TreeholePost: user_id → encrypted_user_id（AES-256-GCM 加密）
+2. TreeholeComment: user_id → anon_identity_id（完全匿名化）
+3. AnonymousIdentity: user_id → encrypted_user_id（加密存储）
+4. UserAnonMapping: 添加 user_id_hash（哈希查询）+ encrypted_user_id（加密存储）
+5. 管理后台反查接口：实现二次认证机制（密码验证 + 临时令牌）
+6. 敏感操作审计日志：记录反查操作
+
+**中断点**：无
+**继续指引**：已完成，可继续 T025-C（前端举报入口实现）
 **未决问题**：
+- 旧数据迁移需在服务启动时检测并处理
+- 生产环境需配置 ANON_MAPPING_ENCRYPTION_KEY 环境变量
+
+**验证状态**：Code Reviewer 已验证通过（2026-04-30）
+- 所有 user_id 明文引用已替换为加密存储
+- 查询使用 user_id_hash 哈希匹配
+- 管理后台二次认证已实现
 
 ---
 
@@ -2195,7 +2224,7 @@ GET  /api/admin/v1/admin-logs
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Frontend Developer |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T014-C, T018, T020, T022 |
 | 参考文档 | modules_design.md 7.7 |
 
@@ -2209,12 +2238,13 @@ GET  /api/admin/v1/admin-logs
 举报分类选择：色情低俗 / 广告引流 / 辱骂攻击 / 骚扰 / 诈骗 / 自杀自残倾向 / 其他
 
 **产出物**：
-- `frontend/src/components/common/ReportDialog.vue` — 统一举报组件
-- 各页面集成举报入口
-
-**中断点**：
-**继续指引**：
-**未决问题**：
+- `frontend/src/components/common/ReportDialog.vue` ✅ — 统一举报组件
+- `frontend/src/api/modules/report.ts` ✅ — 举报API模块
+- `frontend/src/pages/treehole/detail.vue` ✅ — 树洞详情页举报入口
+- `frontend/src/pagesSocial/square/detail.vue` ✅ — 广场详情页举报入口
+- `frontend/src/pages/friends/profile.vue` ✅ — 用户主页举报入口
+- `frontend/src/pagesSocial/chat/private.vue` ✅ — 私聊举报入口
+- `frontend/src/components/treehole/CommentSection.vue` ✅ — 树洞评论区长按举报
 
 ---
 
@@ -2228,7 +2258,7 @@ GET  /api/admin/v1/admin-logs
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T005, T011, T021-A |
 | 参考文档 | modules_design.md 3.5 |
 
@@ -2246,12 +2276,17 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 ```
 
 **产出物**：
-- `backend/services/account_service.py`
-- `backend/services/scheduler.py` — 新增冷静期到期检查任务
+- `backend/app/schemas/account.py` ✅ — 注销相关Schema定义
+- `backend/app/services/account_deletion.py` ✅ — 注销核心服务
+- `backend/app/routers/user/account.py` ✅ — 注销路由
+- `backend/app/routers/user/__init__.py` ✅ — 用户子路由模块
+- `backend/app/enums/error_codes.py` ✅ — 添加注销相关错误码
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**验证状态**：Code Reviewer 已验证通过（2026-04-30）
+- 所有数据表正确处理（软删除/硬删除/匿名化）
+- PenaltyRecord 和 DeviceBan 处理已添加
+- Token 黑名单机制正确实现
+- anon_identity.py 导入错误已修复
 
 ---
 
@@ -2263,7 +2298,7 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | Backend Architect |
-| 状态 | ⏳ |
+| 状态 | ✅ |
 | 前置依赖 | T005, T008, T011, T013-A |
 | 参考文档 | PRD 第六章 阶段一验证门控 |
 
@@ -2284,13 +2319,14 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 | 内测NPS | ≥ 30 | < 0 重新评估产品方向 |
 
 **产出物**：
-- `backend/routers/stats.py`
-- `backend/services/stats_service.py`
-- `backend/models/user_events.py` — 用户行为事件模型
+- `backend/app/routers/stats.py` — 7个统计API端点 + 事件上报端点
+- `backend/app/services/stats_service.py` — 统计服务 + 事件记录服务
+- `backend/app/models/user_events.py` — 用户行为事件模型
+- `backend/app/models/nps.py` — NPS记录模型
 
-**中断点**：
-**继续指引**：
-**未决问题**：
+**中断点**：无
+**继续指引**：已完成
+**未决问题**：无
 
 ---
 
@@ -2302,7 +2338,7 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 |------|-----|
 | 优先级 | P0 |
 | 负责智能体 | DevOps Automator + Frontend Developer |
-| 状态 | ⏳ |
+| 状态 | 🔄 |
 | 前置依赖 | 阶段一全部任务（T001-T016） + CP1 + CP2 |
 | 参考文档 | PRD 第六章 阶段一 W11-W12 |
 
@@ -2314,12 +2350,21 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 - 运行验证门控指标收集
 
 **产出物**：
-- 内测版 APK / TestFlight 链接
+- H5 构建版本：`frontend/dist/` ✅
+- 内测版 APK（需要 Docker + HBuilderX 环境）
 - 内测反馈收集表单
+
+**验证状态**（2026-04-30）：
+- ✅ .env 配置文件已创建（内测环境配置）
+- ✅ H5 构建成功（`frontend/dist/index.html`）
+- ⚠️ Android APK 需要特定环境（Docker + HBuilderX）
+- ⚠️ iOS TestFlight 需要 Apple 开发者账号
 
 **中断点**：
 **继续指引**：
 **未决问题**：
+- 需要 Docker 环境才能启动完整内测服务
+- 需要 HBuilderX 才能打包 Android APK
 
 ---
 
@@ -2496,6 +2541,11 @@ DELETE /api/v1/users/me                # 冷静期后永久删除（内部定时
 | 2026-04-29 | T021-C | Backend Architect | ✅ 完成 | WebSocket私聊系统（ConnectionManager + 心跳 + 骚扰检测） |
 | 2026-04-29 | T021-D | Backend Architect | ✅ 完成 | AI聊天辅助 + 社交能量系统（6个API端点 + 频率限制） |
 | 2026-04-29 | T022 | Frontend Developer | ✅ 完成 | 好友页+私聊页前端（4页面+7组件+3composable+WebSocket） |
+| 2026-04-29 | T023-A | Backend Architect | ✅ 完成 | 个人中心API + 查看他人信息 + 渐进式社交暴露级别 |
+| 2026-04-29 | T023-B | Frontend Developer | ✅ 完成 | 个人中心页 + 设置页（AI画像+社交能量+节日管理） |
+| 2026-04-29 | T024-A | Backend Architect | ✅ 完成 | 管理后台阶段二API（数据看板+推送管理+权限管理） |
+| 2026-04-29 | T024-B | Frontend Developer | ✅ 完成 | 管理后台阶段二页面（数据看板+推送管理+权限管理） |
+| 2026-04-29 | T025-A | Security Engineer | ✅ 完成 | AI安全审核系统（四大场景审核+骚扰三层防御+处罚梯度+虚假预警） |
 | 2026-04-26 | CP1 | Software Architect | ✅ 通过 | 架构评分 B+，发现 4 个严重问题 |
 | 2026-04-26 | CP2 | Code Reviewer | ✅ 通过 | 发现 13 个安全问题，已修复 P0 |
 | 2026-04-26 | P0修复 | Security Engineer | ✅ 完成 | JWT/加密/IP/Mock��信安全问题 |

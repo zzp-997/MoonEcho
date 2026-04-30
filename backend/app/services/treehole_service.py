@@ -60,6 +60,7 @@ from app.services.content_audit import (
     get_audit_feedback,
 )
 from app.services.crisis_detection import CrisisDetector, get_crisis_detector
+from app.services.crypto import encrypt_data, decrypt_data
 from app.services.harassment_detector import (
     HarassmentDetector,
     HarassmentDetectionResult,
@@ -646,10 +647,10 @@ class TreeholeService:
         # 6. 生成随机延迟（0-15分钟）
         random_delay_minutes = random.randint(0, 15)
 
-        # 7. 创建帖子
+        # 7. 创建帖子（加密存储用户ID，满足匿名隔离要求）
         post = TreeholePost(
             id=str(uuid.uuid4()),
-            user_id=user_id,
+            encrypted_user_id=encrypt_data(user_id),
             anon_identity_id=anon_identity.id,
             content=request.content,
             topic_tag=request.topic_tag.value if request.topic_tag else None,
@@ -739,11 +740,21 @@ class TreeholeService:
             )
 
         # 2. 验证帖子属于该用户（只有帖子作者可以申诉）
-        if post.user_id != user_id:
+        # 解密加密的用户ID进行比较
+        try:
+            post_owner_id = decrypt_data(post.encrypted_user_id)
+            if post_owner_id != user_id:
+                raise AppError(
+                    code=ErrorCode.PERMISSION_DENIED,
+                    message="只能对自己的帖子发起申诉",
+                    status_code=403,
+                )
+        except Exception:
+            # 解密失败，无法验证归属
             raise AppError(
-                code=ErrorCode.PERMISSION_DENIED,
-                message="只能对自己的帖子发起申诉",
-                status_code=403,
+                code=ErrorCode.INTERNAL_ERROR,
+                message="无法验证帖子归属",
+                status_code=500,
             )
 
         # 3. 检查是否已有待处理的申诉
@@ -824,12 +835,20 @@ class TreeholeService:
                 status_code=404,
             )
 
-        # 验证所有者
-        if post.user_id != user_id:
+        # 验证所有者（解密加密的用户ID进行比较）
+        try:
+            post_owner_id = decrypt_data(post.encrypted_user_id)
+            if post_owner_id != user_id:
+                raise AppError(
+                    code=ErrorCode.PERMISSION_DENIED,
+                    message="无权限删除此帖子",
+                    status_code=403,
+                )
+        except Exception:
             raise AppError(
-                code=ErrorCode.PERMISSION_DENIED,
-                message="无权限删除此帖子",
-                status_code=403,
+                code=ErrorCode.INTERNAL_ERROR,
+                message="无法验证帖子归属",
+                status_code=500,
             )
 
         # 软删除
@@ -881,10 +900,16 @@ class TreeholeService:
                 status_code=404,
             )
 
-        # 检查是否已共鸣
+        # 获取用户的匿名身份
+        anon_service = self._get_anon_identity_service()
+        anon_identity = await anon_service.get_or_create_treehole_identity(
+            user_id, db
+        )
+
+        # 检查是否已共鸣（通过匿名身份检查）
         check_stmt = select(TreeholeComment).where(
             TreeholeComment.post_id == post_id,
-            TreeholeComment.user_id == user_id,
+            TreeholeComment.anon_identity_id == anon_identity.id,
             TreeholeComment.is_resonance.is_(True),
             TreeholeComment.deleted_at.is_(None),
         )
@@ -898,11 +923,11 @@ class TreeholeService:
                 already_resonated=True,
             )
 
-        # 创建共鸣记录
+        # 创建共鸣记录（仅存储匿名身份ID）
         resonance = TreeholeComment(
             id=str(uuid.uuid4()),
             post_id=post_id,
-            user_id=user_id,
+            anon_identity_id=anon_identity.id,
             content="",
             is_resonance=True,
         )
@@ -968,11 +993,17 @@ class TreeholeService:
                 status_code=404,
             )
 
-        # 2. 骚扰频率检测
+        # 2. 获取用户的匿名身份
+        anon_service = self._get_anon_identity_service()
+        anon_identity = await anon_service.get_or_create_treehole_identity(
+            user_id, db
+        )
+
+        # 3. 骚扰频率检测（不传递帖子作者的加密ID）
         harassment_result = await self._harassment_detector.check_treehole_interaction(
             user_id=user_id,
             action="comment",
-            target_user_id=post.user_id,
+            target_user_id=None,  # 匿名场景下不传递目标用户
         )
         harassment_warning = None
         if harassment_result.has_warning and not harassment_result.has_rate_limit:
@@ -1015,11 +1046,11 @@ class TreeholeService:
                 harassment_warning=None,
             )
 
-        # 6. 创建评论
+        # 6. 创建评论（仅存储匿名身份ID，满足匿名隔离要求）
         comment = TreeholeComment(
             id=str(uuid.uuid4()),
             post_id=post_id,
-            user_id=user_id,
+            anon_identity_id=anon_identity.id,
             content=request.content,
             is_resonance=False,
         )

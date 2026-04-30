@@ -32,7 +32,8 @@ from app.models.chat import Friendship
 from app.models.diary import EmotionDiary
 from app.models.post import Post
 from app.models.treehole import TreeholeComment, TreeholePost
-from app.models.user import User
+from app.models.user import AnonymousIdentity, User
+from app.services.crypto import encrypt_data
 from app.schemas.admin import (
     AdminBanUserRequest,
     AdminMinorModeRequest,
@@ -584,21 +585,34 @@ class AdminUserService:
         post_result = await db.execute(post_stmt)
         post_count = post_result.scalar() or 0
 
-        # 查询树洞帖子数（直接通过 user_id 关联）
-        treehole_stmt = select(func.count()).select_from(TreeholePost).where(
-            TreeholePost.user_id == user_id,
-            TreeholePost.deleted_at.is_(None),
+        # 查询树洞帖子数（通过匿名身份关联，满足匿名隔离要求）
+        # 先获取用户的匿名身份ID列表
+        anon_stmt = select(AnonymousIdentity.id).where(
+            AnonymousIdentity.encrypted_user_id == encrypt_data(user_id),
+            AnonymousIdentity.deleted_at.is_(None),
         )
-        treehole_result = await db.execute(treehole_stmt)
-        treehole_count = treehole_result.scalar() or 0
+        anon_result = await db.execute(anon_stmt)
+        anon_ids = [row[0] for row in anon_result.fetchall()]
 
-        # 查询评论数（树洞评论 - 通过 user_id 直接关联）
-        comment_stmt = select(func.count()).select_from(TreeholeComment).where(
-            TreeholeComment.user_id == user_id,
-            TreeholeComment.deleted_at.is_(None),
-        )
-        comment_result = await db.execute(comment_stmt)
-        comment_count = comment_result.scalar() or 0
+        # 统计树洞帖子数
+        if anon_ids:
+            treehole_stmt = select(func.count()).select_from(TreeholePost).where(
+                TreeholePost.anon_identity_id.in_(anon_ids),
+                TreeholePost.deleted_at.is_(None),
+            )
+            treehole_result = await db.execute(treehole_stmt)
+            treehole_count = treehole_result.scalar() or 0
+
+            # 统计树洞评论数
+            comment_stmt = select(func.count()).select_from(TreeholeComment).where(
+                TreeholeComment.anon_identity_id.in_(anon_ids),
+                TreeholeComment.deleted_at.is_(None),
+            )
+            comment_result = await db.execute(comment_stmt)
+            comment_count = comment_result.scalar() or 0
+        else:
+            treehole_count = 0
+            comment_count = 0
 
         return AdminUserSocialStats(
             friend_count=friend_count,

@@ -177,6 +177,18 @@ export const EventName = {
   SQUARE_SORT_CHANGE: 'square_sort_change',
   /** 删除动态 */
   SQUARE_DELETE: 'square_delete',
+  /** 举报广场动态 */
+  SQUARE_REPORT: 'square_report',
+
+  // ========== 举报相关 ==========
+  /** 举报树洞帖子 */
+  TREEHOLE_REPORT: 'treehole_report',
+  /** 举报树洞评论 */
+  TREEHOLE_COMMENT_REPORT: 'treehole_comment_report',
+  /** 举报广场评论 */
+  SQUARE_COMMENT_REPORT: 'square_comment_report',
+  /** 举报用户 */
+  USER_REPORT: 'user_report',
 
   // ========== NPS相关（验证门控：NPS）==========
   /** 显示NPS问卷 */

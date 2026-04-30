@@ -32,6 +32,9 @@ from app.routers.admin.contents import router as admin_contents_router
 from app.routers.admin.dashboard import router as admin_dashboard_router
 from app.routers.admin.admins import router as admin_admins_router
 from app.routers.admin.push import router as admin_push_router
+from app.routers.admin.anon_identity import router as admin_anon_identity_router
+from app.routers.user.account import router as account_router
+from app.routers.stats import analytics_router, stats_router
 
 
 # 路由注册表 — (router实例, 前缀, 标签列表)
@@ -57,6 +60,10 @@ ROUTER_REGISTRY: list[tuple[APIRouter, str, list[str]]] = [
     (admin_dashboard_router, "", ["admin-dashboard"]),
     (admin_admins_router, "", ["admin-admins"]),
     (admin_push_router, "", ["admin-push"]),
+    (admin_anon_identity_router, "", ["admin-anon-identity"]),
+    (account_router, "", ["account-deletion"]),
+    (analytics_router, "", ["analytics"]),
+    (stats_router, "", ["stats"]),
 ]
 
 

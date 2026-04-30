@@ -33,7 +33,7 @@ from app.models.admin import Admin
 from app.models.post import Post
 from app.models.report import Report
 from app.models.treehole import TreeholeComment, TreeholePost
-from app.models.user import User
+from app.models.user import AnonymousIdentity, User
 from app.schemas.base import PaginatedResponse
 from app.schemas.report import (
     AdminAppealListItem,
@@ -48,6 +48,7 @@ from app.schemas.report import (
     ReportCreateRequest,
     ReportCreateResponse,
 )
+from app.services.crypto import decrypt_data
 
 logger = logging.getLogger(__name__)
 
@@ -182,14 +183,37 @@ class AdminReportService:
             return result.scalar_one_or_none()
 
         elif content_type == "treehole_post":
-            stmt = select(TreeholePost.user_id).where(TreeholePost.id == content_id)
+            # 通过匿名身份获取加密的用户ID并解密
+            from app.services.crypto import decrypt_data
+            stmt = select(TreeholePost).where(TreeholePost.id == content_id)
             result = await db.execute(stmt)
-            return result.scalar_one_or_none()
+            post = result.scalar_one_or_none()
+            if post and post.encrypted_user_id:
+                try:
+                    return decrypt_data(post.encrypted_user_id)
+                except Exception:
+                    return None
+            return None
 
         elif content_type == "comment":
-            stmt = select(TreeholeComment.user_id).where(TreeholeComment.id == content_id)
+            # 树洞评论通过匿名身份关联获取用户ID
+            from app.services.crypto import decrypt_data
+            stmt = select(TreeholeComment).where(TreeholeComment.id == content_id)
             result = await db.execute(stmt)
-            return result.scalar_one_or_none()
+            comment = result.scalar_one_or_none()
+            if comment and comment.anon_identity_id:
+                # 通过匿名身份获取加密的用户ID
+                anon_stmt = select(AnonymousIdentity).where(
+                    AnonymousIdentity.id == comment.anon_identity_id
+                )
+                anon_result = await db.execute(anon_stmt)
+                anon = anon_result.scalar_one_or_none()
+                if anon and anon.encrypted_user_id:
+                    try:
+                        return decrypt_data(anon.encrypted_user_id)
+                    except Exception:
+                        return None
+            return None
 
         return None
 
@@ -672,16 +696,23 @@ class AdminReportService:
                     status="deleted",
                 )
 
-            # 查询作者昵称
-            author_stmt = select(User.nickname).where(User.id == post.user_id)
-            author_result = await db.execute(author_stmt)
-            author_nickname = author_result.scalar_one_or_none()
+            # 解密用户ID并查询作者昵称
+            try:
+                author_id = decrypt_data(post.encrypted_user_id)
+            except Exception:
+                author_id = None
+
+            author_nickname = None
+            if author_id:
+                author_stmt = select(User.nickname).where(User.id == author_id)
+                author_result = await db.execute(author_stmt)
+                author_nickname = author_result.scalar_one_or_none()
 
             return ReportContentInfo(
                 id=post.id,
                 type=content_type,
                 content=self._truncate_content(post.content),
-                author_id=post.user_id,
+                author_id=author_id,
                 author_nickname=author_nickname,
                 created_at=post.created_at,
                 status=post.status,
@@ -703,16 +734,30 @@ class AdminReportService:
                     status="deleted",
                 )
 
-            # 查询作者昵称
-            author_stmt = select(User.nickname).where(User.id == comment.user_id)
-            author_result = await db.execute(author_stmt)
-            author_nickname = author_result.scalar_one_or_none()
+            # 通过匿名身份获取用户ID并查询作者昵称
+            author_id = None
+            author_nickname = None
+            if comment.anon_identity_id:
+                anon_stmt = select(AnonymousIdentity).where(
+                    AnonymousIdentity.id == comment.anon_identity_id
+                )
+                anon_result = await db.execute(anon_stmt)
+                anon = anon_result.scalar_one_or_none()
+                if anon and anon.encrypted_user_id:
+                    try:
+                        author_id = decrypt_data(anon.encrypted_user_id)
+                        if author_id:
+                            author_stmt = select(User.nickname).where(User.id == author_id)
+                            author_result = await db.execute(author_stmt)
+                            author_nickname = author_result.scalar_one_or_none()
+                    except Exception:
+                        author_id = None
 
             return ReportContentInfo(
                 id=comment.id,
                 type=content_type,
                 content=self._truncate_content(comment.content),
-                author_id=comment.user_id,
+                author_id=author_id,
                 author_nickname=author_nickname,
                 created_at=comment.created_at,
                 status="deleted" if comment.deleted_at else "active",

@@ -43,6 +43,7 @@ from app.schemas.post import (
     PostVisibility,
 )
 from app.services.anonymous_identity import AnonymousIdentityService
+from app.services.crypto import encrypt_data
 from app.services.content_audit import (
     ContentAuditProtocol,
     AuditResult,
@@ -125,6 +126,21 @@ class PostService:
         if self._content_audit is None:
             self._content_audit = create_content_audit_service(self._content_audit_provider)
         return self._content_audit
+
+    def _compute_user_id_hash(self, user_id: str) -> str:
+        """计算用户ID的哈希值（加盐）。
+
+        用于快速查询映射关系，不暴露真实用户ID。
+
+        Args:
+            user_id: 用户ID
+
+        Returns:
+            SHA-256 哈希值
+        """
+        encryption_key = self._settings.ENCRYPTION_KEY
+        data = f"{encryption_key}:{user_id}"
+        return hashlib.sha256(data.encode()).hexdigest()
 
     # =========================================================================
     # 信息流排序算法
@@ -1278,9 +1294,12 @@ class PostService:
         Returns:
             AnonymousIdentity 实例
         """
-        # 查询现有映射
+        # 计算用户ID哈希（用于快速查询，满足匿名隔离要求）
+        user_id_hash = self._compute_user_id_hash(user_id)
+
+        # 查询现有映射（通过哈希查询）
         stmt = select(UserAnonMapping).where(
-            UserAnonMapping.user_id == user_id,
+            UserAnonMapping.user_id_hash == user_id_hash,
             UserAnonMapping.scene == self.SCENE_SQUARE,
         )
         result = await db.execute(stmt)
@@ -1306,10 +1325,11 @@ class PostService:
             db=db,
         )
 
-        # 创建映射关系
+        # 创建映射关系（使用哈希和加密存储）
         new_mapping = UserAnonMapping(
             id=str(uuid.uuid4()),
-            user_id=user_id,
+            user_id_hash=user_id_hash,
+            encrypted_user_id=encrypt_data(user_id),
             anon_identity_id=anon_identity.id,
             scene=self.SCENE_SQUARE,
         )

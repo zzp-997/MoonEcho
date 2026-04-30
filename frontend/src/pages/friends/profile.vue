@@ -129,8 +129,20 @@
           <text class="option-icon">[取消]</text>
           <text class="option-text">取消拉黑</text>
         </view>
+        <view class="more-option danger" @tap="handleReport">
+          <text class="option-icon">[举报]</text>
+          <text class="option-text">举报用户</text>
+        </view>
       </view>
     </wd-action-sheet>
+
+    <!-- 举报弹窗 -->
+    <ReportDialog
+      :show="showReportDialog"
+      :target="reportTarget"
+      @update:show="showReportDialog = $event"
+      @success="handleReportSuccess"
+    />
   </view>
 </template>
 
@@ -157,6 +169,8 @@ import {
   type UserPublicProfile,
 } from '@/api/modules/friend'
 import { track, EventName } from '@/utils/tracking'
+import ReportDialog from '@/components/common/ReportDialog.vue'
+import { ReportContentType, type ReportTarget } from '@/api/modules/report'
 
 // ==================== 响应式状态 ====================
 
@@ -193,6 +207,12 @@ const hasPendingRequest = ref(false)
 
 /** 更多操作弹窗 */
 const showMoreActions = ref(false)
+
+/** 举报弹窗 */
+const showReportDialog = ref(false)
+
+/** 举报目标 */
+const reportTarget = ref<ReportTarget | null>(null)
 
 // ==================== 计算属性 ====================
 
@@ -446,6 +466,26 @@ async function handleUnblock(): Promise<void> {
  */
 function handleBack(): void {
   uni.navigateBack()
+}
+
+/**
+ * 举报用户
+ */
+function handleReport(): void {
+  showMoreActions.value = false
+
+  reportTarget.value = {
+    contentType: ReportContentType.USER,
+    userId: userId.value,
+  }
+  showReportDialog.value = true
+}
+
+/**
+ * 举报成功回调
+ */
+function handleReportSuccess(): void {
+  track(EventName.USER_REPORT, { user_id: userId.value })
 }
 
 // ==================== 生命周期 ====================

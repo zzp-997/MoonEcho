@@ -89,6 +89,7 @@
     <wd-action-sheet
       v-model="showMoreSheet"
       :actions="moreActions"
+      cancelText="取消"
       @select="handleMoreAction"
     />
 
@@ -98,6 +99,14 @@
       :exit-phrases="exitPhrases"
       @select="handleSelectExit"
       @close="handleCloseExit"
+    />
+
+    <!-- 举报弹窗 -->
+    <ReportDialog
+      :show="showReportDialog"
+      :target="reportTarget"
+      @update:show="showReportDialog = $event"
+      @success="handleReportSuccess"
     />
   </view>
 </template>
@@ -130,6 +139,8 @@ import PrivateMessageBubble from '@/components/chat/PrivateMessageBubble.vue'
 import ChatInput from '@/components/chat/ChatInput.vue'
 import AIAssistHint from '@/components/chat/AIAssistHint.vue'
 import GentleExit from '@/components/chat/GentleExit.vue'
+import ReportDialog from '@/components/common/ReportDialog.vue'
+import { ReportContentType, type ReportTarget } from '@/api/modules/report'
 
 // ==================== Props & Params ====================
 
@@ -260,6 +271,7 @@ const showMoreSheet = ref(false)
 const moreActions = [
   { name: '温柔退出当前对话', value: 'exit' },
   { name: '查看对方主页', value: 'profile' },
+  { name: '举报', value: 'report' },
   { name: '清空聊天记录', value: 'clear' },
 ]
 
@@ -268,6 +280,12 @@ const showExitDialog = ref(false)
 
 /** 退出语列表 */
 const exitPhrases = ref<string[]>([])
+
+/** 举报弹窗 */
+const showReportDialog = ref(false)
+
+/** 举报目标 */
+const reportTarget = ref<ReportTarget | null>(null)
 
 // ==================== 方法 ====================
 
@@ -508,6 +526,13 @@ function handleMoreAction(action: any): void {
         url: `/pages/friends/profile?userId=${friendId.value}`,
       })
       break
+    case 'report':
+      reportTarget.value = {
+        contentType: ReportContentType.USER,
+        userId: friendId.value,
+      }
+      showReportDialog.value = true
+      break
     case 'clear':
       uni.showModal({
         title: '确认清空',
@@ -571,6 +596,13 @@ function handleViewProfile(): void {
  */
 function handleBack(): void {
   uni.navigateBack()
+}
+
+/**
+ * 举报成功回调
+ */
+function handleReportSuccess(): void {
+  track(EventName.USER_REPORT, { user_id: friendId.value })
 }
 
 /**

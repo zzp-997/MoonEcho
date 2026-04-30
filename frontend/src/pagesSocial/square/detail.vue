@@ -11,6 +11,11 @@
           <text class="action-text">删除</text>
         </view>
       </view>
+      <view v-else class="header-actions">
+        <view class="action-btn" @tap="handleShowMoreActions">
+          <text class="more-icon">...</text>
+        </view>
+      </view>
     </view>
 
     <!-- 加载状态 -->
@@ -111,6 +116,7 @@
             v-for="comment in comments"
             :key="comment.id"
             class="comment-item"
+            @longpress="handleCommentLongPress(comment)"
           >
             <view class="comment-avatar-wrapper">
               <image
@@ -185,6 +191,30 @@
         <text class="submit-text">{{ isSubmittingComment ? '发送中' : '发送' }}</text>
       </view>
     </view>
+
+    <!-- 更多操作弹窗 -->
+    <wd-action-sheet
+      v-model="showMoreActions"
+      :actions="moreActions"
+      cancelText="取消"
+      @select="handleMoreAction"
+    />
+
+    <!-- 评论操作弹窗 -->
+    <wd-action-sheet
+      v-model="showCommentActions"
+      :actions="commentActions"
+      cancelText="取消"
+      @select="handleCommentAction"
+    />
+
+    <!-- 举报弹窗 -->
+    <ReportDialog
+      :show="showReportDialog"
+      :target="reportTarget"
+      @update:show="showReportDialog = $event"
+      @success="handleReportSuccess"
+    />
   </view>
 </template>
 
@@ -209,6 +239,8 @@ import {
   type PostComment,
 } from '@/api/modules/post'
 import { track, EventName, trackPageEnter } from '@/utils/tracking'
+import ReportDialog from '@/components/common/ReportDialog.vue'
+import { ReportContentType, type ReportTarget } from '@/api/modules/report'
 
 // ==================== 响应式状态 ====================
 
@@ -244,6 +276,31 @@ const replyToId = ref<string | null>(null)
 
 /** 回复的评论昵称 */
 const replyToNickname = ref<string | null>(null)
+
+/** 更多操作弹窗 */
+const showMoreActions = ref(false)
+
+/** 更多操作列表 */
+const moreActions = [
+  { name: '举报', value: 'report' },
+]
+
+/** 举报弹窗 */
+const showReportDialog = ref(false)
+
+/** 举报目标 */
+const reportTarget = ref<ReportTarget | null>(null)
+
+/** 评论操作弹窗 */
+const showCommentActions = ref(false)
+
+/** 评论操作列表 */
+const commentActions = [
+  { name: '举报', value: 'report' },
+]
+
+/** 长按选中的评论 */
+const selectedComment = ref<PostComment | null>(null)
 
 // ==================== 计算属性 ====================
 
@@ -604,6 +661,61 @@ function parsePageParams(): void {
   focusComment = options.focus === 'comment'
 }
 
+/**
+ * 显示更多操作
+ */
+function handleShowMoreActions(): void {
+  showMoreActions.value = true
+}
+
+/**
+ * 处理更多操作
+ */
+function handleMoreAction(action: any): void {
+  showMoreActions.value = false
+
+  if (action.value === 'report' && post.value) {
+    reportTarget.value = {
+      contentType: ReportContentType.POST,
+      contentId: post.value.id,
+    }
+    showReportDialog.value = true
+  }
+}
+
+/**
+ * 举报成功回调
+ */
+function handleReportSuccess(): void {
+  track(EventName.SQUARE_REPORT, { post_id: post.value?.id })
+}
+
+/**
+ * 评论长按事件
+ */
+function handleCommentLongPress(comment: PostComment): void {
+  selectedComment.value = comment
+  showCommentActions.value = true
+}
+
+/**
+ * 评论操作选择
+ */
+function handleCommentAction(action: any): void {
+  showCommentActions.value = false
+
+  if (action.value === 'report' && selectedComment.value) {
+    reportTarget.value = {
+      contentType: ReportContentType.COMMENT,
+      contentId: selectedComment.value.id,
+    }
+    showReportDialog.value = true
+  }
+
+  // 清除选中状态
+  selectedComment.value = null
+}
+
 // ==================== 生命周期 ====================
 
 onMounted(() => {
@@ -679,6 +791,13 @@ onShow(() => {
 .action-text {
   font-size: var(--font-size-sm);
   color: var(--color-error);
+}
+
+.more-icon {
+  font-size: var(--font-size-lg);
+  font-weight: bold;
+  color: var(--text-primary);
+  letter-spacing: 2rpx;
 }
 
 // ==================== 加载状态 ====================

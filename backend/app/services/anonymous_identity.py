@@ -314,6 +314,9 @@ class AnonymousIdentityService:
     ) -> AnonymousIdentity:
         """创建新的匿名身份。
 
+        安全设计（PRD 7.5 匿名身份架构隔离）：
+        - encrypted_user_id: 加密存储的用户ID，数据库泄露后无法直接关联
+
         Args:
             user_id: 用户ID
             scene: 使用场景
@@ -327,10 +330,13 @@ class AnonymousIdentityService:
         persona_tag = self.generate_persona_tag()
         avatar_url = await self.generate_avatar_url()
 
+        # 加密存储用户ID
+        encrypted_user_id = encrypt_data(user_id)
+
         # 创建匿名身份记录
         anon_identity = AnonymousIdentity(
             id=str(uuid.uuid4()),
-            user_id=user_id,
+            encrypted_user_id=encrypted_user_id,
             anon_nickname=nickname,
             anon_avatar_url=avatar_url,
             persona_type=persona_tag,
@@ -367,9 +373,12 @@ class AnonymousIdentityService:
         Returns:
             AnonymousIdentity 实例
         """
-        # 查询现有映射
+        # 计算用户ID哈希（用于快速查询，不暴露真实ID）
+        user_id_hash = self._compute_user_id_hash(user_id)
+
+        # 查询现有映射（通过哈希查询，满足匿名隔离要求）
         stmt = select(UserAnonMapping).where(
-            UserAnonMapping.user_id == user_id,
+            UserAnonMapping.user_id_hash == user_id_hash,
             UserAnonMapping.scene == self.SCENE_TREEHOLE,
         )
         result = await db.execute(stmt)
@@ -394,10 +403,11 @@ class AnonymousIdentityService:
             db=db,
         )
 
-        # 创建映射关系
+        # 创建映射关系（加密存储用户ID，满足匿名隔离要求）
         new_mapping = UserAnonMapping(
             id=str(uuid.uuid4()),
-            user_id=user_id,
+            user_id_hash=self._compute_user_id_hash(user_id),
+            encrypted_user_id=encrypt_data(user_id),
             anon_identity_id=anon_identity.id,
             scene=self.SCENE_TREEHOLE,
         )
@@ -444,7 +454,9 @@ class AnonymousIdentityService:
     ) -> str | None:
         """通过匿名身份ID反查用户ID（管理后台专用）。
 
-        注意：此方法需要二次认证，用于管理后台。
+        安全设计：
+        - 此方法需要二次认证才能调用
+        - 返回解密后的真实用户ID
 
         Args:
             anon_id: 匿名身份ID
@@ -459,7 +471,18 @@ class AnonymousIdentityService:
         result = await db.execute(stmt)
         anon_identity = result.scalar_one_or_none()
 
-        return anon_identity.user_id if anon_identity else None
+        if not anon_identity:
+            return None
+
+        # 解密加密的用户ID
+        try:
+            return decrypt_data(anon_identity.encrypted_user_id)
+        except Exception as e:
+            logger.error(
+                "[AnonymousIdentityService] 解密用户ID失败: %s",
+                str(e)
+            )
+            return None
 
     # =========================================================================
     # 加密映射关系
@@ -547,6 +570,20 @@ class AnonymousIdentityService:
     # 隔离性检查
     # =========================================================================
 
+    def _compute_user_id_hash(self, user_id: str) -> str:
+        """计算用户ID的哈希值（加盐）。
+
+        用于快速查询映射关系，不暴露真实用户ID。
+
+        Args:
+            user_id: 用户ID
+
+        Returns:
+            SHA-256 哈希值
+        """
+        data = f"{self._encryption_key}:{user_id}"
+        return hashlib.sha256(data.encode()).hexdigest()
+
     async def check_anonymity_isolation(
         self,
         user_id: str,
@@ -565,9 +602,12 @@ class AnonymousIdentityService:
         Returns:
             是否隔离
         """
-        # 检查映射关系是否存在
+        # 计算用户ID哈希
+        user_id_hash = self._compute_user_id_hash(user_id)
+
+        # 检查映射关系是否存在（通过哈希查询）
         stmt = select(UserAnonMapping).where(
-            UserAnonMapping.user_id == user_id,
+            UserAnonMapping.user_id_hash == user_id_hash,
             UserAnonMapping.anon_identity_id == anon_id,
             UserAnonMapping.scene == self.SCENE_TREEHOLE,
         )
@@ -576,8 +616,8 @@ class AnonymousIdentityService:
 
         if not mapping:
             logger.warning(
-                "[AnonymousIdentityService] 隔离检查失败，映射不存在，用户: %s，匿名ID: %s",
-                user_id, anon_id
+                "[AnonymousIdentityService] 隔离检查失败，映射不存在，匿名ID: %s",
+                anon_id
             )
             return False
 
@@ -599,8 +639,11 @@ class AnonymousIdentityService:
         Returns:
             是否有权限
         """
+        # 计算用户ID哈希
+        user_id_hash = self._compute_user_id_hash(user_id)
+
         stmt = select(UserAnonMapping).where(
-            UserAnonMapping.user_id == user_id,
+            UserAnonMapping.user_id_hash == user_id_hash,
             UserAnonMapping.anon_identity_id == anon_id,
         )
         result = await db.execute(stmt)

@@ -40,6 +40,15 @@ from .weekly_report import WeeklyReport
 # 节日模块
 from .holiday import Holiday, UserHoliday
 
+# 处罚模块
+from .penalty import PenaltyRecord, DeviceBan
+
+# 用户行为事件模块
+from .user_events import UserEvent
+
+# NPS 评分模块
+from .nps import NPSRecord
+
 __all__ = [
     # 基类
     "Base",
@@ -85,4 +94,11 @@ __all__ = [
     # 节日
     "Holiday",
     "UserHoliday",
+    # 处罚
+    "PenaltyRecord",
+    "DeviceBan",
+    # 用户行为事件
+    "UserEvent",
+    # NPS 评分
+    "NPSRecord",
 ]

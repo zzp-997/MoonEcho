@@ -29,12 +29,17 @@ class TreeholePost(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     用户以匿名身份发布的树洞内容，支持图片、话题标签。
     帖子可设置过期时间，过期后自动隐藏。
+
+    安全设计（PRD 7.5 匿名身份架构隔离）：
+    - encrypted_user_id: 加密存储的用户ID，用于软删除和统计
+    - 仅通过 anon_identity_id 关联内容，API 返回不暴露真实身份
     """
 
     __tablename__ = "treehole_posts"
 
-    user_id: Mapped[str] = mapped_column(
-        CHAR(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, comment="用户ID（真实身份）",
+    # 加密存储的用户ID，满足匿名隔离要求
+    encrypted_user_id: Mapped[str] = mapped_column(
+        String(200), nullable=False, comment="加密的用户ID（AES-256-GCM）",
     )
     anon_identity_id: Mapped[str | None] = mapped_column(
         CHAR(36), ForeignKey("anonymous_identities.id", ondelete="SET NULL"), comment="匿名身份ID",
@@ -62,14 +67,13 @@ class TreeholePost(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     )
 
     # ---- 关系 ----
-    user: Mapped["User"] = relationship(back_populates="treehole_posts")
+    # 移除直接用户关系，仅通过匿名身份关联（匿名隔离）
     anon_identity: Mapped["AnonymousIdentity"] = relationship(back_populates="treehole_posts")
     comments: Mapped[list["TreeholeComment"]] = relationship(
         back_populates="post", cascade="all, delete-orphan", lazy="noload",
     )
 
     __table_args__ = (
-        Index("idx_treehole_posts_user_id", "user_id"),
         Index("idx_treehole_posts_anon_id", "anon_identity_id"),
         Index("idx_treehole_posts_status", "status"),
         Index("idx_treehole_posts_created", "created_at"),
@@ -86,6 +90,10 @@ class TreeholeComment(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     用户对树洞帖子的评论，支持"共鸣"类型（轻量互动）。
     内容限制 100 字以保持轻量。
+
+    安全设计（PRD 7.5 匿名身份架构隔离）：
+    - 仅存储 anon_identity_id，不存储 user_id
+    - 评论完全匿名化，无法追溯真实用户
     """
 
     __tablename__ = "treehole_comments"
@@ -93,8 +101,8 @@ class TreeholeComment(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     post_id: Mapped[str] = mapped_column(
         CHAR(36), ForeignKey("treehole_posts.id", ondelete="CASCADE"), nullable=False, comment="帖子ID",
     )
-    user_id: Mapped[str] = mapped_column(
-        CHAR(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, comment="用户ID",
+    anon_identity_id: Mapped[str | None] = mapped_column(
+        CHAR(36), ForeignKey("anonymous_identities.id", ondelete="SET NULL"), comment="匿名身份ID",
     )
     content: Mapped[str] = mapped_column(
         String(100), nullable=False, comment="评论内容，限制100字",
@@ -105,9 +113,10 @@ class TreeholeComment(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     # ---- 关系 ----
     post: Mapped["TreeholePost"] = relationship(back_populates="comments")
+    anon_identity: Mapped["AnonymousIdentity"] = relationship(back_populates="treehole_comments")
 
     __table_args__ = (
         Index("idx_treehole_comments_post_id", "post_id"),
-        Index("idx_treehole_comments_user_id", "user_id"),
+        Index("idx_treehole_comments_anon_id", "anon_identity_id"),
         Index("idx_treehole_comments_created", "created_at"),
     )

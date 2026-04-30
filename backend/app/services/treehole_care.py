@@ -30,6 +30,7 @@ from app.models.treehole import TreeholePost, TreeholeComment
 from app.models.user import User
 from app.services.ai_chat import MockAIChat, GLMChatService, create_ai_chat_service
 from app.services.crisis_detection import CrisisDetector, CrisisLevel, get_crisis_detector
+from app.services.crypto import decrypt_data
 
 logger = logging.getLogger(__name__)
 
@@ -560,10 +561,9 @@ class TreeholeCareService:
         }
 
         try:
-            # 获取帖子内容
+            # 获取帖子内容（解密加密的用户ID验证归属）
             post_stmt = select(TreeholePost).where(
                 TreeholePost.id == post_id,
-                TreeholePost.user_id == user_id,
                 TreeholePost.deleted_at.is_(None),
             )
             post_result = await db.execute(post_stmt)
@@ -736,9 +736,16 @@ class TreeholeCareService:
                         stats["skipped"] += 1
                         continue
 
+                    # 解密用户ID
+                    try:
+                        user_id = decrypt_data(post.encrypted_user_id)
+                    except Exception:
+                        stats["skipped"] += 1
+                        continue
+
                     # 获取用户
                     user_stmt = select(User).where(
-                        User.id == post.user_id,
+                        User.id == user_id,
                         User.deleted_at.is_(None),
                     )
                     user_result = await db.execute(user_stmt)
@@ -755,7 +762,7 @@ class TreeholeCareService:
 
                     # 创建 AI 对话
                     await self._create_ai_conversation_with_message(
-                        user_id=post.user_id,
+                        user_id=user_id,
                         message=care_message,
                         db=db,
                     )
@@ -767,7 +774,7 @@ class TreeholeCareService:
 
                     logger.info(
                         "[TreeholeCareService] 无回应安慰发送成功，用户: %s，帖子: %s",
-                        post.user_id, post.id
+                        user_id, post.id
                     )
 
                 except Exception as e:

@@ -12,6 +12,7 @@
         v-for="comment in comments"
         :key="comment.id"
         class="comment-item"
+        @longpress="handleCommentLongPress(comment)"
       >
         <view class="comment-content">
           <text class="comment-text">{{ comment.content }}</text>
@@ -53,6 +54,22 @@
     <view class="section-footer">
       <text class="footer-hint">如果TA需要建议，TA会问的。</text>
     </view>
+
+    <!-- 评论操作弹窗 -->
+    <wd-action-sheet
+      v-model="showCommentActions"
+      :actions="commentActions"
+      cancelText="取消"
+      @select="handleCommentAction"
+    />
+
+    <!-- 举报弹窗 -->
+    <ReportDialog
+      :show="showReportDialog"
+      :target="reportTarget"
+      @update:show="showReportDialog = $event"
+      @success="handleReportSuccess"
+    />
   </view>
 </template>
 
@@ -61,10 +78,14 @@
  * 回声 - 树洞评论区组件
  * 文件：src/components/treehole/CommentSection.vue
  * 说明：评论列表展示和评论输入，限制50字，保持树洞匿名性
+ * 支持：长按评论举报功能
  */
 
 import { ref, computed } from 'vue'
 import type { TreeholeComment } from '@/api/treehole'
+import ReportDialog from '@/components/common/ReportDialog.vue'
+import { ReportContentType, type ReportTarget } from '@/api/modules/report'
+import { track, EventName } from '@/utils/tracking'
 
 // ==================== Props ====================
 
@@ -89,6 +110,23 @@ const isSubmitting = ref(false)
 
 /** 占位符 */
 const placeholder = '写点什么温暖TA...'
+
+/** 长按选中的评论 */
+const selectedComment = ref<TreeholeComment | null>(null)
+
+/** 评论操作弹窗 */
+const showCommentActions = ref(false)
+
+/** 评论操作列表 */
+const commentActions = [
+  { name: '举报', value: 'report' },
+]
+
+/** 举报弹窗 */
+const showReportDialog = ref(false)
+
+/** 举报目标 */
+const reportTarget = ref<ReportTarget | null>(null)
 
 // ==================== 计算属性 ====================
 
@@ -116,6 +154,39 @@ async function handleSubmit(): Promise<void> {
   } finally {
     isSubmitting.value = false
   }
+}
+
+/**
+ * 处理评论长按事件
+ */
+function handleCommentLongPress(comment: TreeholeComment): void {
+  selectedComment.value = comment
+  showCommentActions.value = true
+}
+
+/**
+ * 处理评论操作
+ */
+function handleCommentAction(action: any): void {
+  showCommentActions.value = false
+
+  if (action.value === 'report' && selectedComment.value) {
+    reportTarget.value = {
+      contentType: ReportContentType.COMMENT,
+      contentId: selectedComment.value.id,
+    }
+    showReportDialog.value = true
+  }
+
+  // 清除选中状态
+  selectedComment.value = null
+}
+
+/**
+ * 举报成功回调
+ */
+function handleReportSuccess(): void {
+  track(EventName.TREEHOLE_COMMENT_REPORT, { post_id: props.postId })
 }
 </script>
 
@@ -162,6 +233,10 @@ async function handleSubmit(): Promise<void> {
   padding: var(--space-sm);
   background-color: var(--bg-tertiary);
   border-radius: var(--radius-md);
+
+  &:active {
+    opacity: 0.9;
+  }
 }
 
 .comment-content {

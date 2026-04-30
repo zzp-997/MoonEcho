@@ -4,7 +4,7 @@
  * 说明：情绪日记相关接口，包括创建日记、隐私同意、同步设置等
  */
 
-import api from '../index'
+import api from './index'
 import type { ApiResponse } from '../types'
 
 // ==================== 类型定义 ====================

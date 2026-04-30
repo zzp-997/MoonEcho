@@ -89,18 +89,23 @@ class User(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     last_active_at: Mapped[datetime | None] = mapped_column(
         DateTime, default=None, comment="最后活跃时间",
     )
+    # 勿扰模式设置
+    do_not_disturb_until: Mapped[datetime | None] = mapped_column(
+        DateTime, default=None, comment="勿扰模式结束时间",
+    )
+    auto_dnd_enabled: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="1", comment="是否允许自动勿扰",
+    )
+    dnd_energy_threshold: Mapped[int] = mapped_column(
+        Integer, default=20, server_default="20", comment="触发自动勿扰的能量阈值",
+    )
 
     # ---- 关系 ----
     tags: Mapped[list["UserTag"]] = relationship(
         back_populates="user", cascade="all, delete-orphan", lazy="selectin",
     )
-    anonymous_identities: Mapped[list["AnonymousIdentity"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan", lazy="selectin",
-    )
+    # 匿名身份关系移除：通过加密映射表关联（匿名隔离）
     emotion_diaries: Mapped[list["EmotionDiary"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan", lazy="noload",
-    )
-    treehole_posts: Mapped[list["TreeholePost"]] = relationship(
         back_populates="user", cascade="all, delete-orphan", lazy="noload",
     )
     posts: Mapped[list["Post"]] = relationship(
@@ -149,6 +154,18 @@ class User(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     user_holidays: Mapped[list["UserHoliday"]] = relationship(
         back_populates="user", cascade="all, delete-orphan", lazy="noload",
     )
+    # 用户边界设置
+    boundary_settings: Mapped["UserBoundarySettings | None"] = relationship(
+        back_populates="user", uselist=False, lazy="selectin",
+    )
+    # 处罚记录
+    penalty_records: Mapped[list["PenaltyRecord"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan", lazy="noload",
+    )
+    # 用户行为事件
+    user_events: Mapped[list["UserEvent"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan", lazy="noload",
+    )
 
     __table_args__ = (
         Index("idx_users_phone_hash", "phone_hash"),
@@ -157,6 +174,7 @@ class User(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
         Index("idx_users_is_active", "is_active"),
         Index("idx_users_is_banned", "is_banned"),
         Index("idx_users_is_minor", "is_minor"),
+        Index("idx_users_do_not_disturb", "do_not_disturb_until"),
     )
 
 
@@ -202,12 +220,18 @@ class AnonymousIdentity(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
 
     每个用户可以拥有多个匿名身份，用于在不同场景下隔离真实身份。
     匿名身份包含独立的昵称和头像，用于树洞、广场等场景。
+
+    安全设计（PRD 7.5 匿名身份架构隔离）：
+    - encrypted_user_id: 加密存储的用户ID，数据库泄露后无法直接关联真实用户
+    - 仅通过 UserAnonMapping 加密映射表反查真实身份
+    - 管理后台访问需二次认证
     """
 
     __tablename__ = "anonymous_identities"
 
-    user_id: Mapped[str] = mapped_column(
-        CHAR(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, comment="用户ID",
+    # 加密存储的用户ID，满足匿名隔离要求
+    encrypted_user_id: Mapped[str] = mapped_column(
+        String(200), nullable=False, comment="加密的用户ID（AES-256-GCM）",
     )
     anon_nickname: Mapped[str] = mapped_column(
         String(50), nullable=False, comment="匿名昵称",
@@ -220,11 +244,14 @@ class AnonymousIdentity(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     )
 
     # ---- 关系 ----
-    user: Mapped["User"] = relationship(back_populates="anonymous_identities")
+    # 移除直接用户关系，通过加密映射表关联（匿名隔离）
     mapping: Mapped["UserAnonMapping"] = relationship(
         back_populates="anonymous_identity", cascade="all, delete-orphan", uselist=False,
     )
     treehole_posts: Mapped[list["TreeholePost"]] = relationship(
+        back_populates="anon_identity", lazy="noload",
+    )
+    treehole_comments: Mapped[list["TreeholeComment"]] = relationship(
         back_populates="anon_identity", lazy="noload",
     )
     square_posts: Mapped[list["Post"]] = relationship(
@@ -232,7 +259,7 @@ class AnonymousIdentity(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     )
 
     __table_args__ = (
-        Index("idx_anon_identities_user_id", "user_id"),
+        Index("idx_anon_identities_encrypted_user_id", "encrypted_user_id"),
     )
 
 
@@ -245,12 +272,22 @@ class UserAnonMapping(Base, UUIDMixin, TimestampMixin):
 
     记录用户与匿名身份的绑定关系，一个用户在同一场景下只使用一个匿名身份。
     唯一约束确保同一用户在同一场景下不会重复绑定。
+
+    安全设计（PRD 7.5 匿名身份架构隔离）：
+    - user_id_hash: 用户ID的哈希值，用于快速查询（加盐 SHA-256）
+    - encrypted_user_id: 加密存储的用户ID，用于反查真实身份
+    - 管理后台访问需二次认证
     """
 
     __tablename__ = "user_anon_mapping"
 
-    user_id: Mapped[str] = mapped_column(
-        CHAR(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, comment="用户ID",
+    # 用户ID哈希（用于快速查询）
+    user_id_hash: Mapped[str] = mapped_column(
+        String(64), nullable=False, comment="用户ID哈希（加盐SHA-256）",
+    )
+    # 加密存储的用户ID
+    encrypted_user_id: Mapped[str] = mapped_column(
+        String(200), nullable=False, comment="加密的用户ID（AES-256-GCM）",
     )
     anon_identity_id: Mapped[str] = mapped_column(
         CHAR(36), ForeignKey("anonymous_identities.id", ondelete="CASCADE"), nullable=False, comment="匿名身份ID",
@@ -263,7 +300,77 @@ class UserAnonMapping(Base, UUIDMixin, TimestampMixin):
     anonymous_identity: Mapped["AnonymousIdentity"] = relationship(back_populates="mapping")
 
     __table_args__ = (
-        UniqueConstraint("user_id", "scene", name="uk_user_anon_mapping_user_scene"),
-        Index("idx_user_anon_mapping_user_id", "user_id"),
+        UniqueConstraint("user_id_hash", "scene", name="uk_user_anon_mapping_user_scene"),
+        Index("idx_user_anon_mapping_user_id_hash", "user_id_hash"),
         Index("idx_user_anon_mapping_anon_id", "anon_identity_id"),
+    )
+
+
+# ---------------------------------------------------------------------------
+# user_boundary_settings — 用户边界设置表
+# ---------------------------------------------------------------------------
+
+class UserBoundarySettings(Base, UUIDMixin, TimestampMixin):
+    """用户边界设置表。
+
+    存储用户的隐私和边界设置，包括：
+    - 消息接收设置
+    - 隐私设置
+    - 自动保护设置
+    - 静默时段设置
+    """
+
+    __tablename__ = "user_boundary_settings"
+
+    user_id: Mapped[str] = mapped_column(
+        CHAR(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, comment="用户ID",
+    )
+    # 消息接收设置
+    allow_stranger_messages: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="1", nullable=False, comment="是否允许陌生人发消息",
+    )
+    require_friend_for_chat: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default="0", nullable=False, comment="是否需要是好友才能聊天",
+    )
+    # 隐私设置
+    show_online_status: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default="0", nullable=False, comment="是否显示在线状态",
+    )
+    show_read_status: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="1", nullable=False, comment="是否显示已读状态",
+    )
+    # 自动保护设置
+    auto_block_on_report: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="1", nullable=False, comment="举报后自动屏蔽",
+    )
+    auto_dnd_on_low_energy: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="1", nullable=False, comment="能量耗尽时自动勿扰",
+    )
+    dnd_energy_threshold: Mapped[int] = mapped_column(
+        Integer, default=20, server_default="20", nullable=False, comment="触发自动勿扰的能量阈值",
+    )
+    # 安全提示设置
+    show_safety_tips: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="1", nullable=False, comment="是否显示安全提示",
+    )
+    safety_tip_interval_hours: Mapped[int] = mapped_column(
+        Integer, default=24, server_default="24", nullable=False, comment="安全提示间隔（小时）",
+    )
+    # 静默时段设置
+    quiet_hours_enabled: Mapped[bool] = mapped_column(
+        Boolean, default=False, server_default="0", nullable=False, comment="是否开启静默时段",
+    )
+    quiet_hours_start: Mapped[str | None] = mapped_column(
+        String(5), default="22:00", comment="静默时段开始（HH:MM）",
+    )
+    quiet_hours_end: Mapped[str | None] = mapped_column(
+        String(5), default="07:00", comment="静默时段结束（HH:MM）",
+    )
+
+    # ---- 关系 ----
+    user: Mapped["User"] = relationship(back_populates="boundary_settings")
+
+    __table_args__ = (
+        UniqueConstraint("user_id", name="uk_user_boundary_settings_user_id"),
+        Index("idx_user_boundary_settings_user_id", "user_id"),
     )

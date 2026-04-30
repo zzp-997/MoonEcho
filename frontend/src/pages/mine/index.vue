@@ -250,8 +250,7 @@
       </view>
     </wd-popup>
 
-    <!-- 下拉刷新 -->
-    <wd-refresh-control v-model="isRefreshing" @refresh="handleRefresh" />
+    <!-- 下拉刷新使用页面原生onPullDownRefresh -->
   </view>
 </template>
 

@@ -40,6 +40,7 @@ from app.schemas.report import (
     ContentStatus,
     ContentType,
 )
+from app.services.crypto import decrypt_data
 
 logger = logging.getLogger(__name__)
 
@@ -144,13 +145,17 @@ class AdminContentService:
         db: AsyncSession,
         params: AdminContentListRequest,
     ) -> PaginatedResponse[AdminContentListItem]:
-        """查询树洞帖子列表。"""
+        """查询树洞帖子列表。
+
+        注意：树洞内容已匿名化，user_id 已加密存储。
+        author_id 筛选功能已移除，因为无法直接比较加密后的 ID。
+        如需按用户筛选，应通过管理后台反查匿名身份后使用 anon_identity_id。
+        """
         # 构建基础查询
         stmt = select(TreeholePost)
 
-        # 应用筛选条件
-        if params.author_id:
-            stmt = stmt.where(TreeholePost.user_id == params.author_id)
+        # 应用筛选条件（移除 author_id 筛选，树洞内容完全匿名化）
+        # if params.author_id:  # 已移除，树洞内容不支持按用户ID筛选
         if params.start_time:
             stmt = stmt.where(TreeholePost.created_at >= params.start_time)
         if params.end_time:
@@ -260,9 +265,17 @@ class AdminContentService:
         if not posts:
             return []
 
-        # 查询作者昵称
-        author_ids = {p.user_id for p in posts}
-        author_stmt = select(User.id, User.nickname).where(User.id.in_(author_ids))
+        # 解密用户ID并查询作者昵称
+        author_ids = {}
+        for p in posts:
+            try:
+                author_ids[str(p.id)] = decrypt_data(p.encrypted_user_id)
+            except Exception:
+                author_ids[str(p.id)] = None
+
+        # 查询作者昵称（过滤掉无效ID）
+        valid_author_ids = {aid for aid in author_ids.values() if aid}
+        author_stmt = select(User.id, User.nickname).where(User.id.in_(valid_author_ids))
         author_result = await db.execute(author_stmt)
         author_nicknames = {row[0]: row[1] for row in author_result.all()}
 
@@ -275,8 +288,8 @@ class AdminContentService:
                 id=post.id,
                 content_type=ContentType.TREEHOLE_POST.value,
                 content=self._truncate_content(post.content),
-                author_id=post.user_id,
-                author_nickname=author_nicknames.get(post.user_id),
+                author_id=author_ids.get(str(post.id)),
+                author_nickname=author_nicknames.get(author_ids.get(str(post.id))),
                 status=post.status if not post.deleted_at else ContentStatus.DELETED.value,
                 is_recommended=False,  # 树洞暂无推荐功能
                 report_count=report_counts.get(str(post.id), 0),
@@ -413,10 +426,17 @@ class AdminContentService:
                 status_code=404,
             )
 
-        # 查询作者信息
-        author_stmt = select(User).where(User.id == post.user_id)
-        author_result = await db.execute(author_stmt)
-        author = author_result.scalar_one_or_none()
+        # 解密用户ID并查询作者信息
+        try:
+            author_id = decrypt_data(post.encrypted_user_id)
+        except Exception:
+            author_id = None
+
+        author = None
+        if author_id:
+            author_stmt = select(User).where(User.id == author_id)
+            author_result = await db.execute(author_stmt)
+            author = author_result.scalar_one_or_none()
 
         # 查询举报次数
         report_count_stmt = select(func.count()).select_from(Report).where(
@@ -432,7 +452,7 @@ class AdminContentService:
             content_type=ContentType.TREEHOLE_POST.value,
             content=post.content,
             image_urls=post.image_urls,
-            author_id=post.user_id,
+            author_id=author_id,
             author_nickname=author.nickname if author else None,
             author_phone=self._mask_phone(author.phone) if author else None,
             status=post.status if not post.deleted_at else ContentStatus.DELETED.value,
