@@ -3,7 +3,9 @@
     <!-- 冷场提示 -->
     <view v-if="type === 'awkward'" class="hint-card awkward-hint">
       <view class="hint-header">
-        <text class="hint-icon">💭</text>
+        <view class="hint-icon-wrapper">
+          <text class="hint-icon-text">静</text>
+        </view>
         <text class="hint-title">好像有点安静...</text>
       </view>
       <view class="hint-content">
@@ -22,7 +24,9 @@
     <!-- 回复建议 -->
     <view v-else-if="type === 'reply'" class="hint-card reply-hint">
       <view class="hint-header">
-        <text class="hint-icon">💡</text>
+        <view class="hint-icon-wrapper">
+          <text class="hint-icon-text">!</text>
+        </view>
         <text class="hint-title">试试这些回复？</text>
       </view>
       <view class="suggestions-list">
@@ -37,7 +41,7 @@
       </view>
       <view class="hint-footer">
         <view class="refresh-btn" @tap="handleRefresh">
-          <text class="refresh-icon">🔄</text>
+          <text class="refresh-icon">↻</text>
           <text class="refresh-text">换一批</text>
         </view>
         <view class="close-btn" @tap="handleDismiss">
@@ -49,7 +53,9 @@
     <!-- 话题建议 -->
     <view v-else-if="type === 'topic'" class="hint-card topic-hint">
       <view class="hint-header">
-        <text class="hint-icon">🌟</text>
+        <view class="hint-icon-wrapper">
+          <text class="hint-icon-text">聊</text>
+        </view>
         <text class="hint-title">可以聊聊这些话题</text>
       </view>
       <view class="suggestions-list">
@@ -64,7 +70,7 @@
       </view>
       <view class="hint-footer">
         <view class="refresh-btn" @tap="handleRefresh">
-          <text class="refresh-icon">🔄</text>
+          <text class="refresh-icon">↻</text>
           <text class="refresh-text">换一批</text>
         </view>
         <view class="close-btn" @tap="handleDismiss">
@@ -167,6 +173,23 @@ function handleGenerateTopic(): void {
 .hint-icon {
   font-size: var(--font-size-md);
   margin-right: var(--space-xs);
+}
+
+.hint-icon-wrapper {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: var(--radius-xs);
+  background-color: var(--brand-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--space-xs);
+}
+
+.hint-icon-text {
+  font-size: 18rpx;
+  font-weight: 600;
+  color: #FFFFFF;
 }
 
 .hint-title {

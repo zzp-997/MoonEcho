@@ -12,7 +12,9 @@
       <view class="header-right">
         <!-- 通知入口 -->
         <view class="notification-btn" @tap="handleNotification">
-          <text class="nav-icon">🔔</text>
+          <view class="nav-icon-wrapper">
+            <text class="nav-icon-text">通知</text>
+          </view>
           <view v-if="unreadCount > 0" class="unread-badge">
             <text class="badge-text">{{ unreadCount > 99 ? '99+' : unreadCount }}</text>
           </view>
@@ -38,8 +40,8 @@
 
       <!-- AI 对话入口 -->
       <view class="ai-entry-card" @tap="handleAIEntry">
-        <view class="ai-avatar">
-          <text class="avatar-emoji">{{ currentPersonalityEmoji }}</text>
+        <view class="ai-avatar" :style="{ backgroundColor: currentPersonalityColor }">
+          <text class="avatar-text">{{ currentPersonalityName.charAt(0) }}</text>
         </view>
         <view class="ai-content">
           <view class="ai-header">
@@ -49,7 +51,7 @@
           <text class="ai-preview">{{ lastMessagePreview || greetingText }}</text>
         </view>
         <view class="ai-arrow">
-          <text class="arrow-text">></text>
+          <text class="arrow-text">&gt;</text>
         </view>
       </view>
 
@@ -57,25 +59,25 @@
       <view class="quick-actions">
         <view class="action-item" @tap="handleQuickAction('diary')">
           <view class="action-icon diary-icon">
-            <text class="icon-emoji">📔</text>
+            <text class="action-icon-text">记</text>
           </view>
           <text class="action-label">记日记</text>
         </view>
         <view class="action-item" @tap="handleQuickAction('treehole')">
           <view class="action-icon treehole-icon">
-            <text class="icon-emoji">🕳️</text>
+            <text class="action-icon-text">洞</text>
           </view>
           <text class="action-label">树洞</text>
         </view>
         <view class="action-item" @tap="handleQuickAction('square')">
           <view class="action-icon square-icon">
-            <text class="icon-emoji">广场</text>
+            <text class="action-icon-text">动</text>
           </view>
           <text class="action-label">动态</text>
         </view>
         <view class="action-item" @tap="handleQuickAction('report')">
           <view class="action-icon report-icon">
-            <text class="icon-emoji">📊</text>
+            <text class="action-icon-text">报</text>
           </view>
           <text class="action-label">周报</text>
         </view>
@@ -87,7 +89,7 @@
           <text class="section-title">近期动态</text>
           <view class="section-more" @tap="handleMoreFeeds">
             <text class="more-text">更多</text>
-            <text class="more-arrow">></text>
+            <text class="more-arrow">&gt;</text>
           </view>
         </view>
         <view class="feeds-preview">
@@ -118,10 +120,10 @@
       <!-- 空状态提示 -->
       <view v-else class="empty-section">
         <view class="empty-illustration">
-          <text class="empty-emoji">🌙</text>
+          <text class="empty-icon">深夜</text>
         </view>
         <text class="empty-title">开始你的情绪之旅</text>
-        <text class="empty-hint">记录心情，与AI朋友聊聊，探索更多可能</text>
+        <text class="empty-hint">记录心情，与AI朋友聊聊</text>
       </view>
 
       <!-- 底部安全区 -->
@@ -136,21 +138,27 @@
         </view>
         <view class="sheet-options">
           <view class="sheet-option" @tap="handlePublishOption('treehole')">
-            <text class="option-emoji">🕳️</text>
+            <view class="option-icon-wrapper treehole-option">
+              <text class="option-icon-text">洞</text>
+            </view>
             <view class="option-content">
               <text class="option-title">发布树洞吐槽</text>
               <text class="option-desc">匿名宣泄，获得共鸣</text>
             </view>
           </view>
           <view class="sheet-option" @tap="handlePublishOption('dynamic')">
-            <text class="option-emoji">📢</text>
+            <view class="option-icon-wrapper dynamic-option">
+              <text class="option-icon-text">动</text>
+            </view>
             <view class="option-content">
               <text class="option-title">发布动态</text>
               <text class="option-desc">实名分享，连接好友</text>
             </view>
           </view>
           <view class="sheet-option" @tap="handlePublishOption('diary')">
-            <text class="option-emoji">📝</text>
+            <view class="option-icon-wrapper diary-option">
+              <text class="option-icon-text">记</text>
+            </view>
             <view class="option-content">
               <text class="option-title">记录情绪</text>
               <text class="option-desc">写下今天的心情</text>
@@ -247,14 +255,14 @@ const currentPersonalityName = computed(() => {
   return personalityMap[currentPersonality.value] || '小温'
 })
 
-/** 当前AI性格表情 */
-const currentPersonalityEmoji = computed(() => {
-  const emojiMap: Record<string, string> = {
-    xiaowen: '🌸',
-    laohei: '🌙',
-    ali: '🌿',
+/** 当前AI性格颜色 */
+const currentPersonalityColor = computed(() => {
+  const colorMap: Record<string, string> = {
+    xiaowen: '#FFB5BA',  // 小温 - 温暖粉
+    laohei: '#8B9DC3',   // 老黑 - 冷静灰蓝
+    ali: '#7CB9A0',      // 阿理 - 沉稳绿
   }
-  return emojiMap[currentPersonality.value] || '🌸'
+  return colorMap[currentPersonality.value] || '#FFB5BA'
 })
 
 /** 最近消息预览 */
@@ -520,7 +528,7 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 var(--space-md);
+  padding: 0 var(--space-sm);
   background-color: var(--bg-primary);
 }
 
@@ -531,7 +539,7 @@ onPullDownRefresh(() => {
 
 .brand-name {
   font-size: var(--font-size-lg);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--brand-primary);
 }
 
@@ -550,9 +558,10 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 72rpx;
-  height: 72rpx;
-  border-radius: var(--radius-full);
+  min-width: 80rpx;
+  height: 64rpx;
+  padding: 0 var(--space-2xs);
+  border-radius: var(--radius-md);
   background-color: var(--bg-secondary);
 
   &:active {
@@ -560,14 +569,21 @@ onPullDownRefresh(() => {
   }
 }
 
-.nav-icon {
-  font-size: 36rpx;
+.nav-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-icon-text {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
 }
 
 .unread-badge {
   position: absolute;
-  top: -4rpx;
-  right: -4rpx;
+  top: -6rpx;
+  right: -6rpx;
   min-width: 32rpx;
   height: 32rpx;
   border-radius: var(--radius-full);
@@ -575,11 +591,11 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 8rpx;
+  padding: 0 6rpx;
 }
 
 .badge-text {
-  font-size: var(--font-size-xs);
+  font-size: 18rpx;
   color: var(--text-on-brand);
   font-weight: 600;
 }
@@ -595,8 +611,8 @@ onPullDownRefresh(() => {
 .ai-entry-card {
   display: flex;
   align-items: center;
-  margin: var(--space-md);
-  padding: var(--space-md);
+  margin: var(--space-sm);
+  padding: var(--space-sm);
   background-color: var(--bg-secondary);
   border-radius: var(--radius-lg);
 
@@ -609,27 +625,29 @@ onPullDownRefresh(() => {
   width: 96rpx;
   height: 96rpx;
   border-radius: var(--radius-full);
-  background-color: var(--ai-xiaowen-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--space-md);
+  margin-right: var(--space-xs);
 }
 
-.avatar-emoji {
-  font-size: 48rpx;
+.avatar-text {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1E1E1E;
 }
 
 .ai-content {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .ai-header {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: var(--space-3xs);
   margin-bottom: 4rpx;
 }
 
@@ -640,8 +658,8 @@ onPullDownRefresh(() => {
 }
 
 .online-dot {
-  width: 16rpx;
-  height: 16rpx;
+  width: 12rpx;
+  height: 12rpx;
   border-radius: 50%;
   background-color: var(--color-success);
 }
@@ -660,6 +678,7 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-left: var(--space-xs);
 }
 
 .arrow-text {
@@ -672,8 +691,8 @@ onPullDownRefresh(() => {
 .quick-actions {
   display: flex;
   justify-content: space-around;
-  margin: var(--space-md);
-  padding: var(--space-lg);
+  margin: var(--space-sm);
+  padding: var(--space-sm);
   background-color: var(--bg-secondary);
   border-radius: var(--radius-lg);
 }
@@ -682,7 +701,7 @@ onPullDownRefresh(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-xs);
+  gap: var(--space-3xs);
 
   &:active {
     opacity: 0.8;
@@ -692,49 +711,51 @@ onPullDownRefresh(() => {
 .action-icon {
   width: 88rpx;
   height: 88rpx;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 4rpx;
 }
 
+.action-icon-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
 .diary-icon {
-  background-color: rgba(255, 154, 92, 0.15);
+  background-color: rgba(255, 154, 92, 0.2);
 }
 
 .treehole-icon {
-  background-color: rgba(139, 167, 196, 0.15);
+  background-color: rgba(139, 167, 196, 0.2);
 }
 
 .square-icon {
-  background-color: rgba(124, 111, 224, 0.15);
+  background-color: rgba(124, 111, 224, 0.2);
 }
 
 .report-icon {
-  background-color: rgba(143, 204, 160, 0.15);
-}
-
-.icon-emoji {
-  font-size: 40rpx;
+  background-color: rgba(143, 204, 160, 0.2);
 }
 
 .action-label {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--text-secondary);
 }
 
 // ==================== 近期动态 ====================
 
 .recent-section {
-  margin: var(--space-md);
+  margin: var(--space-sm);
 }
 
 .section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .section-title {
@@ -766,11 +787,11 @@ onPullDownRefresh(() => {
 .feeds-preview {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
 }
 
 .feed-card {
-  padding: var(--space-md);
+  padding: var(--space-sm);
   background-color: var(--bg-secondary);
   border-radius: var(--radius-lg);
 
@@ -793,7 +814,7 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--space-sm);
+  margin-right: var(--space-xs);
 }
 
 .avatar-text {
@@ -831,7 +852,7 @@ onPullDownRefresh(() => {
 
 .feed-stats {
   display: flex;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .stat-item {
@@ -846,18 +867,19 @@ onPullDownRefresh(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl);
-  margin: var(--space-md);
+  padding: var(--space-xl);
+  margin: var(--space-sm);
   background-color: var(--bg-secondary);
   border-radius: var(--radius-lg);
 }
 
 .empty-illustration {
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
 }
 
-.empty-emoji {
-  font-size: 80rpx;
+.empty-icon {
+  font-size: 48rpx;
+  color: var(--text-tertiary);
 }
 
 .empty-title {
@@ -890,13 +912,13 @@ onPullDownRefresh(() => {
 
 .action-sheet {
   width: 100%;
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-tertiary);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
 .sheet-title {
-  padding: var(--space-lg);
+  padding: var(--space-sm);
   text-align: center;
   border-bottom: 1px solid var(--border-primary);
 }
@@ -908,23 +930,46 @@ onPullDownRefresh(() => {
 }
 
 .sheet-options {
-  padding: var(--space-md);
+  padding: var(--space-xs);
 }
 
 .sheet-option {
   display: flex;
   align-items: center;
-  padding: var(--space-md);
-  border-radius: var(--radius-lg);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
 
   &:active {
-    background-color: var(--bg-tertiary);
+    background-color: var(--bg-secondary);
   }
 }
 
-.option-emoji {
-  font-size: 44rpx;
-  margin-right: var(--space-md);
+.option-icon-wrapper {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--space-xs);
+}
+
+.option-icon-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1E1E1E;
+}
+
+.treehole-option {
+  background-color: rgba(139, 167, 196, 0.3);
+}
+
+.dynamic-option {
+  background-color: rgba(124, 111, 224, 0.3);
+}
+
+.diary-option {
+  background-color: rgba(255, 154, 92, 0.3);
 }
 
 .option-content {
@@ -946,12 +991,14 @@ onPullDownRefresh(() => {
 }
 
 .sheet-cancel {
-  padding: var(--space-lg);
+  margin: var(--space-xs);
+  padding: var(--space-sm);
   text-align: center;
-  border-top: 1px solid var(--border-primary);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-md);
 
   &:active {
-    background-color: var(--bg-tertiary);
+    opacity: 0.8;
   }
 }
 

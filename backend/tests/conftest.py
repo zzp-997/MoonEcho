@@ -10,11 +10,10 @@
 from __future__ import annotations
 
 import asyncio
-import os
 import sys
 from pathlib import Path
-from typing import Any, AsyncGenerator, Generator
-from unittest.mock import AsyncMock, MagicMock
+from typing import Any, Generator
+from unittest.mock import MagicMock
 
 import pytest
 from fastapi import FastAPI
@@ -72,11 +71,20 @@ def mock_redis():
 
 @pytest.fixture
 def app(mock_redis) -> FastAPI:
-    """创建测试 FastAPI 应用，使用 MockRedis。"""
-    from app.main import create_app, MockRedis
+    """创建测试 FastAPI 应用，使用 MockRedis。
+
+    注意：此 fixture 每个 test function 都会创建新的 app 实例，
+    确保测试之间的数据库会话隔离，避免 SQLAlchemy 会话冲突。
+    """
+    from app.main import MockRedis
     from app.services.auth_service import AuthService
     from app.services.admin.admin_service import AdminAuthService
     from app.services.providers import build_provider_registry
+    from app.services.image import create_image_service
+    from app.services.storage import create_storage_service
+    from app.services.chat_service import create_chat_service
+    from app.services.connection_manager import create_connection_manager
+    from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
     settings = get_test_settings()
 
@@ -105,39 +113,61 @@ def app(mock_redis) -> FastAPI:
         redis=mock_redis,
     )
 
-    # 初始化数据库会话并创建表
-    from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+    # 初始化图片服务
+    app.state.image_service = create_image_service()
+
+    # 初始化存储服务
+    app.state.storage_service = create_storage_service(
+        provider=settings.storage_provider,
+    )
+
+    # 初始化聊天服务和 WebSocket 连接管理器
+    app.state.chat_service = create_chat_service(redis=mock_redis)
+    connection_manager = create_connection_manager(
+        redis=mock_redis,
+        auth_service=app.state.auth_service,
+        chat_service=app.state.chat_service,
+    )
+    app.state.connection_manager = connection_manager
+
+    # 初始化数据库引擎和会话工厂
     engine = create_async_engine(
         settings.database_url,
         echo=settings.debug,
     )
 
-    # 创建所有表
+    # 创建所有表 - 使用同步方式在当前事件循环中执行
     from app.models import Base
-    import asyncio
 
     async def create_tables():
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-    # 在新的事件循环中创建表
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+    # 在当前线程的事件循环中创建表
     try:
+        loop = asyncio.get_running_loop()
         loop.run_until_complete(create_tables())
-    finally:
-        loop.close()
+    except RuntimeError:
+        # 如果没有运行中的循环，创建新的
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(create_tables())
+        finally:
+            loop.close()
 
     session_factory = async_sessionmaker(
         engine, class_=AsyncSession, expire_on_commit=False,
     )
     app.state.db_session = session_factory
+    app.state.async_session_factory = session_factory
+    app.state.db_engine = engine
 
     # 注册路由
     from app.routers import register_routers
     register_routers(app)
 
-    # 添加中间件
+    # 添加中间件 - 注意：中间件顺序很重要，后添加的先执行
     from app.middleware.request_context import RequestContextMiddleware
     app.add_middleware(RequestContextMiddleware)
 
@@ -166,7 +196,11 @@ def app(mock_redis) -> FastAPI:
 
 @pytest.fixture
 def client(app: FastAPI) -> Generator[TestClient, None, None]:
-    """创建测试客户端。"""
+    """创建测试客户端。
+
+    注意：每个测试函数使用独立的 client 实例，
+    确保请求之间的状态隔离。
+    """
     with TestClient(app) as test_client:
         yield test_client
 
@@ -194,6 +228,9 @@ def test_admin_data() -> dict[str, Any]:
 @pytest.fixture
 def auth_token(client: TestClient, test_user_data: dict) -> str | None:
     """获取测试用户认证 token。
+
+    重要：每个测试函数会使用独立的数据库会话，
+    避免跨会话的用户对象复用问题。
 
     如果需要登录获取 token，使用此 fixture。
     """
@@ -236,7 +273,10 @@ def admin_token(client: TestClient, test_admin_data: dict) -> str | None:
 
 @pytest.fixture
 def auth_headers(auth_token: str | None) -> dict[str, str]:
-    """获取认证请求头。"""
+    """获取认证请求头。
+
+    注意：返回的是新的字典实例，避免跨测试复用。
+    """
     if auth_token:
         return {"Authorization": f"Bearer {auth_token}"}
     return {}

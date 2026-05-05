@@ -197,43 +197,43 @@ export async function deletePost(postId: string): Promise<{ deleted: boolean }> 
 }
 
 /**
- * 创建共鸣
+ * 创建共鸣（与后端 POST /api/v1/posts/:id/like 对齐）
  * @param postId 动态ID
  */
 export async function createResonance(postId: string): Promise<ResonanceResponse> {
-  return api.post<ResonanceResponse>(`/posts/${postId}/resonance`)
+  return api.post<ResonanceResponse>(`/posts/${postId}/like`)
 }
 
 /**
- * 创建收藏
+ * 创建收藏（与后端 POST /api/v1/posts/:id/favorite 对齐）
  * @param postId 动态ID
  */
 export async function createBookmark(postId: string): Promise<BookmarkResponse> {
-  return api.post<BookmarkResponse>(`/posts/${postId}/bookmark`)
+  return api.post<BookmarkResponse>(`/posts/${postId}/favorite`)
 }
 
 /**
- * 取消收藏
+ * 取消收藏（与后端 DELETE /api/v1/posts/:id/favorite 对齐）
  * @param postId 动态ID
  */
 export async function deleteBookmark(postId: string): Promise<{ deleted: boolean }> {
-  return api.delete<{ deleted: boolean }>(`/posts/${postId}/bookmark`)
+  return api.delete<{ deleted: boolean }>(`/posts/${postId}/favorite`)
 }
 
 /**
- * 悄悄关注作者
+ * 悄悄关注作者（与后端 POST /api/v1/posts/:id/follow 对齐）
  * @param postId 动态ID
  */
 export async function createWhisperFollow(postId: string): Promise<WhisperFollowResponse> {
-  return api.post<WhisperFollowResponse>(`/posts/${postId}/whisper-follow`)
+  return api.post<WhisperFollowResponse>(`/posts/${postId}/follow`)
 }
 
 /**
- * 取消悄悄关注
+ * 取消悄悄关注（与后端 DELETE /api/v1/posts/:id/follow 对齐）
  * @param postId 动态ID
  */
 export async function deleteWhisperFollow(postId: string): Promise<{ deleted: boolean }> {
-  return api.delete<{ deleted: boolean }>(`/posts/${postId}/whisper-follow`)
+  return api.delete<{ deleted: boolean }>(`/posts/${postId}/follow`)
 }
 
 /**

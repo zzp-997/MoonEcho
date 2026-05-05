@@ -17,7 +17,7 @@
       <!-- 空状态提示 -->
       <view v-if="messages.length === 0 && !isGenerating" class="empty-state">
         <view class="empty-avatar">
-          <text class="avatar-emoji">{{ currentPersonalityEmoji }}</text>
+          <text class="avatar-label">{{ currentPersonalityLabel }}</text>
         </view>
         <view class="empty-content">
           <text class="empty-title">{{ currentPersonalityName }}</text>
@@ -41,7 +41,7 @@
       <!-- AI 正在生成提示 -->
       <view v-if="isGenerating && !streamingContent" class="generating-indicator">
         <view class="generating-avatar">
-          <text class="avatar-emoji">{{ currentPersonalityEmoji }}</text>
+          <text class="avatar-label">{{ currentPersonalityLabel }}</text>
         </view>
         <view class="generating-bubble">
           <view class="typing-indicator">
@@ -95,7 +95,7 @@
             :class="{ 'is-current': currentPersonality === p.type }"
             @tap="selectPersonality(p.type)"
           >
-            <text class="option-emoji">{{ p.emoji }}</text>
+            <text class="option-label">{{ p.label }}</text>
             <text class="option-name">{{ p.name }}</text>
             <view v-if="currentPersonality === p.type" class="current-mark">
               <text class="mark-text">当前</text>
@@ -142,9 +142,9 @@ const APP_OPEN_COUNT_KEY = 'huisheng_app_open_count'
 
 /** 性格选项 */
 const personalityOptions = [
-  { type: 'xiaowen', name: '小温', emoji: '🌸' },
-  { type: 'laohei', name: '老黑', emoji: '🌙' },
-  { type: 'ali', name: '阿理', emoji: '🌿' },
+  { type: 'xiaowen', name: '小温', label: '温' },
+  { type: 'laohei', name: '老黑', label: '黑' },
+  { type: 'ali', name: '阿理', label: '理' },
 ]
 
 // ==================== Store ====================
@@ -211,10 +211,10 @@ const currentPersonalityName = computed(() => {
   return option?.name || '小温'
 })
 
-/** 当前 AI 性格表情 */
-const currentPersonalityEmoji = computed(() => {
+/** 当前 AI 性格标识 */
+const currentPersonalityLabel = computed(() => {
   const option = personalityOptions.find((p) => p.type === currentPersonality.value)
-  return option?.emoji || '🌸'
+  return option?.label || '温'
 })
 
 /** 流式输出的临时消息 */
@@ -585,8 +585,10 @@ onShow(() => {
   margin-bottom: var(--space-lg);
 }
 
-.avatar-emoji {
-  font-size: 72rpx;
+.avatar-label {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .empty-content {
@@ -743,9 +745,11 @@ onShow(() => {
   }
 }
 
-.option-emoji {
-  font-size: 40rpx;
-  margin-right: var(--space-md);
+.option-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: var(--space-sm);
 }
 
 .option-name {

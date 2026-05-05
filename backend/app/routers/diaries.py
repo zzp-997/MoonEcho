@@ -187,7 +187,7 @@ async def list_diaries(
 # POST /api/v1/diaries — 创建日记
 # ---------------------------------------------------------------------------
 
-@router.post("", summary="创建日记", response_model=DiaryResponse)
+@router.post("", summary="创建日记")
 async def create_diary(
     body: DiaryCreateRequest,
     user: CurrentUser,
@@ -238,7 +238,6 @@ async def create_diary(
 @router.get(
     "/privacy",
     summary="获取隐私同意状态",
-    response_model=PrivacyConsentResponse,
 )
 async def get_privacy_consent(
     user: CurrentUser,
@@ -275,7 +274,6 @@ async def get_privacy_consent(
 @router.post(
     "/privacy",
     summary="设置隐私同意",
-    response_model=PrivacyConsentResponse,
 )
 async def set_privacy_consent(
     body: PrivacyConsentRequest,
@@ -318,7 +316,6 @@ async def set_privacy_consent(
 @router.get(
     "/sync-settings",
     summary="获取同步设置",
-    response_model=SyncSettingsResponse,
 )
 async def get_sync_settings(
     user: CurrentUser,
@@ -355,7 +352,6 @@ async def get_sync_settings(
 @router.put(
     "/sync-settings",
     summary="更新同步设置",
-    response_model=SyncSettingsResponse,
 )
 async def update_sync_settings(
     body: SyncSettingsUpdateRequest,
@@ -396,7 +392,6 @@ async def update_sync_settings(
 @router.get(
     "/stats",
     summary="获取日记统计",
-    response_model=DiaryStatsResponse,
 )
 async def get_diary_stats(
     user: CurrentUser,
@@ -443,7 +438,6 @@ async def get_diary_stats(
 @router.get(
     "/report/weekly",
     summary="获取本周情绪周报",
-    response_model=WeeklyReportResponse | EmptyWeeklyReportResponse,
 )
 async def get_weekly_report(
     user: CurrentUser,
@@ -498,7 +492,6 @@ async def get_weekly_report(
 @router.get(
     "/report/history",
     summary="获取周报历史",
-    response_model=WeeklyReportHistoryResponse,
 )
 async def get_report_history(
     user: CurrentUser,
@@ -545,7 +538,6 @@ async def get_report_history(
 @router.post(
     "/export",
     summary="导出日记",
-    response_model=ExportResponse,
 )
 async def export_diaries(
     body: ExportRequest,
@@ -706,7 +698,6 @@ async def delete_all_diaries(
 @router.get(
     "/{diary_id}",
     summary="获取日记详情",
-    response_model=DiaryDetailResponse,
 )
 async def get_diary(
     user: CurrentUser,
@@ -750,7 +741,6 @@ async def get_diary(
 @router.put(
     "/{diary_id}",
     summary="更新日记",
-    response_model=DiaryResponse,
 )
 async def update_diary(
     body: DiaryUpdateRequest,

@@ -4,13 +4,12 @@
     <view class="toolbar">
       <!-- 表情按钮 -->
       <view class="tool-btn" @tap="toggleEmoji">
-        <text class="iconfont icon-emoji" />
+        <text class="tool-btn-text">表情</text>
       </view>
 
       <!-- 换人聊聊按钮 -->
       <view class="tool-btn switch-btn" @tap="handleSwitchPersonality">
-        <text class="iconfont icon-switch" />
-        <text class="tool-text">换人聊聊</text>
+        <text class="tool-btn-text">换人</text>
       </view>
     </view>
 
@@ -234,20 +233,27 @@ getSafeArea()
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64rpx;
+  min-width: 64rpx;
   height: 64rpx;
+  padding: 0 var(--space-xs);
   border-radius: var(--radius-md);
   background-color: var(--bg-tertiary);
   color: var(--text-secondary);
-  font-size: 36rpx;
 
   &:active {
     background-color: var(--bg-primary);
   }
 }
 
+.tool-btn-text {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
 .switch-btn {
   width: auto;
+  padding: 0 var(--space-sm);
+  gap: 4rpx;
   padding: 0 var(--space-sm);
   gap: 4rpx;
 }

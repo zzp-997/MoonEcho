@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>回声APP — 公测反馈表</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #F5F5F7;
+      color: #333;
+      padding: 20px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    h1 { text-align: center; color: #4A6FA5; margin-bottom: 8px; font-size: 24px; }
+    .subtitle { text-align: center; color: #8BA7C4; margin-bottom: 24px; font-size: 14px; }
+    .section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .section h2 { font-size: 16px; color: #4A6FA5; margin-bottom: 16px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: #555; }
+    .form-group label .required { color: #FF9A5C; }
+    input[type="text"], input[type="email"], textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #8B85FF; }
+    textarea { resize: vertical; min-height: 80px; }
+    .nps-scale {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .nps-scale label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .nps-scale input:checked + label { background: #8B85FF; color: #fff; border-color: #8B85FF; }
+    .nps-scale input { display: none; }
+    .nps-labels { display: flex; justify-content: space-between; font-size: 12px; color: #999; }
+    .rating { display: flex; gap: 8px; }
+    .rating label {
+      padding: 6px 14px;
+      border-radius: 16px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .rating input:checked + label { background: #8FCCA0; color: #fff; border-color: #8FCCA0; }
+    .rating input { display: none; }
+    .bug-section { border-left: 3px solid #FF9A5C; padding-left: 12px; }
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #8B85FF, #4A6FA5);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .submit-btn:hover { opacity: 0.9; }
+    .module-check { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .module-check label { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>回声APP 公测反馈</h1>
+  <p class="subtitle">感谢你参与公测！你的反馈将帮助回声变得更好。</p>
+
+  <!-- 基本信息 -->
+  <div class="section">
+    <h2>基本信息</h2>
+    <div class="form-group">
+      <label>昵称 <span class="required">*</span></label>
+      <input type="text" placeholder="你希望我们怎么称呼你">
+    </div>
+    <div class="form-group">
+      <label>使用平台 <span class="required">*</span></label>
+      <select>
+        <option value="">请选择</option>
+        <option value="h5">H5 网页版</option>
+        <option value="android">Android App</option>
+        <option value="ios">iOS App</option>
+        <option value="mp-weixin">微信小程序</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>使用天数</label>
+      <select>
+        <option value="">请选择</option>
+        <option value="1-3">1-3天</option>
+        <option value="4-7">4-7天</option>
+        <option value="8-14">8-14天</option>
+        <option value="14+">14天以上</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- NPS -->
+  <div class="section">
+    <h2>推荐意愿</h2>
+    <div class="form-group">
+      <label>你有多大可能向朋友推荐回声APP？ <span class="required">*</span></label>
+      <div class="nps-scale">
+        <input type="radio" name="nps" id="n0" value="0"><label for="n0">0</label>
+        <input type="radio" name="nps" id="n1" value="1"><label for="n1">1</label>
+        <input type="radio" name="nps" id="n2" value="2"><label for="n2">2</label>
+        <input type="radio" name="nps" id="n3" value="3"><label for="n3">3</label>
+        <input type="radio" name="nps" id="n4" value="4"><label for="n4">4</label>
+        <input type="radio" name="nps" id="n5" value="5"><label for="n5">5</label>
+        <input type="radio" name="nps" id="n6" value="6"><label for="n6">6</label>
+        <input type="radio" name="nps" id="n7" value="7"><label for="n7">7</label>
+        <input type="radio" name="nps" id="n8" value="8"><label for="n8">8</label>
+        <input type="radio" name="nps" id="n9" value="9"><label for="n9">9</label>
+        <input type="radio" name="nps" id="n10" value="10"><label for="n10">10</label>
+      </div>
+      <div class="nps-labels">
+        <span>完全不可能</span>
+        <span>非常可能</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>给出这个分数的原因？</label>
+      <textarea placeholder="说说你的理由..."></textarea>
+    </div>
+  </div>
+
+  <!-- 功能满意度 -->
+  <div class="section">
+    <h2>功能满意度</h2>
+    <p style="font-size:12px;color:#999;margin-bottom:12px;">请对以下功能打分（1=很不满意，5=很满意），没使用过的可跳过</p>
+
+    <div class="form-group">
+      <label>AI 陪伴好友</label>
+      <div class="rating">
+        <input type="radio" name="r_ai" id="r_ai_1" value="1"><label for="r_ai_1">1</label>
+        <input type="radio" name="r_ai" id="r_ai_2" value="2"><label for="r_ai_2">2</label>
+        <input type="radio" name="r_ai" id="r_ai_3" value="3"><label for="r_ai_3">3</label>
+        <input type="radio" name="r_ai" id="r_ai_4" value="4"><label for="r_ai_4">4</label>
+        <input type="radio" name="r_ai" id="r_ai_5" value="5"><label for="r_ai_5">5</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>情绪日记</label>
+      <div class="rating">
+        <input type="radio" name="r_diary" id="r_diary_1" value="1"><label for="r_diary_1">1</label>
+        <input type="radio" name="r_diary" id="r_diary_2" value="2"><label for="r_diary_2">2</label>
+        <input type="radio" name="r_diary" id="r_diary_3" value="3"><label for="r_diary_3">3</label>
+        <input type="radio" name="r_diary" id="r_diary_4" value="4"><label for="r_diary_4">4</label>
+        <input type="radio" name="r_diary" id="r_diary_5" value="5"><label for="r_diary_5">5</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>树洞吐槽区</label>
+      <div class="rating">
+        <input type="radio" name="r_treehole" id="r_th_1" value="1"><label for="r_th_1">1</label>
+        <input type="radio" name="r_treehole" id="r_th_2" value="2"><label for="r_th_2">2</label>
+        <input type="radio" name="r_treehole" id="r_th_3" value="3"><label for="r_th_3">3</label>
+        <input type="radio" name="r_treehole" id="r_th_4" value="4"><label for="r_th_4">4</label>
+        <input type="radio" name="r_treehole" id="r_th_5" value="5"><label for="r_th_5">5</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>动态广场</label>
+      <div class="rating">
+        <input type="radio" name="r_square" id="r_sq_1" value="1"><label for="r_sq_1">1</label>
+        <input type="radio" name="r_square" id="r_sq_2" value="2"><label for="r_sq_2">2</label>
+        <input type="radio" name="r_square" id="r_sq_3" value="3"><label for="r_sq_3">3</label>
+        <input type="radio" name="r_square" id="r_sq_4" value="4"><label for="r_sq_4">4</label>
+        <input type="radio" name="r_square" id="r_sq_5" value="5"><label for="r_sq_5">5</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>好友/私聊</label>
+      <div class="rating">
+        <input type="radio" name="r_friend" id="r_fr_1" value="1"><label for="r_fr_1">1</label>
+        <input type="radio" name="r_friend" id="r_fr_2" value="2"><label for="r_fr_2">2</label>
+        <input type="radio" name="r_friend" id="r_fr_3" value="3"><label for="r_fr_3">3</label>
+        <input type="radio" name="r_friend" id="r_fr_4" value="4"><label for="r_fr_4">4</label>
+        <input type="radio" name="r_friend" id="r_fr_5" value="5"><label for="r_fr_5">5</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bug 反馈 -->
+  <div class="section">
+    <h2>Bug 反馈</h2>
+    <div class="form-group bug-section">
+      <label>遇到了什么问题？</label>
+      <textarea placeholder="请描述问题、复现步骤、预期行为和实际行为"></textarea>
+    </div>
+    <div class="form-group">
+      <label>问题严重程度</label>
+      <select>
+        <option value="">请选择</option>
+        <option value="p0">致命 — 功能完全不可用</option>
+        <option value="p1">严重 — 核心功能异常</option>
+        <option value="p2">一般 — 体验不佳</option>
+        <option value="p3">轻微 — 小问题</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 开放反馈 -->
+  <div class="section">
+    <h2>开放反馈</h2>
+    <div class="form-group">
+      <label>你最喜欢回声的什么？</label>
+      <textarea placeholder="说说你最喜欢的点..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>你觉得最需要改进的是什么？</label>
+      <textarea placeholder="说说你的建议..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>你希望回声未来增加什么功能？</label>
+      <textarea placeholder="说说你的期待..."></textarea>
+    </div>
+  </div>
+
+  <button class="submit-btn" type="button">提交反馈</button>
+  <p style="text-align:center;color:#999;font-size:12px;margin-top:12px;">你的反馈对我们非常重要，谢谢！</p>
+</body>
+</html>

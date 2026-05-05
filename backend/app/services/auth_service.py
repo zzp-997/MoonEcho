@@ -252,9 +252,8 @@ class AuthService:
         # 4. 新用户自动创建
         is_new_user = False
         if user is None:
-            encrypted_phone = encrypt_phone(phone)
             user = User(
-                phone=encrypted_phone,
+                phone=phone,
                 phone_hash=hash_value,
                 is_minor=False,
             )
@@ -289,18 +288,24 @@ class AuthService:
         """完善用户资料（昵称 + 年龄段）。
 
         流程：
-        1. 更新昵称和年龄段
-        2. 18 岁以下自动标记 is_minor=True
-        3. 重新签发 Token（载荷包含 is_minor/age_range）
+        1. 合并用户对象到当前会话（避免跨会话冲突）
+        2. 更新昵称和年龄段
+        3. 18 岁以下自动标记 is_minor=True
+        4. 重新签发 Token（载荷包含 is_minor/age_range）
 
         Args:
-            user: 当前用户
+            user: 当前用户（可能来自不同会话）
             request: 完善资料请求
             db: 数据库会话
 
         Returns:
             VerifyCodeResponse: 新的 Token 信息
         """
+        # 合并用户对象到当前会话，避免跨会话冲突
+        # 当 user 对象来自其他会话（如认证中间件的会话）时，
+        # 需要将其合并到当前会话才能进行操作
+        user = await db.merge(user)
+
         user.nickname = request.nickname
         user.age_range = request.age_range
 
@@ -309,7 +314,6 @@ class AuthService:
             user.is_minor = True
             logger.info("用户标记为未成年人: user_id=%s", user.id)
 
-        db.add(user)
         await db.commit()
         await db.refresh(user)
 

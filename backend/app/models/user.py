@@ -111,10 +111,9 @@ class User(Base, UUIDMixin, TimestampMixin, SoftDeleteMixin):
     posts: Mapped[list["Post"]] = relationship(
         back_populates="user", cascade="all, delete-orphan", lazy="noload",
     )
-    square_posts: Mapped[list["Post"]] = relationship(
-        back_populates="anon_identity", cascade="all, delete-orphan", lazy="noload",
-        foreign_keys="Post.anon_identity_id",
-    )
+    # 注意: square_posts 关系已由 AnonymousIdentity 模型定义
+    # Post.anon_identity_id 指向 anonymous_identities 表，不是 users 表
+    # 用户发布的广场动态通过 posts 关系（back_populates="user"）访问
     # 好友申请关系
     sent_friend_requests: Mapped[list["FriendRequest"]] = relationship(
         back_populates="sender",

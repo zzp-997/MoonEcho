@@ -19,7 +19,7 @@ from app.schemas.base import BaseSchema
 class TopicSuggestionRequest(BaseSchema):
     """话题建议请求模型。"""
 
-    conversation_id: str = Field(..., description="会话ID")
+    conversation_id: str | None = Field(None, description="会话ID（可选）")
     context: str = Field(..., max_length=1000, description="对话上下文（最近几轮对话摘要）")
 
 
@@ -45,7 +45,7 @@ class TopicSuggestionResponse(BaseSchema):
 class ReplySuggestionRequest(BaseSchema):
     """回复建议请求模型。"""
 
-    conversation_id: str = Field(..., description="会话ID")
+    conversation_id: str | None = Field(None, description="会话ID（可选）")
     context: str = Field(..., max_length=1000, description="对话上下文")
     last_message: str = Field(..., max_length=500, description="对方最后说的话")
 
@@ -93,7 +93,7 @@ class PolishResponse(BaseSchema):
 class ExitSuggestionRequest(BaseSchema):
     """温柔退出请求模型。"""
 
-    conversation_id: str = Field(..., description="会话ID")
+    conversation_id: str | None = Field(None, description="会话ID（可选）")
     context: str = Field(..., max_length=1000, description="对话上下文")
 
 

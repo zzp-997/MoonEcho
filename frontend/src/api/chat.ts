@@ -4,7 +4,7 @@
  * 说明：AI 对话相关接口，包括同步对话、SSE 流式对话、对话列表、开场白等
  */
 
-import api from './index'
+import { api } from './index'
 import type { ApiResponse, Pagination } from '../types'
 
 // ==================== 类型定义 ====================

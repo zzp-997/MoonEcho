@@ -206,6 +206,16 @@ async function handleGetCode() {
   try {
     await sendVerifyCode(phoneNumber.value)
 
+    // 开发环境提示固定验证码
+    if (import.meta.env.VITE_DEBUG === 'true') {
+      uni.showModal({
+        title: '开发模式提示',
+        content: '当前为开发环境，验证码固定为：123456',
+        showCancel: false,
+        confirmText: '知道了',
+      })
+    }
+
     // 开始倒计时
     start()
 
@@ -231,12 +241,13 @@ async function handleLogin() {
     const result = await verifyCodeLogin(phoneNumber.value, codeInput.value)
 
     if (result.success) {
-      if (result.isNewUser) {
-        // 新用户跳转到完善资料页
+      // 核心判断：资料是否完善（无论新老用户，未完善都需要先完善资料）
+      if (!result.profileCompleted) {
+        // 资料未完善，跳转到完善资料页
         goToProfile()
       } else {
-        // 老用户跳转到首页
-        uni.switchTab({ url: '/pages/chat/index' })
+        // 资料已完善，跳转到首页
+        uni.switchTab({ url: '/pages/home/index' })
       }
     }
   } catch (error: any) {
@@ -311,8 +322,8 @@ onMounted(() => {
 .login-page {
   min-height: 100vh;
   background-color: var(--bg-primary);
-  padding: 0 var(--space-lg);
-  padding-top: 200rpx;
+  padding: 0 var(--space-md);
+  padding-top: 160rpx;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -324,25 +335,28 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 80rpx;
+  margin-bottom: var(--space-xl);
 }
 
 .logo {
-  width: 160rpx;
-  height: 160rpx;
+  width: 140rpx;
+  height: 140rpx;
   margin-bottom: var(--space-md);
+  border-radius: var(--radius-lg);
 }
 
 .title {
-  font-size: 44rpx;
+  font-size: var(--font-size-2xl);
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: var(--space-xs);
+  text-align: center;
 }
 
 .subtitle {
-  font-size: 28rpx;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
+  text-align: center;
 }
 
 // ==================== 表单区域 ====================
@@ -353,48 +367,48 @@ onMounted(() => {
 
 .input-group {
   background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  margin-bottom: var(--space-md);
-  padding: 0 var(--space-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+  padding: 0 var(--space-xs);
   overflow: hidden;
 }
 
 .input-prefix {
-  color: var(--text-primary);
-  font-size: 32rpx;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
   font-weight: 500;
-  margin-right: var(--space-sm);
+  margin-right: var(--space-xs);
 }
 
 .code-btn {
   padding: var(--space-xs) var(--space-sm);
   background-color: var(--brand-primary);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
 
   text {
     color: var(--text-on-brand);
-    font-size: 24rpx;
+    font-size: var(--font-size-xs);
     white-space: nowrap;
   }
 
   &.disabled {
-    background-color: #404040;
+    background-color: var(--bg-tertiary);
 
     text {
-      color: #808080;
+      color: var(--text-tertiary);
     }
   }
 }
 
 .error-tip {
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
 
   text {
     color: var(--color-error);
-    font-size: 24rpx;
+    font-size: var(--font-size-xs);
   }
 }
 
@@ -403,14 +417,14 @@ onMounted(() => {
 .privacy-row {
   display: flex;
   align-items: flex-start;
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .privacy-text {
-  font-size: 24rpx;
+  font-size: var(--font-size-xs);
   color: var(--text-secondary);
   line-height: 1.5;
-  margin-left: var(--space-xs);
+  margin-left: var(--space-2xs);
 }
 
 .privacy-link {
@@ -420,10 +434,10 @@ onMounted(() => {
 // ==================== 自动注册提示 ====================
 
 .auto-register-hint {
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 
   text {
-    font-size: 24rpx;
+    font-size: var(--font-size-xs);
     color: var(--text-tertiary);
   }
 }
@@ -437,13 +451,13 @@ onMounted(() => {
 // ==================== 微信登录区域 ====================
 
 .wechat-section {
-  margin-top: var(--space-2xl);
+  margin-top: var(--space-xl);
 }
 
 .divider-row {
   display: flex;
   align-items: center;
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .divider-line {
@@ -453,25 +467,25 @@ onMounted(() => {
 }
 
 .divider-text {
-  font-size: 24rpx;
+  font-size: var(--font-size-xs);
   color: var(--text-tertiary);
-  padding: 0 var(--space-md);
+  padding: 0 var(--space-sm);
 }
 
 .wechat-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
 }
 
 .wechat-icon {
-  width: 64rpx;
-  height: 64rpx;
+  width: 56rpx;
+  height: 56rpx;
   background-color: #07C160;
   border-radius: 50%;
   color: #FFFFFF;
-  font-size: 36rpx;
+  font-size: 28rpx;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -479,7 +493,7 @@ onMounted(() => {
 }
 
 .wechat-text {
-  font-size: 28rpx;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
 }
 
@@ -490,12 +504,11 @@ onMounted(() => {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 60rpx;
-  padding-bottom: calc(60rpx + env(safe-area-inset-bottom));
+  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
 }
 
 .footer-text {
-  font-size: 24rpx;
+  font-size: var(--font-size-xs);
   color: var(--text-tertiary);
 }
 </style>

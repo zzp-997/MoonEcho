@@ -4,7 +4,9 @@
     <view class="crisis-dialog" @tap.stop>
       <!-- 图标 -->
       <view class="dialog-icon">
-        <text class="icon-heart">❤</text>
+        <view class="heart-icon-wrapper">
+          <text class="heart-icon-text">♥</text>
+        </view>
       </view>
 
       <!-- 标题 -->
@@ -173,10 +175,19 @@ function handleConfirm(): void {
   margin-bottom: var(--space-md);
 }
 
-.icon-heart {
-  font-size: 80rpx;
+.heart-icon-wrapper {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: var(--radius-full);
+  background-color: rgba(255, 181, 186, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heart-icon-text {
+  font-size: 48rpx;
   color: var(--ai-xiaowen);
-  animation: pulse 1.5s ease-in-out infinite;
 }
 
 // ==================== 标题与消息 ====================

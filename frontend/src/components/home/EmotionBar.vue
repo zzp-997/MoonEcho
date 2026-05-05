@@ -3,7 +3,7 @@
     <!-- 状态文案 -->
     <view class="bar-content" @tap="handleTap">
       <view class="status-icon">
-        <text class="icon-emoji">{{ statusEmoji }}</text>
+        <text class="status-icon-text">{{ statusIcon }}</text>
       </view>
       <view class="status-text">
         <text class="main-text">{{ mainText }}</text>
@@ -63,14 +63,14 @@ const emit = defineEmits<{
 
 // ==================== 计算属性 ====================
 
-/** 状态表情 */
-const statusEmoji = computed(() => {
+/** 状态标识文字 */
+const statusIcon = computed(() => {
   if (props.hasRecordToday) {
-    if (props.streakDays >= 7) return '✨'
-    if (props.streakDays >= 3) return '🌟'
-    return '✓'
+    if (props.streakDays >= 7) return '强'
+    if (props.streakDays >= 3) return '连'
+    return '已'
   }
-  return '💭'
+  return '记'
 })
 
 /** 主文案 */
@@ -172,8 +172,10 @@ function handleTap(): void {
   margin-right: var(--space-sm);
 }
 
-.icon-emoji {
-  font-size: 36rpx;
+.status-icon-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--brand-primary);
 }
 
 .status-text {

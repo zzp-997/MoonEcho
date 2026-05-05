@@ -9,7 +9,7 @@
  *   POST /api/v1/auth/refresh-token   # 刷新token
  */
 
-import api from '../index'
+import { api } from '../index'
 
 // ==================== 类型定义 ====================
 

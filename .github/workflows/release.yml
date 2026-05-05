@@ -1,0 +1,130 @@
+# ============================================================
+# 回声（Echo Meet）发布版本流水线
+# 功能：版本发布 / 打包 / 发布通知
+# ============================================================
+
+name: Echo Meet Release Pipeline
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  # ----------------------------------------------------------
+  # 构建发布版本
+  # ----------------------------------------------------------
+  build-release:
+    name: 构建发布版本
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 获取版本号
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "版本号: ${VERSION}"
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 构建 H5 版本
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build:h5
+
+      - name: 打包 H5 发布版本
+        run: |
+          cd frontend/dist/build/h5
+          zip -r echo-meet-h5-v${{ steps.version.outputs.version }}.zip .
+
+      - name: 上传 H5 发布包
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: frontend/dist/build/h5/echo-meet-h5-v${{ steps.version.outputs.version }}.zip
+          asset_name: echo-meet-h5-v${{ steps.version.outputs.version }}.zip
+          asset_content_type: application/zip
+
+      - name: 构建微信小程序版本
+        working-directory: frontend
+        run: |
+          npm run build:mp-weixin
+
+      - name: 打包微信小程序发布版本
+        run: |
+          cd frontend/dist/build/mp-weixin
+          zip -r echo-meet-mp-weixin-v${{ steps.version.outputs.version }}.zip .
+
+      - name: 上传微信小程序发布包
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: frontend/dist/build/mp-weixin/echo-meet-mp-weixin-v${{ steps.version.outputs.version }}.zip
+          asset_name: echo-meet-mp-weixin-v${{ steps.version.outputs.version }}.zip
+          asset_content_type: application/zip
+
+      - name: 构建管理后台版本
+        working-directory: admin-web
+        run: |
+          npm ci
+          npm run build
+
+      - name: 打包管理后台发布版本
+        run: |
+          cd admin-web/dist
+          zip -r echo-meet-admin-v${{ steps.version.outputs.version }}.zip .
+
+      - name: 上传管理后台发布包
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: admin-web/dist/echo-meet-admin-v${{ steps.version.outputs.version }}.zip
+          asset_name: echo-meet-admin-v${{ steps.version.outputs.version }}.zip
+          asset_content_type: application/zip
+
+  # ----------------------------------------------------------
+  # 发布通知
+  # ----------------------------------------------------------
+  notify-release:
+    name: 发布通知
+    runs-on: ubuntu-latest
+    needs: build-release
+
+    steps:
+      - name: 发送钉钉通知
+        run: |
+          curl -X POST "${{ secrets.DINGTALK_WEBHOOK }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"msgtype\":\"markdown\",\"markdown\":{\"title\":\"版本发布通知\",\"text\":\"## 回声 APP 新版本发布\\n\\n版本: ${GITHUB_REF#refs/tags/v}\\n\\n发布时间: $(date '+%Y-%m-%d %H:%M:%S')\\n\\n发布说明: ${GITHUB_EVENT_RELEASE_BODY}\\n\\n请及时更新部署！\"}}"
+
+      - name: 发送 Slack 通知
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          custom_payload: |
+            {
+              attachments: [{
+                color: 'good',
+                title: '版本发布成功',
+                fields: [
+                  { title: '版本', value: '${GITHUB_REF#refs/tags/v}', short: true },
+                  { title: '发布时间', value: '${{ github.event.release.published_at }}', short: true },
+                  { title: '发布说明', value: '${{ github.event.release.body }}', short: false }
+                ]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

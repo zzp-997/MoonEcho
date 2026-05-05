@@ -1,19 +1,72 @@
 <template>
-  <view class="container">
-    <text class="placeholder">动态</text>
-    <text class="hint">阶段二功能：树洞 & 广场</text>
+  <view class="community-page">
+    <!-- 顶部导航栏 -->
+    <view class="page-header">
+      <view class="header-title">
+        <text class="title-text">动态</text>
+        <text class="title-hint">树洞 & 广场</text>
+      </view>
+    </view>
+
+    <!-- 功能入口卡片 -->
+    <view class="entry-cards">
+      <!-- 树洞入口 -->
+      <view class="entry-card" @tap="handleGoTreehole">
+        <view class="card-icon treehole-icon">
+          <text class="icon-text">洞</text>
+        </view>
+        <view class="card-content">
+          <text class="card-title">树洞</text>
+          <text class="card-desc">匿名吐槽，把没处说的话丢出来</text>
+        </view>
+        <view class="card-arrow">
+          <text class="arrow-text">></text>
+        </view>
+      </view>
+
+      <!-- 广场入口 -->
+      <view class="entry-card" @tap="handleGoSquare">
+        <view class="card-icon square-icon">
+          <text class="icon-text">场</text>
+        </view>
+        <view class="card-content">
+          <text class="card-title">广场</text>
+          <text class="card-desc">实名分享，看看大家在聊什么</text>
+        </view>
+        <view class="card-arrow">
+          <text class="arrow-text">></text>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
 /**
- * 回声 - 动态页（社区）
+ * 回声 - 动态入口页（社区）
  * 文件：src/pages/community/index.vue
- * 说明：社区动态入口，阶段二整合树洞和广场功能
- *       阶段一仅作占位页面
+ * 说明：社区动态入口，整合树洞和广场功能
  */
 import { onShow } from '@dcloudio/uni-app'
 import { trackPageEnter } from '@/utils/tracking'
+
+/**
+ * 跳转到树洞页面
+ */
+function handleGoTreehole(): void {
+  uni.navigateTo({
+    url: '/pagesSocial/treehole/index',
+  })
+}
+
+/**
+ * 跳转到广场页面
+ */
+function handleGoSquare(): void {
+  uni.navigateTo({
+    url: '/pagesSocial/square/index',
+  })
+}
 
 onShow(() => {
   trackPageEnter('community')
@@ -21,23 +74,106 @@ onShow(() => {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.community-page {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
   background-color: var(--bg-primary);
 }
 
-.placeholder {
+.page-header {
+  display: flex;
+  align-items: center;
+  height: 88rpx;
+  padding: 0 var(--space-md);
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.header-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.title-text {
   font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.title-hint {
+  font-size: var(--font-size-xs);
   color: var(--text-tertiary);
+}
+
+.entry-cards {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-lg) var(--space-md);
+  gap: var(--space-md);
+}
+
+.entry-card {
+  display: flex;
+  align-items: center;
+  padding: var(--space-lg);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.card-icon {
+  width: 100rpx;
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--space-md);
+  border-radius: var(--radius-md);
+}
+
+.treehole-icon {
+  background-color: rgba(139, 167, 196, 0.2);
+}
+
+.square-icon {
+  background-color: rgba(124, 111, 224, 0.2);
+}
+
+.icon-text {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text-primary);
   margin-bottom: var(--space-xs);
 }
 
-.hint {
+.card-desc {
   font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+}
+
+.card-arrow {
+  display: flex;
+  align-items: center;
+}
+
+.arrow-text {
+  font-size: var(--font-size-lg);
   color: var(--text-tertiary);
 }
 </style>

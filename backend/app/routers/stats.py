@@ -51,11 +51,13 @@ class TrackingEventSchema(BaseModel):
     name: str = Field(..., description="事件名称")
     properties: dict[str, Any] | None = Field(None, description="事件属性")
     timestamp: int = Field(..., description="时间戳（毫秒）")
-    user_id: str | None = Field(None, description="用户ID（可选）")
-    device_id: str = Field(..., description="设备ID")
-    session_id: str = Field(..., description="会话ID")
+    user_id: str | None = Field(None, alias="userId", description="用户ID（可选）")
+    device_id: str = Field(..., alias="deviceId", description="设备ID")
+    session_id: str = Field(..., alias="sessionId", description="会话ID")
     platform: str = Field(..., description="平台：h5/app/mp-weixin")
-    app_version: str | None = Field(None, description="App版本")
+    app_version: str | None = Field(None, alias="appVersion", description="App版本")
+
+    model_config = {"populate_by_name": True}
 
 
 class EventBatchSubmitRequest(BaseModel):
@@ -404,9 +406,8 @@ async def submit_event_batch(
             return success_response(result, request_id)
         except Exception as e:
             logger.error("[Analytics] 批量事件上报异常: %s", str(e))
-            # 静默处理，不抛出异常
+            # 静默处理，不抛出异常，返回简化响应
             return success_response({
-                "success": True,
                 "recorded_count": 0,
                 "skipped_count": len(events),
                 "message": "事件接收成功",

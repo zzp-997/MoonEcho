@@ -70,9 +70,26 @@ async def _get_auth_service(request: Request) -> Any:
 
 
 async def _get_db_session(request: Request) -> AsyncSession:
-    """从应用状态获取数据库会话。"""
+    """从应用状态获取数据库会话（内部使用）。"""
     # 使用 request.app.state.db_pool 获取连接池
     # 或者通过依赖注入系统
+    async_session_factory = request.app.state.async_session_factory
+    async with async_session_factory() as session:
+        yield session
+
+
+async def get_db_session(request: Request) -> AsyncSession:
+    """从应用状态获取数据库会话（公开依赖注入函数）。
+
+    用于路由处理函数中需要数据库会话的场景，
+    确保与 CurrentUser 使用同一会话，避免 SQLAlchemy 会话冲突。
+
+    Args:
+        request: FastAPI 请求对象
+
+    Yields:
+        AsyncSession: 数据库会话
+    """
     async_session_factory = request.app.state.async_session_factory
     async with async_session_factory() as session:
         yield session
@@ -128,11 +145,12 @@ async def get_current_user(
     payload = await auth_service.verify_access_token(token)
     user_id = payload.get("sub")
 
-    # 查询用户
+    # 查询用户 - 使用 populate_existing() 确保获取最新状态
+    # 避免与之前会话中的对象冲突
     stmt = select(User).where(
         User.id == user_id,
         User.is_active == True,  # noqa: E712
-    )
+    ).options().execution_options(populate_existing=True)
     result = await db.execute(stmt)
     user = result.scalar_one_or_none()
 

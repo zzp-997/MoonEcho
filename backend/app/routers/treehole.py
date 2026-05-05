@@ -107,7 +107,6 @@ def _create_treehole_care_service(
 @router.get(
     "/posts",
     summary="获取树洞帖子列表",
-    response_model=TreeholePostListResponse,
 )
 async def list_posts(
     user: CurrentUser,
@@ -157,7 +156,6 @@ async def list_posts(
 @router.post(
     "/posts",
     summary="发布树洞帖子",
-    response_model=TreeholePostCreateResponse,
 )
 async def create_post(
     body: TreeholePostCreateRequest,
@@ -233,7 +231,6 @@ async def create_post(
 @router.get(
     "/posts/{post_id}",
     summary="获取帖子详情",
-    response_model=TreeholePostDetailResponse,
 )
 async def get_post(
     user: CurrentUser,
@@ -278,7 +275,6 @@ async def get_post(
 @router.post(
     "/posts/{post_id}/resonance",
     summary="创建共鸣（我懂你）",
-    response_model=ResonanceResponse,
 )
 async def create_resonance(
     user: CurrentUser,
@@ -336,7 +332,6 @@ async def create_resonance(
 @router.post(
     "/posts/{post_id}/comments",
     summary="创建评论",
-    response_model=TreeholeCommentCreateResponse,
 )
 async def create_comment(
     body: TreeholeCommentCreateRequest,
@@ -442,7 +437,6 @@ async def delete_post(
 @router.post(
     "/posts/{post_id}/appeal",
     summary="审核结果申诉",
-    response_model=AuditAppealCreateResponse,
 )
 async def create_appeal(
     body: AuditAppealCreateRequest,

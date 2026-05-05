@@ -57,7 +57,9 @@
       <view class="action-bar">
         <view class="left-actions">
           <view class="ai-rewrite-btn" @tap="handleAiRewrite">
-            <text class="btn-icon">✨</text>
+            <view class="ai-btn-icon">
+              <text class="ai-btn-text">AI</text>
+            </view>
             <text class="btn-text">AI润色</text>
           </view>
         </view>
@@ -404,8 +406,21 @@ onMounted(() => {
   }
 }
 
-.btn-icon {
-  font-size: var(--font-size-sm);
+.ai-btn-icon {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: var(--radius-xs);
+  background-color: var(--brand-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6rpx;
+}
+
+.ai-btn-text {
+  font-size: 16rpx;
+  font-weight: 600;
+  color: #FFFFFF;
 }
 
 .btn-text {

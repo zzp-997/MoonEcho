@@ -1,0 +1,170 @@
+# ============================================================
+# 回声（Echo Meet）测试流水线
+# 功能：每日定时测试 / PR 测试
+# ============================================================
+
+name: Echo Meet Test Pipeline
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # 每日北京时间14:00
+  pull_request:
+    branches: [master, develop]
+  workflow_dispatch:
+
+jobs:
+  # ----------------------------------------------------------
+  # API 全面测试
+  # ----------------------------------------------------------
+  api-comprehensive-test:
+    name: API 全面测试
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test_root_2026
+          MYSQL_DATABASE: echo_meet_test
+          MYSQL_USER: echo_test
+          MYSQL_PASSWORD: test_2026
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 安装依赖
+        working-directory: backend
+        run: |
+          pip install -e .[dev]
+
+      - name: 等待数据库就绪
+        run: |
+          for i in {1..60}; do
+            mysql -h 127.0.0.1 -u root -ptest_root_2026 -e "SELECT 1" && break
+            echo "等待 MySQL 启动..."
+            sleep 3
+          done
+
+      - name: 初始化数据库
+        working-directory: backend
+        env:
+          DATABASE_URL: mysql+aiomysql://echo_test:test_2026@127.0.0.1:3306/echo_meet_test
+          REDIS_URL: redis://127.0.0.1:6379/0
+          JWT_SECRET_KEY: test_jwt_secret_key_for_ci
+          APP_ENV: test
+        run: |
+          mysql -h 127.0.0.1 -u root -ptest_root_2026 echo_meet_test < ../mysql/init.sql
+          alembic upgrade head
+
+      - name: 运行全面测试
+        working-directory: backend
+        env:
+          DATABASE_URL: mysql+aiomysql://echo_test:test_2026@127.0.0.1:3306/echo_meet_test
+          REDIS_URL: redis://127.0.0.1:6379/0
+          JWT_SECRET_KEY: test_jwt_secret_key_for_ci
+          APP_ENV: test
+          DEBUG: false
+        run: |
+          pytest tests/ -v --tb=short -x --timeout=300
+
+      - name: 生成测试报告
+        if: always()
+        working-directory: backend
+        run: |
+          pytest tests/ --html=report.html --self-contained-html || true
+
+      - name: 上传测试报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: backend/report.html
+          retention-days: 7
+
+  # ----------------------------------------------------------
+  # 安全扫描
+  # ----------------------------------------------------------
+  security-scan:
+    name: 安全扫描
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 运行 Trivy 漏洞扫描
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+
+      - name: 运行 CodeQL 分析
+        uses: github/codeql-action/analyze@v2
+        with:
+          languages: python, javascript
+
+      - name: 检查敏感信息泄露
+        uses: zricethezav/gitleaks-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ----------------------------------------------------------
+  # 性能基准测试
+  # ----------------------------------------------------------
+  performance-test:
+    name: 性能基准测试
+    runs-on: ubuntu-latest
+    needs: api-comprehensive-test
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装性能测试工具
+        run: |
+          pip install locust
+
+      - name: 运行性能测试
+        working-directory: backend
+        run: |
+          # 性能测试脚本需要单独准备
+          echo "性能测试待实现"
+
+      - name: 上传性能报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-report
+          path: backend/performance_report.html
+          retention-days: 7

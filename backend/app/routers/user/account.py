@@ -64,7 +64,6 @@ def _get_auth_service(request: Request) -> Any:
 @router.get(
     "/delete/pre-check",
     summary="账户注销预检查",
-    response_model=DeletionPreCheckResponse,
 )
 async def pre_check_deletion(
     user: CurrentUser,
@@ -109,7 +108,6 @@ async def pre_check_deletion(
 @router.post(
     "/delete",
     summary="发起账户注销",
-    response_model=AccountDeletionResponse,
 )
 async def delete_account(
     user: CurrentUser,
@@ -171,7 +169,6 @@ async def delete_account(
 @router.post(
     "/export",
     summary="导出用户数据",
-    response_model=DataExportResponse,
 )
 async def export_user_data(
     user: CurrentUser,

@@ -20,7 +20,24 @@ import { track, EventName } from '@/utils/tracking'
 // ==================== 配置 ====================
 
 /** WebSocket 基础地址 */
-const WS_BASE_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8000/api/v1/ws/chat'
+const WS_BASE_URL_CONFIG = import.meta.env.VITE_WS_URL || '/api/v1/ws/chat'
+
+/**
+ * 获取完整的 WebSocket URL
+ * 支持相对路径，自动根据当前协议和主机构建完整 URL
+ */
+function getWebSocketUrl(): string {
+  // 如果已经是完整 URL，直接返回
+  if (WS_BASE_URL_CONFIG.startsWith('ws://') || WS_BASE_URL_CONFIG.startsWith('wss://')) {
+    return WS_BASE_URL_CONFIG
+  }
+  // 相对路径：根据当前页面协议和主机构建完整 URL
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  const host = window.location.host
+  return `${protocol}//${host}${WS_BASE_URL_CONFIG}`
+}
+
+const WS_BASE_URL = getWebSocketUrl()
 
 /** 心跳间隔（毫秒） */
 const HEARTBEAT_INTERVAL = 30000

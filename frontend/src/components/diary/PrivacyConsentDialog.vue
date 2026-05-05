@@ -1,3 +1,4 @@
+
 <template>
   <!-- 隐私声明弹窗 -->
   <view v-if="visible" class="privacy-dialog-overlay" @tap.stop.prevent>
@@ -55,7 +56,7 @@
           @tap="selectSyncMode('cloud_sync')"
         >
           <view class="option-icon">
-            <text class="icon-cloud">☁️</text>
+            <text class="icon-cloud-text">云</text>
           </view>
           <view class="option-content">
             <text class="option-title">开启云端同步</text>
@@ -256,8 +257,10 @@ function handleConfirm(): void {
 }
 
 .icon-device,
-.icon-cloud {
-  font-size: 32rpx;
+.icon-cloud-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .option-content {

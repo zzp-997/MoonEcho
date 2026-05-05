@@ -82,6 +82,7 @@ class BehaviorStats:
     follow_count: int = 0       # 悄悄关注人数
     friend_request_count: int = 0  # 好友申请次数（发送的）
     chat_count: int = 0         # 私聊开启次数
+    _friend_count: int = 0      # 好友数量（内部使用，用于判断Level 6）
 
 
 @dataclass

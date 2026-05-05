@@ -17,7 +17,7 @@
       >
         <!-- 头像 -->
         <view class="card-avatar" :class="`avatar-${personality.type}`">
-          <text class="avatar-emoji">{{ personality.emoji }}</text>
+          <text class="avatar-label">{{ personality.label }}</text>
         </view>
 
         <!-- 名称 -->
@@ -86,7 +86,7 @@ const personalities = [
   {
     type: 'xiaowen',
     name: '小温',
-    emoji: '🌸',
+    label: '温',
     description: '温柔倾听者，像姐姐一样温暖',
     tags: ['温柔', '倾听', '治愈'],
     color: '#FFB5BA',
@@ -94,7 +94,7 @@ const personalities = [
   {
     type: 'laohei',
     name: '老黑',
-    emoji: '🌙',
+    label: '黑',
     description: '毒舌吐槽者，像损友一样直率',
     tags: ['直率', '吐槽', '清醒'],
     color: '#8B9DC3',
@@ -102,7 +102,7 @@ const personalities = [
   {
     type: 'ali',
     name: '阿理',
-    emoji: '🌿',
+    label: '理',
     description: '理性开导者，像大哥一样可靠',
     tags: ['理性', '分析', '建议'],
     color: '#7CB9A0',
@@ -315,8 +315,10 @@ onMounted(() => {
   }
 }
 
-.avatar-emoji {
-  font-size: 48rpx;
+.avatar-label {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 // ==================== 卡片内容 ====================

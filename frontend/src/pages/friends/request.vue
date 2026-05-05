@@ -45,7 +45,9 @@
     <!-- AI 帮我想想 -->
     <view class="ai-assist-section">
       <view class="ai-btn" :class="{ 'is-loading': isGenerating }" @tap="handleGenerateGreeting">
-        <text v-if="!isGenerating" class="ai-icon">✨</text>
+        <view v-if="!isGenerating" class="ai-icon-wrapper">
+          <text class="ai-icon-text">AI</text>
+        </view>
         <wd-loading v-else size="small" />
         <text class="ai-text">{{ isGenerating ? 'AI正在想...' : 'AI帮我想想' }}</text>
       </view>
@@ -405,8 +407,21 @@ onMounted(() => {
   }
 }
 
-.ai-icon {
-  font-size: var(--font-size-sm);
+.ai-icon-wrapper {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: var(--radius-xs);
+  background-color: var(--brand-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6rpx;
+}
+
+.ai-icon-text {
+  font-size: 16rpx;
+  font-weight: 600;
+  color: #FFFFFF;
 }
 
 .ai-text {

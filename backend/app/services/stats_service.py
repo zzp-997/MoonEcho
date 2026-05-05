@@ -562,7 +562,6 @@ async def batch_record_events(
         )
 
         return {
-            "success": True,
             "message": f"批量记录完成，成功: {recorded_count}, 跳过: {skipped_count}",
             "recorded_count": recorded_count,
             "skipped_count": skipped_count,
@@ -572,7 +571,6 @@ async def batch_record_events(
         logger.error("[Stats] 批量记录用户事件异常: %s", str(e))
         await db.rollback()
         return {
-            "success": True,
             "message": "批量记录失败（静默处理）",
             "recorded_count": 0,
             "skipped_count": len(events),

@@ -11,7 +11,7 @@
  *   PATCH  /api/v1/notifications/settings     # 更新通知设置
  */
 
-import api from '../index'
+import { api } from '../index'
 import type { Pagination } from '../types'
 
 // ==================== 类型定义 ====================

@@ -9,29 +9,38 @@ import type { SendMessageParams } from '@/types/chat'
 
 // ==================== AI 对话接口 ====================
 
-/** 发送消息（SSE流式响应入口） */
+/** 发送消息（同步模式，与后端 POST /api/v1/ai/chat 对齐） */
 export function sendMessage(params: SendMessageParams) {
-  return api.post('/chat/send', params)
+  return api.post('/ai/chat', params)
 }
 
-/** 获取对话历史 */
-export function getChatHistory(sessionId: string, page = 1, pageSize = 50) {
-  return api.get('/chat/history', { sessionId, page, pageSize })
+/** 获取 SSE 流式对话地址 */
+export function getStreamUrl(): string {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'
+  return `${baseUrl}/ai/chat/stream`
 }
 
-/** 获取会话列表 */
-export function getChatSessions() {
-  return api.get('/chat/sessions')
+/** 获取对话历史（与后端 GET /api/v1/ai/conversations 对齐） */
+export function getChatHistory(conversationId: string, page = 1, pageSize = 20) {
+  return api.get('/ai/conversations/history', { conversation_id: conversationId, page, page_size: pageSize })
 }
 
-/** 创建新会话 */
+/** 获取会话列表（与后端 GET /api/v1/ai/conversations 对齐） */
+export function getChatSessions(page = 1, pageSize = 20) {
+  return api.get('/ai/conversations', { page, page_size: pageSize })
+}
+
+/** 创建新会话（通过发送消息自动创建，无需单独接口） */
 export function createChatSession(personalityType: string) {
-  return api.post('/chat/sessions', { personalityType })
+  // 后端无单独创建会话接口，通过 sendMessage 传入 personalityType 自动创建
+  return sendMessage({ content: '', personalityType: personalityType as any })
 }
 
-/** 删除会话 */
-export function deleteChatSession(sessionId: string) {
-  return api.delete(`/chat/sessions/${sessionId}`)
+/** 删除会话（后端暂无此接口，保留但标记为未实现） */
+export function deleteChatSession(_sessionId: string) {
+  // TODO: 后端暂未实现删除 AI 会话接口
+  console.warn('删除 AI 会话接口暂未实现')
+  return Promise.resolve()
 }
 
 // ==================== 私聊类型定义 ====================

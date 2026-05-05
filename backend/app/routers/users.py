@@ -70,7 +70,6 @@ def _get_redis(request: Request) -> Any:
 @router.get(
     "/me",
     summary="获取自己的用户信息",
-    response_model=UserDetailResponse,
 )
 async def get_my_profile(
     user: CurrentUser,
@@ -139,7 +138,6 @@ async def update_my_profile(
 @router.get(
     "/me/tags",
     summary="获取我的兴趣标签",
-    response_model=UserTagsResponse,
 )
 async def get_my_tags(
     user: CurrentUser,
@@ -173,7 +171,6 @@ async def get_my_tags(
 @router.post(
     "/me/tags",
     summary="添加兴趣标签",
-    response_model=UserTagResponse,
 )
 async def add_my_tag(
     user: CurrentUser,
@@ -244,7 +241,6 @@ async def delete_my_tag(
 @router.get(
     "/me/profile-tags",
     summary="获取AI画像标签",
-    response_model=AIProfileTagResponse,
 )
 async def get_my_profile_tags(
     user: CurrentUser,
@@ -286,7 +282,6 @@ async def get_my_profile_tags(
 @router.get(
     "/me/social-energy",
     summary="获取社交能量",
-    response_model=SocialEnergyResponse,
 )
 async def get_social_energy(
     user: CurrentUser,
@@ -329,7 +324,6 @@ async def get_social_energy(
 @router.post(
     "/me/social-energy/rest",
     summary="主动休息恢复能量",
-    response_model=RestResponse,
 )
 async def rest_and_recover(
     user: CurrentUser,
@@ -376,7 +370,6 @@ async def rest_and_recover(
 @router.get(
     "/me/social-level",
     summary="获取渐进式社交暴露级别",
-    response_model=SocialLevelResponse,
 )
 async def get_social_level(
     user: CurrentUser,
@@ -429,7 +422,6 @@ async def get_social_level(
 @router.get(
     "/{user_id}",
     summary="查看他人公开信息",
-    response_model=UserPublicInfo,
 )
 async def get_user_public_info(
     user: CurrentUser,
@@ -476,7 +468,6 @@ async def get_user_public_info(
 @router.get(
     "/{user_id}/public-posts",
     summary="获取他人公开动态列表",
-    response_model=PublicPostsResponse,
 )
 async def get_user_public_posts(
     user: CurrentUser,

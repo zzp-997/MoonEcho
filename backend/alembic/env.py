@@ -87,7 +87,7 @@ def run_migrations_online() -> None:
     """
     # 判断是否为异步驱动
     url = config.get_main_option("sqlalchemy.url", "")
-    is_async = url.startswith(("sqlite+aiosqlite", "mysql+aiomysql", "postgresql+asyncpg"))
+    is_async = url.startswith(("sqlite+aiosqlite", "mysql+aiomysql", "mysql+asyncmy", "postgresql+asyncpg"))
 
     if is_async:
         asyncio.run(run_async_migrations())

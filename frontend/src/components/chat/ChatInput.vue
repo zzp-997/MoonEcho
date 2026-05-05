@@ -3,7 +3,9 @@
     <!-- AI 辅助提示 -->
     <view v-if="showAIHint" class="ai-hint-bar">
       <view class="hint-content" @tap="handleHintTap">
-        <text class="hint-icon">💡</text>
+        <view class="hint-icon-wrapper">
+          <text class="hint-icon-text">AI</text>
+        </view>
         <text class="hint-text">{{ aiHintText }}</text>
         <text class="hint-arrow">></text>
       </view>
@@ -38,7 +40,7 @@
         />
         <!-- 语气优化按钮 -->
         <view v-if="inputContent.length > 0" class="polish-btn" @tap="handlePolish">
-          <text class="polish-icon">✨</text>
+          <text class="polish-text">优</text>
         </view>
       </view>
 
@@ -55,11 +57,15 @@
     <!-- 更多功能面板 -->
     <view v-if="showMorePanel" class="more-panel">
       <view class="panel-item" @tap="handleChooseImage">
-        <text class="panel-icon">📷</text>
+        <view class="panel-icon-wrapper">
+          <text class="panel-icon-text">图</text>
+        </view>
         <text class="panel-label">图片</text>
       </view>
       <view class="panel-item" @tap="handleChooseCamera">
-        <text class="panel-icon">📸</text>
+        <view class="panel-icon-wrapper">
+          <text class="panel-icon-text">拍</text>
+        </view>
         <text class="panel-label">拍照</text>
       </view>
     </view>
@@ -303,9 +309,21 @@ function clearInput(): void {
   }
 }
 
-.hint-icon {
-  font-size: var(--font-size-md);
+.hint-icon-wrapper {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: var(--radius-xs);
+  background-color: var(--brand-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-right: var(--space-xs);
+}
+
+.hint-icon-text {
+  font-size: 18rpx;
+  font-weight: 600;
+  color: #FFFFFF;
 }
 
 .hint-text {
@@ -397,8 +415,10 @@ function clearInput(): void {
   }
 }
 
-.polish-icon {
-  font-size: var(--font-size-md);
+.polish-text {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--brand-primary);
 }
 
 .send-btn {
@@ -454,9 +474,21 @@ function clearInput(): void {
   }
 }
 
-.panel-icon {
-  font-size: 48rpx;
+.panel-icon-wrapper {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: var(--space-xs);
+}
+
+.panel-icon-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .panel-label {

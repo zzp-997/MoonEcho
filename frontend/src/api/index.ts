@@ -75,12 +75,12 @@ async function tryRefreshToken(): Promise<string | null> {
       return null
     }
 
-    const res = await new Promise<ApiResponse<{ token: string; refreshToken: string }>>(
+    const res = await new Promise<ApiResponse<{ access_token: string; refresh_token: string }>>(
       (resolve, reject) => {
         uni.request({
-          url: `${BASE_URL}/auth/refresh`,
+          url: `${BASE_URL}/auth/refresh-token`,
           method: 'POST',
-          data: { refreshToken },
+          data: { refresh_token: refreshToken },
           header: { 'Content-Type': 'application/json' },
           success: (result) => resolve(result.data as ApiResponse),
           fail: (err) => reject(err),
@@ -89,8 +89,8 @@ async function tryRefreshToken(): Promise<string | null> {
     )
 
     if (res.success && res.data) {
-      const newToken = res.data.token
-      userStore.setToken(newToken, res.data.refreshToken)
+      const newToken = res.data.access_token
+      userStore.setToken(newToken, res.data.refresh_token)
 
       // 处理等待队列
       pendingRequests.forEach((cb) => cb(newToken))
@@ -355,7 +355,7 @@ export const api = {
 
   /** PATCH 请求 */
   patch<T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> {
-    return request<T>(url, 'PATCH', data, config)
+    return request<T>(url, 'PATCH' as UniApp.RequestOptions['method'], data, config)
   },
 
   /** DELETE 请求 */

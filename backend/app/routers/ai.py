@@ -441,7 +441,6 @@ async def get_greeting_quota(
 @router.post(
     "/chat-assist/topic",
     summary="冷场救急话题建议",
-    response_model=TopicSuggestionResponse,
 )
 async def suggest_topics(
     body: TopicSuggestionRequest,
@@ -485,7 +484,6 @@ async def suggest_topics(
 @router.post(
     "/chat-assist/reply",
     summary="回复建议",
-    response_model=ReplySuggestionResponse,
 )
 async def suggest_replies(
     body: ReplySuggestionRequest,
@@ -530,7 +528,6 @@ async def suggest_replies(
 @router.post(
     "/chat-assist/polish",
     summary="语气优化（润色）",
-    response_model=PolishResponse,
 )
 async def polish_message(
     body: PolishRequest,
@@ -574,7 +571,6 @@ async def polish_message(
 @router.post(
     "/chat-assist/exit",
     summary="温柔退出结束语",
-    response_model=ExitSuggestionResponse,
 )
 async def suggest_exits(
     body: ExitSuggestionRequest,

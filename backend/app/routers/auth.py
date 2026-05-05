@@ -18,7 +18,7 @@ from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.responses import success_response
-from app.middleware.auth import CurrentUser
+from app.middleware.auth import CurrentUser, get_db_session
 from app.models.user import User
 from app.schemas.auth import (
     CompleteProfileRequest,
@@ -39,13 +39,6 @@ router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
 def _get_auth_service(request: Request) -> Any:
     """从应用状态获取认证服务。"""
     return request.app.state.auth_service
-
-
-def _get_db(request: Request) -> Any:
-    """从请求状态获取数据库会话。"""
-    # 数据库会话在中间件或依赖注入中创建
-    # 此处通过 request.state 获取
-    return request.state.db
 
 
 # ---------------------------------------------------------------------------
@@ -105,6 +98,7 @@ async def complete_profile(
     user: CurrentUser,
     request: Request,
     auth_service: Any = Depends(_get_auth_service),
+    db: AsyncSession = Depends(get_db_session),
 ) -> dict[str, Any]:
     """完善用户资料（昵称 + 年龄段）。
 
@@ -112,14 +106,13 @@ async def complete_profile(
     - 18岁以下自动标记 is_minor=True（青少年模式）
     - 完善后重新签发 Token（载荷包含 is_minor/age_range）
     - 需要登录（Bearer Token）
+
+    注意：使用依赖注入的数据库会话，确保与 CurrentUser 使用同一会话，
+    避免 SQLAlchemy "Object is already attached to session" 错误。
     """
     request_id = getattr(request.state, "request_id", "")
-    db: AsyncSession = request.app.state.db_session()
-    try:
-        result = await auth_service.complete_profile(user, body, db)
-        return success_response(result, request_id)
-    finally:
-        await db.close()
+    result = await auth_service.complete_profile(user, body, db)
+    return success_response(result, request_id)
 
 
 # ---------------------------------------------------------------------------

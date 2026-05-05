@@ -2,15 +2,21 @@
 
 本目录用于存放 Nginx SSL 证书文件。
 
-## 证书文件命名
-
-生产环境需要放置以下文件：
+## 目录结构
 
 ```
 nginx/ssl/
-├── fullchain.pem    # 完整证书链（包含域名证书 + 中间证书）
-├── privkey.pem      # 私钥文件
-└── README.md        # 本说明文件
+├── api.echomeet.cn/
+│   ├── fullchain.pem      # API 域名 SSL 证书链
+│   ├── privkey.pem        # API 域名私钥文件
+│   └── chain.pem          # 中间证书（可选）
+│
+├── admin.echomeet.cn/
+│   ├── fullchain.pem      # 管理后台域名 SSL 证书链
+│   ├── privkey.pem        # 管理后台私钥文件
+│   └── chain.pem          # 中间证书（可选）
+│
+└── README.md              # 本说明文件
 ```
 
 ## 获取证书的方式

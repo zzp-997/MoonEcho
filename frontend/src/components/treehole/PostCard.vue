@@ -50,12 +50,16 @@
     <!-- 互动区域 -->
     <view class="post-actions">
       <view class="action-item" :class="{ 'is-active': post.has_resonated }" @tap.stop="handleResonance">
-        <text class="action-icon">{{ post.has_resonated ? '❤️' : '🤍' }}</text>
+        <view class="action-icon-wrapper" :class="{ 'is-active': post.has_resonated }">
+          <text class="action-icon-text">{{ post.has_resonated ? '✓' : '○' }}</text>
+        </view>
         <text class="action-text">我懂你</text>
         <text v-if="post.resonance_count > 0" class="action-count">{{ formatCount(post.resonance_count) }}</text>
       </view>
       <view class="action-item" @tap.stop="handleComment">
-        <text class="action-icon">💭</text>
+        <view class="action-icon-wrapper">
+          <text class="action-icon-text">评</text>
+        </view>
         <text class="action-text">回声</text>
         <text v-if="post.comment_count > 0" class="action-count">{{ formatCount(post.comment_count) }}</text>
       </view>
@@ -272,8 +276,25 @@ function handleImageTap(index: number): void {
   }
 }
 
-.action-icon {
-  font-size: var(--font-size-md);
+.action-icon-wrapper {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6rpx;
+
+  &.is-active {
+    background-color: rgba(248, 113, 113, 0.15);
+  }
+}
+
+.action-icon-text {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .action-text {

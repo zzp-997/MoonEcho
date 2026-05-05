@@ -54,29 +54,22 @@ const PUBLIC_PAGES = [
 
 // ==================== 类型定义 ====================
 
-/** 验证码登录响应类型 */
+/** 验证码登录响应类型（与后端 VerifyCodeResponse 对齐） */
 interface VerifyCodeResponse {
-  token: string
-  refreshToken: string
+  access_token: string
+  refresh_token: string
+  token_type: string
+  expires_in: number
   is_new_user: boolean
-  user: {
-    id: string
-    phone: string
-    nickname?: string
-    avatarUrl?: string
-    ageRange?: string
-    is_minor?: boolean
-  }
+  profile_completed: boolean
 }
 
-/** 完善资料响应类型 */
+/** 完善资料响应类型（与后端 CompleteProfileResponse 对齐） */
 interface CompleteProfileResponse {
-  id: string
-  phone: string
-  nickname: string
-  avatarUrl?: string
-  ageRange: string
-  is_minor: boolean
+  access_token: string
+  refresh_token: string
+  token_type: string
+  expires_in: number
 }
 
 /** 路由守卫选项 */
@@ -211,13 +204,13 @@ export function useAuth() {
       const refreshToken = userStore.refreshTokenValue
       if (!refreshToken) return false
 
-      const data = await api.post<{ token: string; refreshToken: string }>(
+      const data = await api.post<{ access_token: string; refresh_token: string }>(
         '/auth/refresh-token',
-        { refreshToken },
+        { refresh_token: refreshToken },
         { requireAuth: false, silent: true }
       )
 
-      userStore.setToken(data.token, data.refreshToken)
+      userStore.setToken(data.access_token, data.refresh_token)
       return true
     } catch (error) {
       console.error('刷新 Token 失败', error)
@@ -251,27 +244,32 @@ export function useAuth() {
    * 验证码登录/注册
    * @param phone 手机号
    * @param code 验证码
-   * @returns 返回 { success, isNewUser } 表示是否为新用户
+   * @returns 返回 { success, isNewUser, profileCompleted } 表示是否为新用户及资料是否完善
    */
-  async function verifyCodeLogin(phone: string, code: string): Promise<{ success: boolean; isNewUser: boolean }> {
+  async function verifyCodeLogin(phone: string, code: string): Promise<{ success: boolean; isNewUser: boolean; profileCompleted: boolean }> {
     isLoading.value = true
     errorMessage.value = ''
 
     try {
       const data = await api.post<VerifyCodeResponse>('/auth/verify-code', { phone, code }, { requireAuth: false })
 
-      // 保存 Token
-      userStore.setToken(data.token, data.refreshToken)
+      // 保存 Token（后端返回 access_token / refresh_token）
+      userStore.setToken(data.access_token, data.refresh_token)
 
-      // 保存用户基本信息
-      userStore.setUserInfo({
-        id: data.user.id,
-        phone: data.user.phone,
-        nickname: data.user.nickname || '',
-        avatarUrl: data.user.avatarUrl,
-        ageRange: data.user.ageRange,
-        is_minor: data.user.is_minor,
-      })
+      // 验证码登录后获取用户信息（后端 verify-code 不返回 user 对象）
+      try {
+        const userInfo = await api.get<{ id: string; phone: string; nickname: string | null; avatar_url: string | null; age_range: string | null; is_minor: boolean }>('/auth/me', {}, { requireAuth: true })
+        userStore.setUserInfo({
+          id: userInfo.id,
+          phone: userInfo.phone,
+          nickname: userInfo.nickname || '',
+          avatarUrl: userInfo.avatar_url,
+          ageRange: userInfo.age_range,
+          is_minor: userInfo.is_minor,
+        })
+      } catch {
+        // 获取用户信息失败不影响登录流程
+      }
 
       // 追踪登录事件
       if (data.is_new_user) {
@@ -283,10 +281,10 @@ export function useAuth() {
         track(EventName.USER_LOGIN, { method: 'phone_code' })
       }
 
-      return { success: true, isNewUser: data.is_new_user }
+      return { success: true, isNewUser: data.is_new_user, profileCompleted: data.profile_completed }
     } catch (error: any) {
       errorMessage.value = error.message || '验证失败'
-      return { success: false, isNewUser: false }
+      return { success: false, isNewUser: false, profileCompleted: false }
     } finally {
       isLoading.value = false
     }
@@ -303,14 +301,22 @@ export function useAuth() {
     errorMessage.value = ''
 
     try {
-      const data = await api.post<CompleteProfileResponse>('/auth/complete-profile', { nickname, ageRange }, { requireAuth: true })
+      const data = await api.post<CompleteProfileResponse>('/auth/complete-profile', { nickname, age_range: ageRange }, { requireAuth: true })
 
-      // 更新用户信息
-      userStore.updateUserInfo({
-        nickname: data.nickname,
-        ageRange: data.ageRange,
-        is_minor: data.is_minor,
-      })
+      // 更新 Token（完善资料后后端重新签发）
+      userStore.setToken(data.access_token, data.refresh_token)
+
+      // 重新获取用户信息
+      try {
+        const userInfo = await api.get<{ id: string; phone: string; nickname: string | null; avatar_url: string | null; age_range: string | null; is_minor: boolean }>('/auth/me', {}, { requireAuth: true })
+        userStore.updateUserInfo({
+          nickname: userInfo.nickname || '',
+          ageRange: userInfo.age_range,
+          is_minor: userInfo.is_minor,
+        })
+      } catch {
+        // 获取用户信息失败不影响流程
+      }
 
       // 追踪注册完成事件
       track(EventName.USER_REGISTER, { method: 'complete_profile', has_nickname: true })

@@ -91,7 +91,6 @@ def _create_post_service(
 @router.get(
     "",
     summary="获取动态列表",
-    response_model=PostListResponse,
 )
 async def list_posts(
     user: CurrentUser,
@@ -145,7 +144,6 @@ async def list_posts(
 @router.post(
     "",
     summary="发布动态",
-    response_model=PostResponse,
 )
 async def create_post(
     body: PostCreateRequest,
@@ -416,7 +414,6 @@ async def unlike_post(
 @router.get(
     "/{post_id}/comments",
     summary="获取评论列表",
-    response_model=PostCommentListResponse,
 )
 async def list_comments(
     user: CurrentUser,

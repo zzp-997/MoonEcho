@@ -17,7 +17,7 @@ import sqlalchemy as sa
 
 # revision identifiers
 revision = "0011_anon_security_fix"
-down_revision = "0010_penalty_records"
+down_revision = "0010_user_boundary_settings"
 branch_labels = None
 depends_on = None
 

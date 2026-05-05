@@ -190,7 +190,6 @@ class MarkReadPathParams(BaseModel):
 @router.patch(
     "/{notification_id}/read",
     summary="标记单条已读",
-    response_model=NotificationResponse,
 )
 async def mark_as_read(
     user: CurrentUser,
@@ -271,7 +270,6 @@ async def mark_all_as_read(
 @router.get(
     "/settings",
     summary="获取通知设置",
-    response_model=NotificationSettingResponse,
 )
 async def get_settings(
     user: CurrentUser,
@@ -312,7 +310,6 @@ async def get_settings(
 @router.patch(
     "/settings",
     summary="更新通知设置",
-    response_model=NotificationSettingResponse,
 )
 async def update_settings(
     body: NotificationSettingUpdateRequest,

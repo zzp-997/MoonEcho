@@ -113,11 +113,11 @@ interface AgeOption {
 }
 
 const ageOptions: AgeOption[] = [
-  { label: '18岁以下', value: 'under_18' },
-  { label: '18-25岁', value: '18_25' },
-  { label: '26-35岁', value: '26_35' },
-  { label: '36-45岁', value: '36_45' },
-  { label: '45岁以上', value: 'above_45' },
+  { label: '18岁以下', value: '18岁以下' },
+  { label: '18-25', value: '18-25' },
+  { label: '26-35', value: '26-35' },
+  { label: '36-45', value: '36-45' },
+  { label: '45以上', value: '45以上' },
 ]
 
 // ==================== 响应式状态 ====================
@@ -239,7 +239,7 @@ async function handleSkip() {
   try {
     // 使用默认昵称和未选择的年龄段标记
     const defaultNickname = '小友'
-    const defaultAge = selectedAge.value || 'under_18'
+    const defaultAge = selectedAge.value || '18岁以下'
 
     const success = await completeProfile(defaultNickname, defaultAge)
 

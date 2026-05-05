@@ -1,0 +1,91 @@
+# ============================================================
+# MoonEcho 基础设施 - 仅包含中间件服务
+# MySQL + Redis + MinIO
+# ============================================================
+
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------
+  # Redis 7 - 缓存 / 会话（持久化）
+  # ----------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: moonecho_redis
+    restart: always
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass Moonecho2024
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "Moonecho2024", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - moonecho_network
+
+  # ----------------------------------------------------------
+  # MinIO - 对象存储
+  # ----------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: moonecho_minio
+    restart: always
+    ports:
+      - "9002:9000"
+      - "9003:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: Moonecho2024
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - moonecho_network
+
+  # ----------------------------------------------------------
+  # MinIO 初始化 - 自动创建存储桶
+  # ----------------------------------------------------------
+  minio-init:
+    image: minio/mc:latest
+    container_name: moonecho_minio_init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "
+        mc alias set myminio http://minio:9000 minioadmin Moonecho2024 &&
+        mc mb myminio/moonecho --ignore-existing &&
+        mc anonymous set download myminio/moonecho &&
+        echo 'MinIO 存储桶创建完成'
+      "
+    networks:
+      - moonecho_network
+
+# ----------------------------------------------------------
+# 持久化数据卷
+# ----------------------------------------------------------
+volumes:
+  redis_data:
+    driver: local
+  minio_data:
+    driver: local
+
+# ----------------------------------------------------------
+# 网络
+# ----------------------------------------------------------
+networks:
+  moonecho_network:
+    driver: bridge
