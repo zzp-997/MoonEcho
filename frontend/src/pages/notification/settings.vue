@@ -287,7 +287,7 @@ function handleBack() {
   padding: 0 32rpx;
   padding-top: var(--status-bar-height, 44rpx);
   background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .header-left {
@@ -324,7 +324,7 @@ function handleBack() {
 .section-title {
   padding: 24rpx 32rpx 16rpx;
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .setting-item {
@@ -332,7 +332,7 @@ function handleBack() {
   align-items: center;
   justify-content: space-between;
   padding: 32rpx;
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 
   &:last-child {
     border-bottom: none;
@@ -368,7 +368,7 @@ function handleBack() {
   display: block;
   margin-top: 8rpx;
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .forced-tag {

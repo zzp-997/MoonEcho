@@ -1,9 +1,9 @@
 <template>
-  <view class="detail-page treehole-force-dark">
+  <view class="detail-page">
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon">&lt;</text>
+        <wd-icon name="arrow-left" class="back-icon" />
       </view>
       <text class="header-title">详情</text>
       <view v-if="post?.is_mine" class="header-actions">
@@ -517,7 +517,7 @@ onShow(() => {
   align-self: flex-start;
   margin-top: var(--space-sm);
   padding: 4rpx 16rpx;
-  background-color: rgba(124, 111, 224, 0.15);
+  background-color: var(--brand-light);
   border-radius: var(--radius-full);
 }
 

@@ -33,8 +33,8 @@ const AUTH_REQUIRED_PAGES = [
   '/pages/diary/index',
   '/pages/diary/edit',
   '/pages/diary/weekly-report',
-  '/pages/treehole/index',
-  '/pages/community/index',
+  '/pagesSocial/treehole/index',
+  '/pagesSocial/square/index',
   '/pages/mine/index',
   '/pages/home/index',
   '/pages/notification/list',
@@ -49,7 +49,7 @@ const PUBLIC_PAGES = [
   '/pages/auth/ai-greeting',
   '/pages/auth/minor-notice',
   '/pages/auth/minor-lock',
-  '/pages/index/index',
+  '/pages/home/index',
 ]
 
 // ==================== 类型定义 ====================

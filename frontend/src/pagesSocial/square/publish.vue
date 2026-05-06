@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon">&lt;</text>
+        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
       </view>
       <text class="header-title">发布动态</text>
       <view class="header-actions">
@@ -30,7 +30,7 @@
               mode="aspectFill"
             />
             <view v-else class="avatar-placeholder">
-              <text class="avatar-icon">~</text>
+              <wd-icon name="user" size="24px" color="var(--text-muted)" />
             </view>
           </view>
           <view class="identity-info">
@@ -44,7 +44,7 @@
               class="avatar-placeholder"
               :style="{ backgroundColor: anonAvatarColor }"
             >
-              <text class="avatar-icon">~</text>
+              <wd-icon name="user" size="24px" color="var(--text-inverse)" />
             </view>
           </view>
           <view class="identity-info">
@@ -819,18 +819,18 @@ onBackPress(() => {
   justify-content: space-between;
   margin-top: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  background-color: #FEF3C7;
+  background-color: var(--color-warning-bg);
   border-radius: var(--radius-md);
 }
 
 .failed-text {
   font-size: var(--font-size-sm);
-  color: #92400E;
+  color: var(--color-warning);
 }
 
 .retry-btn {
   padding: 8rpx 20rpx;
-  background-color: #D97706;
+  background-color: var(--color-warning);
   border-radius: var(--radius-sm);
 
   &.is-loading {
@@ -840,7 +840,7 @@ onBackPress(() => {
 
 .retry-text {
   font-size: var(--font-size-sm);
-  color: #fff;
+  color: var(--text-inverse);
 }
 
 // ==================== 工具栏 ====================

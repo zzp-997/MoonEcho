@@ -216,11 +216,11 @@ export function getNotificationJumpUrl(notification: NotificationItem): string |
     case 'friend_accept':
       return '/pages/friends/index'
     case 'treehole_reply':
-      return payload?.treehole_id ? `/pages/treehole/detail?id=${payload.treehole_id}` : null
+      return payload?.treehole_id ? `/pagesSocial/treehole/detail?id=${payload.treehole_id}` : null
     case 'square_comment':
-      return payload?.post_id ? `/pages/square/detail?id=${payload.post_id}` : null
+      return payload?.post_id ? `/pagesSocial/square/detail?id=${payload.post_id}` : null
     case 'square_like':
-      return payload?.post_id ? `/pages/square/detail?id=${payload.post_id}` : null
+      return payload?.post_id ? `/pagesSocial/square/detail?id=${payload.post_id}` : null
     case 'weekly_report':
       return '/pages/diary/weekly-report'
     case 'system':

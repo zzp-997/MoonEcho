@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon">&lt;</text>
+        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
       </view>
       <text class="header-title">AI画像</text>
       <view class="placeholder" />
@@ -24,7 +24,7 @@
       <!-- 情绪模式 -->
       <view v-if="emotionTags.length > 0" class="tag-group">
         <view class="group-header">
-          <text class="group-icon">[情绪]</text>
+          <wd-icon name="heart" size="18px" color="var(--mood-warm)" />
           <text class="group-title">情绪模式</text>
         </view>
         <view class="tags-list">
@@ -49,7 +49,7 @@
       <!-- 社交偏好 -->
       <view v-if="socialTags.length > 0" class="tag-group">
         <view class="group-header">
-          <text class="group-icon">[社交]</text>
+          <wd-icon name="user" size="18px" color="var(--mood-calm)" />
           <text class="group-title">社交偏好</text>
         </view>
         <view class="tags-list">
@@ -74,7 +74,7 @@
       <!-- 兴趣领域 -->
       <view v-if="interestTags.length > 0" class="tag-group">
         <view class="group-header">
-          <text class="group-icon">[兴趣]</text>
+          <wd-icon name="star" size="18px" color="var(--brand-primary)" />
           <text class="group-title">兴趣领域</text>
         </view>
         <view class="tags-list">
@@ -98,7 +98,7 @@
 
       <!-- 无标签 -->
       <view v-if="allTags.length === 0" class="empty-area">
-        <view class="empty-icon">[AI]</view>
+        <wd-icon name="robot" size="48px" color="var(--brand-primary)" custom-style="margin-bottom: var(--space-md)" />
         <text class="empty-title">暂无画像数据</text>
         <text class="empty-desc">继续使用应用后，AI会为你生成个性化画像。建议：</text>
         <view class="suggestions">
@@ -301,7 +301,7 @@ onMounted(() => {
   padding: var(--space-md);
   padding-top: calc(env(safe-area-inset-top) + var(--space-md));
   background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .back-btn {
@@ -334,6 +334,7 @@ onMounted(() => {
   background-color: var(--bg-secondary);
   margin: var(--space-md);
   border-radius: var(--radius-md);
+  border-left: 4px solid var(--brand-primary);
 }
 
 .intro-text {
@@ -391,8 +392,9 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md);
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-elevated);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
   transition: all 0.3s ease;
 
   &.is-hidden {
@@ -415,7 +417,7 @@ onMounted(() => {
 
 .tag-name {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .tag-control {
@@ -426,7 +428,7 @@ onMounted(() => {
 
 .control-text {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 空状态 ====================
@@ -439,9 +441,7 @@ onMounted(() => {
 }
 
 .empty-icon {
-  font-size: 80rpx;
   color: var(--brand-primary);
-  margin-bottom: var(--space-md);
 }
 
 .empty-title {
@@ -467,6 +467,11 @@ onMounted(() => {
 .suggestion-item {
   font-size: var(--font-size-sm);
   color: var(--brand-primary);
+
+  &::before {
+    content: '·';
+    margin-right: var(--space-xs);
+  }
 }
 
 // ==================== 生成信息 ====================
@@ -479,7 +484,7 @@ onMounted(() => {
 
 .generated-text {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 提示信息 ====================
@@ -487,7 +492,7 @@ onMounted(() => {
 .message-section {
   margin: var(--space-sm) var(--space-md);
   padding: var(--space-md);
-  background-color: var(--color-info-bg);
+  background-color: var(--mood-low-bg);
   border-radius: var(--radius-md);
 }
 
@@ -508,7 +513,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 96rpx;
-  background-color: var(--bg-secondary);
+  background-color: var(--brand-light);
   border-radius: var(--radius-md);
 
   &:active {

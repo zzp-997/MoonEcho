@@ -96,7 +96,7 @@ function handleConfirm() {
 
   // 跳转到首页
   uni.switchTab({
-    url: '/pages/chat/index',
+    url: '/pages/home/index',
   })
 }
 </script>
@@ -176,7 +176,7 @@ function handleConfirm() {
   padding: var(--space-sm) 0;
 
   &:not(:last-child) {
-    border-bottom: 1px solid var(--border-primary);
+    border-bottom: 1px solid var(--border-standard);
     padding-bottom: var(--space-md);
     margin-bottom: 0;
   }
@@ -206,7 +206,7 @@ function handleConfirm() {
 // ==================== 温馨提示 ====================
 
 .warm-tip {
-  background-color: var(--brand-primary-bg, rgba(124, 111, 224, 0.1));
+  background-color: var(--brand-light);
   border-radius: var(--radius-md);
   padding: var(--space-md);
   margin-bottom: var(--space-2xl);

@@ -2,6 +2,7 @@
  * 回声 - 主题切换组合式函数
  * 文件：src/composables/useTheme.ts
  * 说明：主题切换逻辑，支持跟随系统/定时/手动三种切换方式
+ * 设计风格：纯净白 · 暖橘
  */
 
 import { ref, watch, onMounted } from 'vue'
@@ -14,15 +15,15 @@ export function useTheme() {
 
   /**
    * 应用主题到页面
-   * 使用 Lovable 设计系统的颜色值：
-   * - 暗色模式: charcoal (#1c1c1c)
-   * - 日间模式: cream (#f7f4ed)
+   * 纯净白 · 暖橘设计系统：
+   * - 暗色模式: #12111a（暖调深色）
+   * - 日间模式: #FFF9F5（微暖白）
    */
   function applyTheme(dark: boolean) {
     try {
       const pageStyle = dark
-        ? { backgroundColor: '#1c1c1c' }  // charcoal
-        : { backgroundColor: '#f7f4ed' }  // cream
+        ? { backgroundColor: '#12111a' }
+        : { backgroundColor: '#FFF9F5' }
 
       uni.setPageStyle({
         style: pageStyle,
@@ -32,38 +33,29 @@ export function useTheme() {
     }
   }
 
-  /**
-   * 切换主题
-   */
   function toggleTheme() {
-    const themes: ThemeMode[] = ['light', 'dark', 'system']
+    const themes: ThemeMode[] = ['light', 'dark', 'system', 'auto']
     const currentIndex = themes.indexOf(settingsStore.theme)
     const nextIndex = (currentIndex + 1) % themes.length
     settingsStore.setTheme(themes[nextIndex])
   }
 
-  /**
-   * 设置为暗色模式
-   */
   function setDark() {
     settingsStore.setTheme('dark')
   }
 
-  /**
-   * 设置为亮色模式
-   */
   function setLight() {
     settingsStore.setTheme('light')
   }
 
-  /**
-   * 设置跟随系统
-   */
   function setSystem() {
     settingsStore.setTheme('system')
   }
 
-  // 监听主题变化
+  function setAuto() {
+    settingsStore.setTheme('auto')
+  }
+
   watch(
     () => settingsStore.isDarkMode,
     (dark) => {
@@ -72,7 +64,6 @@ export function useTheme() {
     }
   )
 
-  // 初始化时应用主题
   onMounted(() => {
     applyTheme(isDark.value)
   })
@@ -83,6 +74,7 @@ export function useTheme() {
     setDark,
     setLight,
     setSystem,
+    setAuto,
     applyTheme,
   }
 }

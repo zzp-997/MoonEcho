@@ -420,7 +420,7 @@ onMounted(() => {
 .ai-btn-text {
   font-size: 16rpx;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--text-inverse);
 }
 
 .btn-text {

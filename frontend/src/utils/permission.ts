@@ -9,8 +9,8 @@ import { useUserStore } from '@/stores/user'
 
 /** 青少年模式受限页面列表 */
 const TEEN_RESTRICTED_PAGES = [
-  '/pages/treehole/index',
-  '/pages/square/index',
+  '/pagesSocial/treehole/index',
+  '/pagesSocial/square/index',
   '/pages/message/index',
 ]
 

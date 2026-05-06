@@ -130,7 +130,11 @@
       "Bash(pkill -f 'uvicorn.*8001')",
       "Bash(taskkill /F /IM python.exe)",
       "Bash(taskkill //F //PID 30864)",
-      "Bash(pnpm dev:h5)"
+      "Bash(pnpm dev:h5)",
+      "Bash(node -e ' *)",
+      "Bash(set DATABASE_URL=mysql+aiomysql://root:HowtoaiRoot2024Secure@118.25.182.15:3306/moonecho)",
+      "Bash(set DATABASE_URL=mysql+pymysql://root:HowtoaiRoot2024Secure@118.25.182.15:3306/moonecho)",
+      "Bash(sort -t: -k2)"
     ]
   }
 }

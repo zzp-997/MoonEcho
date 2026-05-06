@@ -35,7 +35,7 @@
     >
       <!-- 空状态 -->
       <view v-if="!isLoading && notificationList.length === 0" class="empty-state">
-        <wd-icon name="message" size="64px" color="var(--text-tertiary)" />
+        <wd-icon name="message" size="64px" color="var(--text-muted)" />
         <text class="empty-text">暂无通知</text>
       </view>
 
@@ -291,7 +291,7 @@ function formatTime(time: string): string {
   padding: 0 32rpx;
   padding-top: var(--status-bar-height, 44rpx);
   background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .header-left {
@@ -342,7 +342,7 @@ function formatTime(time: string): string {
 .empty-text {
   margin-top: 24rpx;
   font-size: var(--font-size-base);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 通知列表 ====================
@@ -407,7 +407,6 @@ function formatTime(time: string): string {
   &.type-friend_request,
   &.type-friend_accept {
     background-color: var(--brand-light);
-    background-color: rgba(124, 111, 224, 0.1);
     color: var(--brand-primary);
   }
 
@@ -453,7 +452,7 @@ function formatTime(time: string): string {
   flex-shrink: 0;
   margin-left: 16rpx;
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .item-desc {
@@ -492,14 +491,14 @@ function formatTime(time: string): string {
 
 .loading-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .no-more {
   text-align: center;
   padding: 32rpx 0;
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .page-loading {

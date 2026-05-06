@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon">&lt;</text>
+        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
       </view>
       <text class="header-title">编辑资料</text>
       <view class="save-btn" :class="{ 'is-disabled': !canSave }" @tap="handleSave">
@@ -41,7 +41,7 @@
       <view class="form-item" @tap="handleSelectCity">
         <text class="form-label">城市</text>
         <text class="form-value">{{ formData.city || '请选择' }}</text>
-        <text class="form-arrow">></text>
+        <wd-icon class="form-arrow" name="arrow-right" size="16px" color="var(--text-muted)" />
       </view>
 
       <!-- 职业 -->
@@ -98,7 +98,7 @@
       <view class="section-header">
         <text class="section-title">兴趣标签</text>
         <view class="add-tag-btn" @tap="handleAddInterestTag">
-          <text class="add-text">+ 添加</text>
+          <wd-icon name="add" size="14px" color="var(--brand-primary)" /><text class="add-text">添加</text>
         </view>
       </view>
 
@@ -109,7 +109,7 @@
           class="interest-tag"
         >
           <text class="interest-tag-text">{{ tag.tag_value }}</text>
-          <text class="interest-tag-delete" @tap="handleDeleteInterestTag(tag.id)">x</text>
+          <wd-icon class="interest-tag-delete" name="close" size="14px" color="var(--text-muted)" @tap="handleDeleteInterestTag(tag.id)" />
         </view>
       </view>
       <view v-else class="empty-interest">
@@ -455,7 +455,7 @@ onMounted(() => {
   padding: var(--space-md);
   padding-top: calc(env(safe-area-inset-top) + var(--space-md));
   background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .back-btn {
@@ -467,8 +467,7 @@ onMounted(() => {
 }
 
 .back-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
+  // 已替换为 wd-icon，此样式保留以防兼容
 }
 
 .header-title {
@@ -499,7 +498,7 @@ onMounted(() => {
   color: var(--text-on-brand);
 
   .is-disabled & {
-    color: var(--text-tertiary);
+    color: var(--text-disabled);
   }
 }
 
@@ -518,25 +517,27 @@ onMounted(() => {
   border-radius: var(--radius-full);
   background-color: var(--bg-tertiary);
   margin-bottom: var(--space-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .avatar-hint {
   padding: var(--space-xs) var(--space-sm);
-  background-color: var(--bg-secondary);
+  background-color: var(--brand-light);
   border-radius: var(--radius-full);
 }
 
 .hint-text {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--brand-primary);
 }
 
 // ==================== 表单 ====================
 
 .form-section {
   margin: 0 var(--space-md);
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-elevated);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
@@ -544,7 +545,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   padding: var(--space-md);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 
   &:last-child {
     border-bottom: none;
@@ -573,13 +574,11 @@ onMounted(() => {
 
 .form-count {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-left: var(--space-xs);
 }
 
 .form-arrow {
-  font-size: var(--font-size-md);
-  color: var(--text-tertiary);
   margin-left: var(--space-xs);
 }
 
@@ -604,7 +603,7 @@ onMounted(() => {
 
 .section-hint {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .loading-area {
@@ -624,8 +623,9 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md);
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-elevated);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 
   &.is-hidden {
     opacity: 0.6;
@@ -656,7 +656,7 @@ onMounted(() => {
 
 .visibility-text {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .empty-tags {
@@ -666,7 +666,7 @@ onMounted(() => {
 
 .empty-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 兴趣标签 ====================
@@ -676,8 +676,11 @@ onMounted(() => {
 }
 
 .add-tag-btn {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
   padding: var(--space-xs) var(--space-sm);
-  background-color: rgba(124, 111, 224, 0.15);
+  background-color: var(--brand-light);
   border-radius: var(--radius-full);
 }
 
@@ -696,7 +699,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   padding: var(--space-xs) var(--space-sm);
-  background-color: var(--bg-secondary);
+  background-color: var(--brand-light);
   border-radius: var(--radius-full);
 }
 
@@ -707,8 +710,6 @@ onMounted(() => {
 }
 
 .interest-tag-delete {
-  font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
   padding: 4rpx;
 }
 

@@ -49,7 +49,7 @@
 
       <!-- 空状态 -->
       <view v-if="!isLoading && notificationList.length === 0" class="empty-state">
-        <wd-icon name="message" size="64px" color="var(--text-tertiary)" />
+        <wd-icon name="message" size="64px" color="var(--text-muted)" />
         <text class="empty-text">暂无通知</text>
       </view>
 
@@ -80,7 +80,7 @@
           </view>
 
           <!-- 右箭头 -->
-          <wd-icon name="arrow-right" size="16px" color="var(--text-tertiary)" />
+          <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
         </view>
 
         <!-- 加载更多 -->
@@ -103,7 +103,7 @@
       scroll-y
     >
       <view class="empty-state">
-        <wd-icon name="info-circle" size="64px" color="var(--text-tertiary)" />
+        <wd-icon name="info-circle" size="64px" color="var(--text-muted)" />
         <text class="empty-text">暂无系统消息</text>
       </view>
     </scroll-view>
@@ -265,7 +265,7 @@ function formatTime(time: string): string {
 .message-tabs {
   display: flex;
   padding: 0 32rpx;
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .tab-item {
@@ -353,7 +353,7 @@ function formatTime(time: string): string {
 .empty-text {
   margin-top: 24rpx;
   font-size: var(--font-size-base);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 通知列表 ====================
@@ -456,7 +456,7 @@ function formatTime(time: string): string {
 .item-time {
   flex-shrink: 0;
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .item-desc {
@@ -479,14 +479,14 @@ function formatTime(time: string): string {
 
 .loading-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .no-more {
   text-align: center;
   padding: 32rpx 0;
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .page-loading {

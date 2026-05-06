@@ -1,87 +1,40 @@
 // ============================================
-// 回声 - 公共样式 (Lovable Design)
+// 回声 - 公共样式
 // 文件：src/styles/common.scss
-// 说明：全局公共样式、工具类、Lovable 风格组件
-// 参考：docs/ui/DESIGN.md
+// 说明：全局公共样式、工具类
 // ============================================
 
-// ==================== 基础重置 ====================
-
+// 基础重置
 view, text {
   box-sizing: border-box;
 }
 
-// ==================== 安全区域 ====================
-
+// 安全区域
 .safe-area-bottom {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
 }
-
 .safe-area-top {
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
 }
 
-// ==================== 布局工具类 ====================
+// 布局工具类
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.flex-wrap { flex-wrap: wrap; }
 
-.flex {
-  display: flex;
-}
+// 文字截断
+.ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ellipsis-2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.ellipsis-3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 
-.flex-col {
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.flex-1 {
-  flex: 1;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-// ==================== 文字截断 ====================
-
-.ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ellipsis-2 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-}
-
-.ellipsis-3 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
-}
-
-// ==================== 间距工具类 ====================
-
+// 间距工具类
 .mt-2xs { margin-top: var(--space-2xs); }
 .mt-xs { margin-top: var(--space-xs); }
 .mt-sm { margin-top: var(--space-sm); }
@@ -89,7 +42,6 @@ view, text {
 .mt-lg { margin-top: var(--space-lg); }
 .mt-xl { margin-top: var(--space-xl); }
 .mt-2xl { margin-top: var(--space-2xl); }
-
 .mb-2xs { margin-bottom: var(--space-2xs); }
 .mb-xs { margin-bottom: var(--space-xs); }
 .mb-sm { margin-bottom: var(--space-sm); }
@@ -97,208 +49,155 @@ view, text {
 .mb-lg { margin-bottom: var(--space-lg); }
 .mb-xl { margin-bottom: var(--space-xl); }
 .mb-2xl { margin-bottom: var(--space-2xl); }
-
 .px-xs { padding-left: var(--space-xs); padding-right: var(--space-xs); }
 .px-sm { padding-left: var(--space-sm); padding-right: var(--space-sm); }
 .px-md { padding-left: var(--space-md); padding-right: var(--space-md); }
 .px-lg { padding-left: var(--space-lg); padding-right: var(--space-lg); }
-
 .py-xs { padding-top: var(--space-xs); padding-bottom: var(--space-xs); }
 .py-sm { padding-top: var(--space-sm); padding-bottom: var(--space-sm); }
 .py-md { padding-top: var(--space-md); padding-bottom: var(--space-md); }
 .py-lg { padding-top: var(--space-lg); padding-bottom: var(--space-lg); }
 
-// ==================== Lovable 按钮样式 ====================
+// 分割线
+.divider { height: 1px; background-color: var(--border-light); margin: var(--space-md) 0; }
+.divider-vertical { width: 1px; background-color: var(--border-light); margin: 0 var(--space-md); }
 
-// Primary Dark 按钮 - 标志性的 inset shadow
+// 情绪装饰条卡片
+.emotion-card {
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+  }
+
+  &--warm::before { background-color: var(--mood-warm); }
+  &--calm::before { background-color: var(--mood-calm); }
+  &--low::before { background-color: var(--mood-low); }
+  &--sad::before { background-color: var(--mood-sad); }
+  &--chaos::before { background-color: var(--mood-chaos); }
+}
+
+// 网络断开提示
+.network-offline-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: var(--z-toast);
+  background-color: var(--color-error);
+  color: #ffffff;
+  text-align: center;
+  padding: var(--space-xs) 0;
+  font-size: var(--font-size-sm);
+}
+
+// 旧组件样式兼容（逐步移除，改用 wot-design-uni）
+// 保留至所有页面迁移完成
+
 .btn-primary-dark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 8px 16px;
   font-size: var(--font-size-md);
-  font-weight: 400;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
-  color: var(--text-off-white);
+  color: var(--text-on-brand);
   background-color: var(--brand-primary);
-  border-radius: var(--radius-std);
+  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-btn-inset);
   transition: opacity var(--transition-fast);
-
-  &:active {
-    opacity: 0.8;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: var(--shadow-focus);
-  }
+  &:active { opacity: 0.8; }
 }
 
-// Ghost/Outline 按钮 - 透明背景 + 边框
 .btn-ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 8px 16px;
   font-size: var(--font-size-md);
-  font-weight: 400;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
   color: var(--text-charcoal);
   background-color: transparent;
   border: 1px solid var(--border-interactive);
-  border-radius: var(--radius-std);
+  border-radius: var(--radius-sm);
   transition: opacity var(--transition-fast);
-
-  &:active {
-    opacity: 0.8;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: var(--shadow-focus);
-  }
+  &:active { opacity: 0.8; }
 }
 
-// Cream Surface 按钮 - 日间模式背景
 .btn-cream {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 8px 16px;
   font-size: var(--font-size-md);
-  font-weight: 400;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
   color: var(--text-charcoal);
   background-color: var(--bg-cream);
-  border-radius: var(--radius-std);
+  border-radius: var(--radius-sm);
   transition: opacity var(--transition-fast);
-
-  &:active {
-    opacity: 0.8;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: var(--shadow-focus);
-  }
+  &:active { opacity: 0.8; }
 }
 
-// Pill/Icon 按钮 - 9999px 圆角
 .btn-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 8px 16px;
   font-size: var(--font-size-md);
-  font-weight: 400;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
   color: var(--text-charcoal);
   background-color: var(--bg-cream);
   border-radius: var(--radius-full);
-  box-shadow: var(--shadow-btn-inset);
-  opacity: 0.5;
+  opacity: 0.7;
   transition: opacity var(--transition-fast);
-
-  &:active {
-    opacity: 0.8;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: var(--shadow-focus);
-  }
+  &:active { opacity: 0.8; }
+  &.active { opacity: 1; }
 }
 
-// 按钮尺寸变体
-.btn-sm {
-  padding: 4px 12px;
-  font-size: var(--font-size-sm);
-}
+.btn-sm { padding: 4px 12px; font-size: var(--font-size-sm); }
+.btn-lg { padding: 12px 24px; font-size: var(--font-size-lg); }
 
-.btn-lg {
-  padding: 12px 24px;
-  font-size: var(--font-size-lg);
-}
-
-// ==================== Lovable 卡片样式 ====================
-
-// 标准卡片 - 边框而非阴影
 .card {
-  background-color: var(--bg-cream);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-md);
   padding: var(--space-md);
 }
 
-// 紧凑卡片
 .card-compact {
-  background-color: var(--bg-cream);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-compact);
+  border-radius: var(--radius-sm);
   padding: var(--space-sm);
 }
 
-// 特色卡片
 .card-featured {
-  background-color: var(--bg-cream);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-container);
+  border-radius: var(--radius-lg);
   padding: var(--space-lg);
 }
 
-// 卡片悬停效果（Lovable 用边框深浅变化）
 .card-interactive {
-  background-color: var(--bg-cream);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-md);
   padding: var(--space-md);
   transition: border-color var(--transition-fast);
-
-  &:active {
-    border-color: var(--border-interactive);
-  }
+  &:active { border-color: var(--border-interactive); }
 }
-
-// ==================== 分割线 ====================
-
-.divider {
-  height: 1px;
-  background-color: var(--border-light);
-  margin: var(--space-md) 0;
-}
-
-.divider-vertical {
-  width: 1px;
-  background-color: var(--border-light);
-  margin: 0 var(--space-md);
-}
-
-// ==================== Focus 状态 ====================
-
-.focus-ring {
-  &:focus {
-    outline: none;
-    box-shadow: var(--shadow-focus);
-  }
-}
-
-// ==================== 网络断开提示条 ====================
-
-.network-offline-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: var(--z-toast);
-  background-color: var(--color-error);
-  color: var(--text-on-brand);
-  text-align: center;
-  padding: var(--space-xs) 0;
-  font-size: var(--font-size-sm);
-}
-
-// ==================== Lovable 头像样式 ====================
 
 .avatar {
   display: flex;
@@ -309,26 +208,10 @@ view, text {
   color: var(--text-primary);
   font-weight: 600;
 
-  &-sm {
-    width: 32px;
-    height: 32px;
-    font-size: var(--font-size-sm);
-  }
-
-  &-md {
-    width: 48px;
-    height: 48px;
-    font-size: var(--font-size-md);
-  }
-
-  &-lg {
-    width: 64px;
-    height: 64px;
-    font-size: var(--font-size-lg);
-  }
+  &-sm { width: 32px; height: 32px; font-size: var(--font-size-sm); }
+  &-md { width: 48px; height: 48px; font-size: var(--font-size-md); }
+  &-lg { width: 64px; height: 64px; font-size: var(--font-size-lg); }
 }
-
-// ==================== Lovable 标签/徽章 ====================
 
 .tag {
   display: inline-flex;
@@ -341,8 +224,6 @@ view, text {
   border-radius: var(--radius-full);
 }
 
-// ==================== 输入框样式 ====================
-
 .input {
   width: 100%;
   padding: 8px 12px;
@@ -350,21 +231,10 @@ view, text {
   color: var(--text-charcoal);
   background-color: var(--bg-cream);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-std);
+  border-radius: var(--radius-sm);
   transition: border-color var(--transition-fast);
 
-  &::placeholder {
-    color: var(--gray-muted);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--border-interactive);
-    box-shadow: var(--shadow-focus);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  &::placeholder { color: var(--gray-muted); }
+  &:focus { outline: none; border-color: var(--border-interactive); box-shadow: var(--shadow-focus); }
+  &:disabled { opacity: 0.5; }
 }

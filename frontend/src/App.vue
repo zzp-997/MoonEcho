@@ -5,6 +5,7 @@
  * 说明：应用生命周期管理、全局样式引入、主题初始化、全局路由守卫
  * 功能增强（T016）：全局路由守卫初始化
  */
+import { computed } from 'vue'
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
 import { useUserStore } from '@/stores/user'
 import { useSettingsStore } from '@/stores/settings'
@@ -15,6 +16,9 @@ import { useAuth, globalAuthGuard } from '@/composables/useAuth'
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
 const { initAuth, incrementAppOpenCount } = useAuth()
+
+// 是否为暗色模式（用于 wd-config-provider）
+const isDark = computed(() => settingsStore.isDarkMode)
 
 // 应用启动
 onLaunch(() => {
@@ -59,9 +63,11 @@ onHide(() => {
 </script>
 
 <template>
-  <view class="app-container">
-    <slot />
-  </view>
+  <wd-config-provider :theme="isDark ? 'dark' : 'light'">
+    <view class="app-container">
+      <slot />
+    </view>
+  </wd-config-provider>
 </template>
 
 <style lang="scss">

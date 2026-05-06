@@ -3,11 +3,11 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon">&lt;</text>
+        <wd-icon name="arrow-left" class="back-icon" />
       </view>
       <text class="title">个人主页</text>
       <view class="more-btn" @tap="handleShowMoreActions">
-        <text class="more-icon">[...]</text>
+        <wd-icon name="more" class="more-icon" />
       </view>
     </view>
 
@@ -93,7 +93,7 @@
       <!-- 已是好友 -->
       <view v-if="isFriend" class="friend-status">
         <view class="status-badge">
-          <text class="status-icon">[已好友]</text>
+          <wd-icon name="user" class="status-icon" />
         </view>
         <text class="status-text">你们已是好友</text>
         <view class="chat-btn" @tap="handleStartChat">
@@ -118,19 +118,19 @@
     <wd-action-sheet v-model="showMoreActions" title="更多操作">
       <view class="more-options">
         <view v-if="isFriend" class="more-option danger" @tap="handleDeleteFriend">
-          <text class="option-icon">[删除]</text>
+          <wd-icon name="delete" class="option-icon" />
           <text class="option-text">删除好友</text>
         </view>
         <view v-if="!isBlocked" class="more-option" @tap="handleBlock">
-          <text class="option-icon">[拉黑]</text>
+          <wd-icon name="block" class="option-icon" />
           <text class="option-text">拉黑该用户</text>
         </view>
         <view v-else class="more-option" @tap="handleUnblock">
-          <text class="option-icon">[取消]</text>
+          <wd-icon name="unblock" class="option-icon" />
           <text class="option-text">取消拉黑</text>
         </view>
         <view class="more-option danger" @tap="handleReport">
-          <text class="option-icon">[举报]</text>
+          <wd-icon name="report" class="option-icon" />
           <text class="option-text">举报用户</text>
         </view>
       </view>
@@ -522,7 +522,7 @@ onMounted(() => {
   padding: var(--space-md);
   padding-top: calc(env(safe-area-inset-top) + var(--space-md));
   background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .back-btn {
@@ -605,7 +605,7 @@ onMounted(() => {
 
 .tags-title {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .tags-list {
@@ -633,7 +633,7 @@ onMounted(() => {
   }
 
   &.tag-interest {
-    background-color: rgba(124, 111, 224, 0.15);
+    background-color: var(--brand-light);
     color: var(--brand-primary);
   }
 }
@@ -644,7 +644,7 @@ onMounted(() => {
 
 .no-tags-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 公开动态 ====================
@@ -709,12 +709,12 @@ onMounted(() => {
 
 .stat-item {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .post-time {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .load-more {
@@ -745,7 +745,7 @@ onMounted(() => {
 
 .empty-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 操作按钮 ====================
@@ -814,7 +814,7 @@ onMounted(() => {
 
 .pending-text {
   font-size: var(--font-size-md);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .action-btn {

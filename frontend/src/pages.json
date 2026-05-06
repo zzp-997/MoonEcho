@@ -12,15 +12,7 @@
       "style": {
         "navigationBarTitleText": "回声",
         "navigationStyle": "custom",
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": "回声",
-        "navigationStyle": "custom",
-        "navigationBarTextStyle": "white"
+        "navigationBarTextStyle": "black"
       }
     },
     {
@@ -180,20 +172,6 @@
       "name": "social",
       "pages": [
         {
-          "path": "add/index",
-          "style": {
-            "navigationBarTitleText": "快捷入口",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "community/index",
-          "style": {
-            "navigationBarTitleText": "动态",
-            "navigationStyle": "custom"
-          }
-        },
-        {
           "path": "square/index",
           "style": {
             "navigationBarTitleText": "广场",
@@ -246,16 +224,16 @@
     }
   ],
   "globalStyle": {
-    "navigationBarTextStyle": "white",
+    "navigationBarTextStyle": "black",
     "navigationBarTitleText": "回声",
-    "navigationBarBackgroundColor": "#f7f4ed",
-    "backgroundColor": "#f7f4ed",
-    "backgroundColorTop": "#f7f4ed",
-    "backgroundColorBottom": "#f7f4ed",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#ffffff",
+    "backgroundColorTop": "#ffffff",
+    "backgroundColorBottom": "#ffffff",
     "backgroundTextStyle": "dark",
     "app-plus": {
       "titleNView": false,
-      "background": "#f7f4ed",
+      "background": "#ffffff",
       "scrollIndicator": "none"
     },
     "h5": {
@@ -263,10 +241,10 @@
     }
   },
   "tabBar": {
-    "color": "#5f5f5d",
-    "selectedColor": "#1c1c1c",
+    "color": "#999999",
+    "selectedColor": "#FF9A5C",
     "borderStyle": "black",
-    "backgroundColor": "#f7f4ed",
+    "backgroundColor": "#ffffff",
     "list": [
       {
         "pagePath": "pages/home/index",
@@ -275,22 +253,16 @@
         "selectedIconPath": "static/images/icons/tab-home-active.png"
       },
       {
-        "pagePath": "pages/chat/index",
-        "text": "对话",
-        "iconPath": "static/images/icons/tab-chat.png",
-        "selectedIconPath": "static/images/icons/tab-chat-active.png"
-      },
-      {
         "pagePath": "pages/diary/index",
         "text": "日记",
         "iconPath": "static/images/icons/tab-diary.png",
         "selectedIconPath": "static/images/icons/tab-diary-active.png"
       },
       {
-        "pagePath": "pagesSocial/community/index",
-        "text": "动态",
-        "iconPath": "static/images/icons/tab-community.png",
-        "selectedIconPath": "static/images/icons/tab-community-active.png"
+        "pagePath": "pagesSocial/square/index",
+        "text": "广场",
+        "iconPath": "static/images/icons/tab-square.png",
+        "selectedIconPath": "static/images/icons/tab-square-active.png"
       },
       {
         "pagePath": "pages/mine/index",
@@ -305,7 +277,7 @@
     "list": [
       {
         "name": "首页",
-        "path": "pages/index/index"
+        "path": "pages/home/index"
       }
     ]
   }

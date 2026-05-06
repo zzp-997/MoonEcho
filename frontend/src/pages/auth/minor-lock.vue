@@ -86,7 +86,7 @@ function checkUnlock() {
   if (hour >= 5 && hour < 22) {
     // 已过锁定时段，跳转到首页
     uni.switchTab({
-      url: '/pages/chat/index',
+      url: '/pages/home/index',
     })
   }
 }

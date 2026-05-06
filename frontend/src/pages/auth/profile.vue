@@ -3,7 +3,7 @@
     <!-- 顶部导航 -->
     <view class="nav-bar">
       <view class="nav-back" @tap="goBack">
-        <text class="back-icon">&lt;</text>
+        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
       </view>
       <text class="nav-title">完善资料</text>
       <view class="nav-placeholder"></view>
@@ -309,11 +309,6 @@ onMounted(() => {
   justify-content: center;
 }
 
-.back-icon {
-  font-size: 40rpx;
-  color: var(--text-primary);
-}
-
 .nav-title {
   font-size: 34rpx;
   font-weight: 600;
@@ -383,7 +378,7 @@ onMounted(() => {
 
 .char-count {
   font-size: 24rpx;
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-left: auto;
 }
 
@@ -407,7 +402,7 @@ onMounted(() => {
   transition: all 0.2s ease;
 
   &.selected {
-    background-color: var(--brand-primary-bg, rgba(124, 111, 224, 0.1));
+    background-color: var(--brand-light);
     border-color: var(--brand-primary);
   }
 }
@@ -501,7 +496,7 @@ onMounted(() => {
 
 .skip-text {
   font-size: 28rpx;
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 </style>
 
@@ -510,7 +505,7 @@ onMounted(() => {
 .profile-page {
   --wd-button-primary-bg-color: var(--brand-primary);
   --wd-button-primary-border-color: var(--brand-primary);
-  --wd-input-placeholder-color: var(--text-tertiary);
+  --wd-input-placeholder-color: var(--text-muted);
   --wd-input-color: var(--text-primary);
 }
 </style>

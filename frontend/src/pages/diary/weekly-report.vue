@@ -3,8 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="header-back" @tap="handleBack">
-        <text class="back-icon">&lt;</text>
-        <text class="back-text">返回</text>
+        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
       </view>
       <view class="header-title">
         <text class="title-text">本周情绪报告</text>
@@ -15,7 +14,7 @@
           class="action-btn"
           @tap="handleRefresh"
         >
-          <text class="action-text">{{ isRefreshing ? '生成中...' : '重新生成' }}</text>
+          <wd-icon name="refresh" size="18px" color="var(--text-muted)" />
         </view>
       </view>
     </view>
@@ -37,7 +36,7 @@
       <!-- 空周报状态 -->
       <view v-else-if="isEmptyReport" class="empty-report">
         <view class="empty-icon-wrapper">
-          <text class="empty-icon">~</text>
+          <wd-icon name="calendar" size="48px" color="var(--text-muted)" />
         </view>
         <text class="empty-title">本周暂无周报</text>
         <text class="empty-message">{{ emptyReport?.message || '本周还没有记录足够的日记，无法生成周报。' }}</text>
@@ -404,7 +403,7 @@ onHide(() => {
   height: 88rpx;
   padding: 0 var(--space-md);
   background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-standard);
 }
 
 .header-back {
@@ -481,7 +480,7 @@ onHide(() => {
 .loading-spinner {
   width: 48rpx;
   height: 48rpx;
-  border: 4rpx solid var(--border-primary);
+  border: 4rpx solid var(--border-standard);
   border-top-color: var(--brand-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -495,7 +494,7 @@ onHide(() => {
 
 .loading-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-top: var(--space-md);
 }
 
@@ -522,7 +521,7 @@ onHide(() => {
 
 .empty-icon {
   font-size: var(--font-size-3xl);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .empty-title {
@@ -546,7 +545,7 @@ onHide(() => {
 
 .hint-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .empty-action {
@@ -607,7 +606,7 @@ onHide(() => {
 
 .diary-count {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-top: var(--space-xs);
 }
 
@@ -717,12 +716,12 @@ onHide(() => {
 
 .toggle-icon {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .toggle-arrow {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .suggestion-content {
@@ -773,7 +772,7 @@ onHide(() => {
 
 .meta-text {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 安全区 ====================

@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon"><</text>
+        <wd-icon name="arrow-left" class="back-icon" />
       </view>
       <text class="title">发送好友申请</text>
       <view class="placeholder" />
@@ -273,7 +273,7 @@ onMounted(() => {
   justify-content: space-between;
   padding: var(--space-md);
   background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .back-btn {
@@ -337,7 +337,7 @@ onMounted(() => {
 
 .user-tag {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   background-color: var(--bg-tertiary);
   padding: 4rpx 12rpx;
   border-radius: var(--radius-xs);
@@ -354,7 +354,7 @@ onMounted(() => {
 
 .section-title {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-bottom: var(--space-sm);
 }
 
@@ -370,14 +370,14 @@ onMounted(() => {
 }
 
 .input-placeholder {
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .char-count {
   display: block;
   text-align: right;
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-top: var(--space-xs);
 }
 
@@ -395,7 +395,7 @@ onMounted(() => {
   align-items: center;
   gap: var(--space-xs);
   padding: var(--space-sm) var(--space-md);
-  background-color: rgba(124, 111, 224, 0.2);
+  background-color: var(--brand-light);
   border-radius: var(--radius-full);
 
   &:active {
@@ -431,7 +431,7 @@ onMounted(() => {
 
 .ai-quota {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== AI 建议 ====================
@@ -442,7 +442,7 @@ onMounted(() => {
 
 .suggestions-title {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-bottom: var(--space-sm);
 }
 
@@ -456,7 +456,7 @@ onMounted(() => {
   padding: var(--space-sm);
   background-color: var(--bg-secondary);
   border-radius: var(--radius-sm);
-  border: 1rpx solid var(--border-primary);
+  border: 1rpx solid var(--border-standard);
 
   &:active {
     opacity: 0.9;
@@ -501,6 +501,6 @@ onMounted(() => {
 }
 
 .send-btn.is-disabled .send-text {
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 </style>

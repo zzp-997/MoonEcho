@@ -7,7 +7,7 @@
       </view>
       <view class="header-right">
         <view class="action-btn" @tap="handleGoRequests">
-          <text class="action-icon">📬</text>
+          <wd-icon name="add-user" size="22px" color="var(--text-primary)" />
           <view v-if="unreadRequestCount > 0" class="unread-dot" />
         </view>
       </view>
@@ -69,7 +69,7 @@
 
       <!-- 空状态 -->
       <view v-if="!isLoading && friends.length === 0" class="empty-state">
-        <text class="empty-icon">👥</text>
+        <wd-icon name="user" size="48px" color="var(--text-muted)" custom-style="margin-bottom: var(--space-md)" />
         <text class="empty-text">还没有好友</text>
         <text class="empty-hint">去广场看看，认识新朋友吧</text>
         <view class="empty-action" @tap="handleGoSquare">
@@ -89,9 +89,9 @@
 
     <!-- 好友申请入口 -->
     <view class="requests-entry" @tap="handleGoRequests" v-if="receiveRequests.length > 0">
-      <text class="requests-icon">📬</text>
+      <wd-icon name="add-user" size="18px" color="var(--brand-primary)" custom-style="margin-right: var(--space-sm)" />
       <text class="requests-text">{{ receiveRequests.length }}个新的好友申请</text>
-      <text class="requests-arrow">></text>
+      <wd-icon name="arrow-right" size="14px" color="var(--brand-primary)" />
     </view>
   </view>
 </template>
@@ -298,7 +298,7 @@ onShow(() => {
   justify-content: space-between;
   padding: var(--space-md);
   background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .header-left {
@@ -363,7 +363,7 @@ onShow(() => {
 }
 
 .search-placeholder {
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 好友列表 ====================
@@ -386,12 +386,12 @@ onShow(() => {
 
 .group-title {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .group-count {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 空状态 ====================
@@ -417,7 +417,7 @@ onShow(() => {
 
 .empty-hint {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-bottom: var(--space-md);
 }
 
@@ -447,7 +447,7 @@ onShow(() => {
 
 .loading-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-top: var(--space-sm);
 }
 
@@ -458,7 +458,7 @@ onShow(() => {
   align-items: center;
   padding: var(--space-md);
   margin: var(--space-sm) var(--space-md);
-  background-color: rgba(124, 111, 224, 0.2);
+  background-color: var(--brand-light);
   border-radius: var(--radius-md);
 
   &:active {
@@ -474,13 +474,10 @@ onShow(() => {
 .requests-text {
   flex: 1;
   font-size: var(--font-size-sm);
-  color: var(--brand-light);
+  color: var(--brand-primary);
 }
 
 .requests-arrow {
-  font-size: var(--font-size-sm);
-  color: var(--brand-light);
-}
 
 // ==================== 安全区 ====================
 

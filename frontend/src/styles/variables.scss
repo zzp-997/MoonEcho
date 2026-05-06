@@ -1,98 +1,101 @@
 // ============================================
-// 回声 - CSS 变量主题系统 (Lovable Design)
+// 回声 - 设计系统变量
 // 文件：src/styles/variables.scss
-// 说明：基于 Lovable 温暖 humanist 设计风格
-// 参考：docs/ui/DESIGN.md
+// 说明：纯净白 · 暖橘 — 双主题 CSS 变量
+// 参考：docs/plans/2026-05-06-frontend-refactor-design.md
 // ============================================
 
-// ==================== Lovable 核心变量 ====================
+// ==================== 日间模式（默认） ====================
 
-:root {
-  // ========== 核心色板 ==========
-  // 温暖奶油色背景 - 品牌签名色，不是纯白或米色
-  --bg-cream: #f7f4ed;
-  // 近黑色主文字 - 不是纯黑，有温暖感
-  --text-charcoal: #1c1c1c;
-  // 暗色按钮上的文字
-  --text-off-white: #fcfbf8;
+page {
+  // 背景层次（微暖白体系）
+  --bg-primary: #FFF9F5;
+  --bg-secondary: #FFF3EB;
+  --bg-tertiary: #FFEDE3;
+  --bg-elevated: #ffffff;
+  --bg-input: #ffffff;
+  --bg-cream: #FFF3EB; // 兼容旧引用
 
-  // ========== 不透明度灰度系统 ==========
-  // 所有灰度来自 #1c1c1c 不同透明度，形成统一视觉
-  --gray-100: #1c1c1c;                    // 主文字/深色表面
-  --gray-83: rgba(28, 28, 28, 0.83);       // 强次要文字
-  --gray-82: rgba(28, 28, 28, 0.82);       // 正文
-  --gray-muted: #5f5f5d;                   // 弱文字/占位符/次要说明
-  --gray-40: rgba(28, 28, 28, 0.4);       // 交互边框
-  --gray-4: rgba(28, 28, 28, 0.04);       // 微妙 hover 背景
-  --gray-3: rgba(28, 28, 28, 0.03);       // 几乎不可见的背景
+  // 文字色
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --text-disabled: #cccccc;
+  --text-inverse: #ffffff;
+  --text-on-brand: #ffffff;
+  --text-charcoal: #1a1a1a; // 兼容旧引用
+  --text-tertiary: #999999; // 兼容旧引用
+  --text-off-white: #ffffff; // 兼容旧引用
 
-  // ========== 边框色系统 ==========
-  // 温暖分割线 - 用于卡片、图片、分割线
-  --border-light: #eceae4;
-  // 交互边框 - 用于按钮、输入框等交互元素
-  --border-interactive: rgba(28, 28, 28, 0.4);
+  // 品牌色
+  --brand-primary: #FF9A5C;
+  --brand-hover: #e88a4a;
+  --brand-active: #d47a3e;
+  --brand-light: rgba(255, 154, 92, 0.1);
+  --brand-dark: #d47a3e; // 兼容 wot-design-uni 映射
 
-  // ========== 背景色系统（日间模式） ==========
-  --bg-primary: var(--bg-cream);
-  --bg-secondary: #fcfbf8;  // Off-white for cards
-  --bg-tertiary: #f7f4ed;   // Same as cream
-  --bg-secondary-60: rgba(252, 251, 248, 0.6);
-  --bg-secondary-80: rgba(252, 251, 248, 0.8);
-  --bg-tertiary-90: rgba(247, 244, 237, 0.9);
+  // 功能色
+  --color-success: #8FCCA0;
+  --color-warning: #FFB020;
+  --color-warning-bg: rgba(255, 176, 32, 0.1);
+  --color-error: #E53935;
+  --color-info: #8BA7C4;
 
-  // ========== 文字色系统（日间模式） ==========
-  --text-primary: var(--text-charcoal);
-  --text-secondary: var(--gray-82);
-  --text-tertiary: var(--gray-muted);
-  --text-on-brand: var(--text-off-white);
+  // 边框色
+  --border-light: #f0f0f0;
+  --border-standard: #e0e0e0;
+  --border-interactive: #d0d0d0;
+  --border-primary: #e0e0e0; // 兼容旧引用
 
-  // ========== 品牌色系统 ==========
-  // 日间模式：charcoal 用于主按钮
-  --brand-primary: #1c1c1c;
-  --brand-light: #f7f4ed;
-  --brand-dark: #5f5f5d;
+  // 阴影
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-input: none;
+  --shadow-input-focus: 0 0 0 2px rgba(255, 154, 92, 0.2);
+  --shadow-btn: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+  --shadow-btn-inset: 0 1px 0 0 rgba(0, 0, 0, 0.04); // 兼容旧引用
+  --shadow-focus: 0 0 0 2px rgba(255, 154, 92, 0.2); // 兼容旧引用
 
-  // ========== 情绪色调系统（保持原有语义） ==========
+  // 情绪色调
   --mood-warm: #FF9A5C;
   --mood-warm-bg: rgba(255, 154, 92, 0.1);
-  --mood-warm-text: #FFB88A;
+  --mood-warm-text: #cc7a3a;
   --mood-calm: #8FCCA0;
   --mood-calm-bg: rgba(143, 204, 160, 0.1);
-  --mood-calm-text: #A8D9B5;
+  --mood-calm-text: #5a9968;
   --mood-low: #8BA7C4;
   --mood-low-bg: rgba(139, 167, 196, 0.1);
-  --mood-low-text: #A5C0D6;
+  --mood-low-text: #5a7a9a;
   --mood-sad: #4A6FA5;
   --mood-sad-bg: rgba(74, 111, 165, 0.1);
-  --mood-sad-text: #6B8FC0;
+  --mood-sad-text: #3a5580;
   --mood-chaos: #6B4C7A;
   --mood-chaos-bg: rgba(107, 76, 122, 0.1);
-  --mood-chaos-text: #8B6C9A;
+  --mood-chaos-text: #503a5a;
 
-  // ========== AI 角色色系统 ==========
-  --ai-xiaowen: #FFB5BA;
-  --ai-xiaowen-bg: rgba(255, 181, 186, 0.15);
-  --ai-laohei: #8B9DC3;
-  --ai-laohei-bg: rgba(139, 157, 195, 0.15);
-  --ai-ali: #7CB9A0;
-  --ai-ali-bg: rgba(124, 185, 160, 0.15);
+  // AI 角色色
+  --ai-xiaowen: #FF9A9A;
+  --ai-xiaowen-bg: rgba(255, 154, 154, 0.1);
+  --ai-laohei: #7A7A8A;
+  --ai-laohei-bg: rgba(122, 122, 138, 0.1);
+  --ai-ali: #5A8ACA;
+  --ai-ali-bg: rgba(90, 138, 202, 0.1);
 
-  // ========== 功能色系统 ==========
-  --color-success: #4ADE80;
-  --color-success-bg: rgba(74, 222, 128, 0.1);
-  --color-warning: #FBBF24;
-  --color-warning-bg: rgba(251, 191, 36, 0.1);
-  --color-error: #F87171;
-  --color-error-bg: rgba(248, 113, 113, 0.1);
-  --color-info: #60A5FA;
-  --color-info-bg: rgba(96, 165, 250, 0.1);
+  // 字体
+  --font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-md: 17px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 28px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
-  // ========== 边框色系统（日间模式） ==========
-  --border-primary: var(--border-light);
-  --border-input: var(--border-light);
-  --border-focus: rgba(59, 130, 246, 0.5);  // Ring blue
-
-  // ========== 间距系统（8px 网格） ==========
+  // 间距
   --space-2xs: 4px;
   --space-xs: 8px;
   --space-sm: 12px;
@@ -100,106 +103,104 @@
   --space-lg: 24px;
   --space-xl: 32px;
   --space-2xl: 48px;
-  // Lovable 扩展间距
-  --space-3xl: 56px;
-  --space-4xl: 80px;
-  --space-5xl: 96px;
-  --space-6xl: 128px;
 
-  // ========== 圆角系统 ==========
-  --radius-micro: 4px;       // 小按钮
-  --radius-std: 6px;         // 标准按钮/输入框
-  --radius-compact: 8px;     // 紧凑卡片
-  --radius-card: 12px;       // 标准卡片
-  --radius-container: 16px;  // 大容器
-  --radius-full: 9999px;     // 药丸/图标按钮
+  // 圆角
+  --radius-sm: 6px;
+  --radius-std: 8px; // 兼容旧引用
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-card: 12px; // 兼容旧引用
+  --radius-compact: 8px; // 兼容旧引用
+  --radius-container: 18px; // 兼容旧引用
+  --radius-micro: 4px; // 兼容旧引用
+  --radius-badge: 14px; // 兼容旧引用
+  --radius-full: 9999px;
 
-  // ========== 阴影系统（Lovable 风格） ==========
-  // Lovable 哲学：卡片用边框而非阴影
-  --shadow-none: none;
-  --shadow-focus: rgba(0, 0, 0, 0.1) 0px 4px 12px;  // Focus 状态
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-
-  // ========== Lovable 按钮 Inset Shadow（标志技术） ==========
-  --shadow-btn-inset:
-    rgba(255, 255, 255, 0.2) 0px 0.5px 0px 0px inset,
-    rgba(0, 0, 0, 0.2) 0px 0px 0px 0.5px inset,
-    rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
-
-  // ========== 字体系统 ==========
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC',
-    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  --font-size-xs: 10px;
-  --font-size-sm: 12px;
-  --font-size-base: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 18px;
-  --font-size-xl: 20px;
-  --font-size-2xl: 24px;
-  --font-size-3xl: 28px;
-  --font-size-4xl: 32px;
-
-  // ========== 动画系统 ==========
+  // 过渡
   --transition-fast: 0.15s;
   --transition-base: 0.3s;
-  --transition-slow: 0.5s;
 
-  // ========== Z-Index 层级系统 ==========
+  // Z-Index
   --z-dropdown: 100;
   --z-sticky: 200;
   --z-fixed: 300;
-  --z-modal-backdrop: 400;
-  --z-modal: 500;
-  --z-popover: 600;
-  --z-toast: 700;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-loading: 600;
+
+  // 旧变量兼容
+  --gray-muted: #999999;
+  --bg-secondary-60: rgba(245, 245, 245, 0.6);
 }
 
-// ==================== 暗色模式 ====================
-// 在根元素添加 .theme-dark 类切换到暗色模式
+// ==================== 夜间模式 ====================
 
-.theme-dark,
 .dark {
-  // ========== 背景色系统（暗色模式） ==========
-  --bg-primary: #1c1c1c;        // Charcoal
-  --bg-secondary: #2a2a2a;      // 暗色卡片
-  --bg-tertiary: #3a3a3a;       // 暗色浮层
-  --bg-secondary-60: rgba(42, 42, 42, 0.6);
-  --bg-secondary-80: rgba(42, 42, 42, 0.8);
-  --bg-tertiary-90: rgba(58, 58, 58, 0.9);
+  --bg-primary: #12111a;
+  --bg-secondary: #1c1a22;
+  --bg-tertiary: #26242c;
+  --bg-elevated: #1c1a22;
+  --bg-input: #1c1a22;
+  --bg-cream: #1c1a22;
 
-  // ========== 文字色系统（暗色模式） ==========
-  --text-primary: #f7f4ed;      // Cream
-  --text-secondary: rgba(247, 244, 237, 0.82);
-  --text-tertiary: rgba(247, 244, 237, 0.5);
-  --text-on-brand: #f7f4ed;
+  --text-primary: #f0f0f2;
+  --text-secondary: #a0a0ac;
+  --text-muted: #6a6a78;
+  --text-disabled: #4a4a56;
+  --text-inverse: #12111a;
+  --text-on-brand: #12111a;
+  --text-charcoal: #f0f0f2;
+  --text-tertiary: #6a6a78;
+  --text-off-white: #f0f0f2;
 
-  // ========== 边框色系统（暗色模式） ==========
-  --border-primary: #333333;
-  --border-input: #404040;
-  --border-focus: rgba(59, 130, 246, 0.5);
+  --brand-primary: #FFB07A;
+  --brand-hover: #e89560;
+  --brand-active: #d48550;
+  --brand-light: rgba(255, 176, 122, 0.12);
+  --brand-dark: #d48550;
 
-  // ========== 品牌色系统（暗色模式） ==========
-  --brand-primary: #f7f4ed;     // Cream 用于按钮
-  --brand-light: #2a2a2a;
-  --brand-dark: #1c1c1c;
-}
+  --color-success: #a8e6b8;
+  --color-warning: #ffc94d;
+  --color-warning-bg: rgba(255, 201, 77, 0.12);
+  --color-error: #ef5350;
+  --color-info: #a3bdd4;
 
-// ==================== 情绪色调变体 ====================
+  --border-light: rgba(255, 255, 255, 0.04);
+  --border-standard: rgba(255, 255, 255, 0.08);
+  --border-interactive: rgba(255, 255, 255, 0.12);
+  --border-primary: rgba(255, 255, 255, 0.08);
 
-.mood-warm-bg {
-  background-color: var(--mood-warm-bg);
-}
-.mood-calm-bg {
-  background-color: var(--mood-calm-bg);
-}
-.mood-low-bg {
-  background-color: var(--mood-low-bg);
-}
-.mood-sad-bg {
-  background-color: var(--mood-sad-bg);
-}
-.mood-chaos-bg {
-  background-color: var(--mood-chaos-bg);
+  --shadow-card: none;
+  --shadow-hover: none;
+  --shadow-input: none;
+  --shadow-input-focus: 0 0 0 2px rgba(255, 176, 122, 0.25);
+  --shadow-btn: none;
+  --shadow-btn-inset: none;
+  --shadow-focus: 0 0 0 2px rgba(255, 176, 122, 0.25);
+
+  --mood-warm: #FFB07A;
+  --mood-warm-bg: rgba(255, 176, 122, 0.12);
+  --mood-warm-text: #ffca9a;
+  --mood-calm: #a8e6b8;
+  --mood-calm-bg: rgba(168, 230, 184, 0.12);
+  --mood-calm-text: #c0f0d0;
+  --mood-low: #a3bdd4;
+  --mood-low-bg: rgba(163, 189, 212, 0.12);
+  --mood-low-text: #b8d4e8;
+  --mood-sad: #6b8fc0;
+  --mood-sad-bg: rgba(107, 143, 192, 0.12);
+  --mood-sad-text: #8aacda;
+  --mood-chaos: #8b6c9a;
+  --mood-chaos-bg: rgba(139, 108, 154, 0.12);
+  --mood-chaos-text: #a88cba;
+
+  --ai-xiaowen: #ffbaba;
+  --ai-xiaowen-bg: rgba(255, 186, 186, 0.12);
+  --ai-laohei: #9a9aaa;
+  --ai-laohei-bg: rgba(154, 154, 170, 0.12);
+  --ai-ali: #7aacda;
+  --ai-ali-bg: rgba(122, 172, 218, 0.12);
+
+  --gray-muted: #6a6a78;
+  --bg-secondary-60: rgba(28, 26, 34, 0.6);
 }

@@ -1,11 +1,10 @@
 // ============================================
-// 回声 - 主题切换核心样式 (Lovable Design)
+// 回声 - 主题核心
 // 文件：src/styles/theme.scss
-// 说明：主题切换逻辑、全局主题类、wot-design-uni 主题覆盖
-// 参考：docs/ui/DESIGN.md
+// 说明：页面基础样式、wot-design-uni 主题变量覆盖
 // ============================================
 
-// ==================== 全局主题基础样式 ====================
+// ==================== 页面基础 ====================
 
 page {
   background-color: var(--bg-primary);
@@ -18,51 +17,41 @@ page {
               border-color var(--transition-base) ease;
 }
 
-// ==================== wot-design-uni 主题覆盖 ====================
-// 将 wot-design-uni 的 CSS 变量映射到我们的主题变量
+// ==================== wot-design-uni 日间覆盖 ====================
 
 :root {
-  // 主色调映射为品牌色
   --wd-color-theme: var(--brand-primary);
   --wd-color-theme-light: var(--brand-light);
-  --wd-color-theme-dark: var(--brand-dark);
-
-  // 功能色映射
+  --wd-color-theme-dark: var(--brand-hover);
   --wd-color-success: var(--color-success);
   --wd-color-warning: var(--color-warning);
   --wd-color-danger: var(--color-error);
   --wd-color-info: var(--color-info);
-
-  // 背景色映射
   --wd-bg: var(--bg-primary);
   --wd-bg-card: var(--bg-secondary);
-  --wd-bg-popup: var(--bg-tertiary);
-
-  // 文字色映射
+  --wd-bg-popup: var(--bg-elevated);
   --wd-text: var(--text-primary);
   --wd-text-secondary: var(--text-secondary);
-  --wd-text-placeholder: var(--text-tertiary);
-
-  // 边框色映射
-  --wd-border: var(--border-primary);
+  --wd-text-placeholder: var(--text-muted);
+  --wd-border-color: var(--border-standard);
 }
 
-// 暗色模式 wot-design-uni 覆盖
-.theme-dark,
+// ==================== wot-design-uni 夜间覆盖 ====================
+
 .dark {
   --wd-color-theme: var(--brand-primary);
   --wd-color-theme-light: var(--brand-light);
-  --wd-color-theme-dark: var(--brand-dark);
+  --wd-color-theme-dark: var(--brand-hover);
   --wd-bg: var(--bg-primary);
   --wd-bg-card: var(--bg-secondary);
-  --wd-bg-popup: var(--bg-tertiary);
+  --wd-bg-popup: var(--bg-elevated);
   --wd-text: var(--text-primary);
   --wd-text-secondary: var(--text-secondary);
-  --wd-text-placeholder: var(--text-tertiary);
-  --wd-border: var(--border-primary);
+  --wd-text-placeholder: var(--text-muted);
+  --wd-border-color: var(--border-standard);
 }
 
-// ==================== 主题过渡动画 ====================
+// ==================== 主题过渡 ====================
 
 .theme-transition {
   transition: background-color var(--transition-base) ease,
@@ -73,65 +62,45 @@ page {
 
 // ==================== 通用背景类 ====================
 
-.bg-primary {
-  background-color: var(--bg-primary);
-}
-
-.bg-secondary {
-  background-color: var(--bg-secondary);
-}
-
-.bg-tertiary {
-  background-color: var(--bg-tertiary);
-}
-
-.bg-cream {
-  background-color: var(--bg-cream);
-}
+.bg-primary { background-color: var(--bg-primary); }
+.bg-secondary { background-color: var(--bg-secondary); }
+.bg-tertiary { background-color: var(--bg-tertiary); }
+.bg-brand { background-color: var(--brand-primary); }
+.bg-brand-light { background-color: var(--brand-light); }
+.bg-cream { background-color: var(--bg-cream); }
 
 // ==================== 通用文字类 ====================
 
-.text-primary {
-  color: var(--text-primary);
-}
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.text-brand { color: var(--brand-primary); }
+.text-charcoal { color: var(--text-charcoal); }
+.text-tertiary { color: var(--text-tertiary); }
+.text-muted-gray { color: var(--gray-muted); }
 
-.text-secondary {
-  color: var(--text-secondary);
-}
+// ==================== 情绪日记覆盖（不受主题影响） ====================
 
-.text-tertiary {
-  color: var(--text-tertiary);
-}
-
-.text-brand {
-  color: var(--brand-primary);
-}
-
-.text-charcoal {
-  color: var(--text-charcoal);
-}
-
-.text-muted {
-  color: var(--gray-muted);
-}
-
-// ==================== 特殊场景主题覆盖 ====================
-
-// 情绪日记 - 不受主题影响，始终使用情绪色调背景
 .diary-emotion-override {
   background-color: var(--mood-warm-bg) !important;
 }
 
-// 树洞区 - 强制使用暗色主题（不受日间/夜间切换影响）
-.treehole-force-dark {
-  background-color: #1c1c1c !important;
-  --bg-primary: #1c1c1c;
-  --bg-secondary: #2a2a2a;
-  --bg-tertiary: #3a3a3a;
-  --text-primary: #f7f4ed;
-  --text-secondary: rgba(247, 244, 237, 0.82);
-  --text-tertiary: rgba(247, 244, 237, 0.5);
-  --border-primary: #333333;
+// ==================== AI 对话气泡 ====================
+
+.bubble-ai {
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm);
+  max-width: 80%;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--text-primary);
+}
+
+.bubble-user {
+  background-color: var(--brand-primary);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg);
+  max-width: 80%;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--text-inverse);
 }
 
 // AI对话 - 夜间模式对话气泡更柔和

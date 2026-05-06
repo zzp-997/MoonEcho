@@ -1,5 +1,16 @@
 <template>
   <view class="chat-page">
+    <!-- 导航栏 -->
+    <view class="nav-bar">
+      <view class="nav-back" @tap="handleBack">
+        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+      </view>
+      <text class="nav-title">{{ currentPersonalityName }}</text>
+      <view class="nav-action" @tap="handleSwitchPersonality">
+        <wd-icon name="refresh" size="20px" color="var(--text-primary)" />
+      </view>
+    </view>
+
     <!-- 消息列表区域 -->
     <scroll-view
       class="message-list"
@@ -365,6 +376,13 @@ function handleSwitchPersonality(): void {
 }
 
 /**
+ * 返回上一页
+ */
+function handleBack(): void {
+  uni.navigateBack()
+}
+
+/**
  * 关闭性格切换弹窗
  */
 function closePersonalityPicker(): void {
@@ -538,7 +556,41 @@ onShow(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
+}
+
+// ==================== 导航栏 ====================
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 var(--space-md);
+  padding-top: env(safe-area-inset-top);
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.nav-back,
+.nav-action {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-secondary);
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.nav-title {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 // ==================== 消息列表 ====================
@@ -562,7 +614,7 @@ onShow(() => {
 
 .loading-text {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 // ==================== 空状态 ====================
@@ -590,7 +642,7 @@ onShow(() => {
 .avatar-label {
   font-size: 48rpx;
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .empty-content {
@@ -601,13 +653,13 @@ onShow(() => {
 .empty-title {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
   margin-bottom: var(--space-sm);
 }
 
 .empty-message {
   font-size: var(--font-size-md);
-  color: var(--gray-muted);
+  color: var(--text-muted);
   line-height: 1.8;
 }
 
@@ -617,7 +669,7 @@ onShow(() => {
 
 .guide-text {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 // ==================== 生成中指示器 ====================
@@ -640,10 +692,10 @@ onShow(() => {
 }
 
 .generating-bubble {
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-light);
   padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-md);
   border-bottom-left-radius: var(--radius-micro);
 }
 
@@ -657,7 +709,7 @@ onShow(() => {
   width: 12rpx;
   height: 12rpx;
   border-radius: 50%;
-  background-color: var(--gray-muted);
+  background-color: var(--text-muted);
   animation: typingBounce 1.4s ease-in-out infinite;
 
   &:nth-child(1) {
@@ -707,7 +759,7 @@ onShow(() => {
 
 .personality-picker {
   width: 100%;
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
   border-radius: var(--radius-container) var(--radius-container) 0 0;
   padding: var(--space-lg);
   padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
@@ -721,7 +773,7 @@ onShow(() => {
 .title-text {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .picker-options {
@@ -735,16 +787,16 @@ onShow(() => {
   display: flex;
   align-items: center;
   padding: var(--space-md);
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-md);
 
   &:active {
     border-color: var(--border-interactive);
   }
 
   &.is-current {
-    border-color: var(--text-charcoal);
+    border-color: var(--brand-primary);
     border-width: 2px;
   }
 }
@@ -752,26 +804,26 @@ onShow(() => {
 .option-label {
   font-size: 28rpx;
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
   margin-right: var(--space-sm);
 }
 
 .option-name {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .current-mark {
   margin-left: auto;
   padding: 4rpx 12rpx;
   border-radius: var(--radius-micro);
-  background-color: var(--text-charcoal);
+  background-color: var(--brand-primary);
 }
 
 .mark-text {
   font-size: var(--font-size-xs);
-  color: var(--text-off-white);
+  color: var(--text-inverse);
 }
 
 .picker-close {
@@ -780,7 +832,7 @@ onShow(() => {
   justify-content: center;
   height: 88rpx;
   background-color: var(--bg-secondary);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-md);
 
   &:active {
     opacity: 0.8;
@@ -789,6 +841,6 @@ onShow(() => {
 
 .close-text {
   font-size: var(--font-size-md);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 </style>

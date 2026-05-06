@@ -14,7 +14,7 @@
           class="avatar-placeholder"
           :style="{ backgroundColor: anonAvatarColor }"
         >
-          <text class="avatar-icon">~</text>
+          <wd-icon name="user" size="20px" color="var(--text-inverse)" />
         </view>
       </view>
       <view class="identity-info">

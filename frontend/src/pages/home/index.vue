@@ -13,7 +13,7 @@
         <!-- 通知入口 -->
         <view class="notification-btn" @tap="handleNotification">
           <view class="nav-icon-wrapper">
-            <text class="nav-icon-text">通知</text>
+            <wd-icon name="bell" size="20px" color="var(--text-primary)" />
           </view>
           <view v-if="unreadCount > 0" class="unread-badge">
             <text class="badge-text">{{ unreadCount > 99 ? '99+' : unreadCount }}</text>
@@ -50,34 +50,32 @@
           </view>
           <text class="ai-preview">{{ lastMessagePreview || greetingText }}</text>
         </view>
-        <view class="ai-arrow">
-          <text class="arrow-text">&gt;</text>
-        </view>
+        <wd-icon name="arrow-right" size="18px" color="var(--text-muted)" />
       </view>
 
       <!-- 快捷功能入口 -->
       <view class="quick-actions">
         <view class="action-item" @tap="handleQuickAction('diary')">
           <view class="action-icon diary-icon">
-            <text class="action-icon-text">记</text>
+            <wd-icon name="calendar" size="24px" color="var(--mood-warm)" />
           </view>
           <text class="action-label">记日记</text>
         </view>
         <view class="action-item" @tap="handleQuickAction('treehole')">
           <view class="action-icon treehole-icon">
-            <text class="action-icon-text">洞</text>
+            <wd-icon name="chat" size="24px" color="var(--mood-low)" />
           </view>
           <text class="action-label">树洞</text>
         </view>
         <view class="action-item" @tap="handleQuickAction('square')">
           <view class="action-icon square-icon">
-            <text class="action-icon-text">动</text>
+            <wd-icon name="star" size="24px" color="var(--brand-primary)" />
           </view>
           <text class="action-label">动态</text>
         </view>
         <view class="action-item" @tap="handleQuickAction('report')">
           <view class="action-icon report-icon">
-            <text class="action-icon-text">报</text>
+            <wd-icon name="chart" size="24px" color="var(--mood-calm)" />
           </view>
           <text class="action-label">周报</text>
         </view>
@@ -89,7 +87,7 @@
           <text class="section-title">近期动态</text>
           <view class="section-more" @tap="handleMoreFeeds">
             <text class="more-text">更多</text>
-            <text class="more-arrow">&gt;</text>
+            <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
           </view>
         </view>
         <view class="feeds-preview">
@@ -101,7 +99,7 @@
           >
             <view class="feed-header">
               <view class="feed-avatar">
-                <text class="avatar-text">{{ feed.isAnonymous ? '匿' : feed.authorNickname?.charAt(0) || '用' }}</text>
+                <text class="feed-avatar-text">{{ feed.isAnonymous ? '匿' : feed.authorNickname?.charAt(0) || '用' }}</text>
               </view>
               <view class="feed-info">
                 <text class="feed-author">{{ feed.isAnonymous ? '匿名用户' : feed.authorNickname }}</text>
@@ -119,9 +117,7 @@
 
       <!-- 空状态提示 -->
       <view v-else class="empty-section">
-        <view class="empty-illustration">
-          <text class="empty-icon">深夜</text>
-        </view>
+        <wd-icon name="moon" size="48px" color="var(--brand-primary)" custom-style="margin-bottom: var(--space-sm)" />
         <text class="empty-title">开始你的情绪之旅</text>
         <text class="empty-hint">记录心情，与AI朋友聊聊</text>
       </view>
@@ -131,45 +127,37 @@
     </scroll-view>
 
     <!-- ActionSheet 发布选择 -->
-    <view v-if="showActionSheet" class="action-sheet-overlay" @tap="closeActionSheet">
-      <view class="action-sheet" @tap.stop>
-        <view class="sheet-title">
-          <text class="title-text">选择发布类型</text>
-        </view>
-        <view class="sheet-options">
-          <view class="sheet-option" @tap="handlePublishOption('treehole')">
-            <view class="option-icon-wrapper treehole-option">
-              <text class="option-icon-text">洞</text>
-            </view>
-            <view class="option-content">
-              <text class="option-title">发布树洞吐槽</text>
-              <text class="option-desc">匿名宣泄，获得共鸣</text>
-            </view>
+    <wd-action-sheet v-model="showActionSheet" title="选择发布类型">
+      <view class="sheet-options">
+        <view class="sheet-option" @tap="handlePublishOption('treehole')">
+          <view class="option-icon-wrapper treehole-option">
+            <wd-icon name="chat" size="24px" color="var(--mood-low)" />
           </view>
-          <view class="sheet-option" @tap="handlePublishOption('dynamic')">
-            <view class="option-icon-wrapper dynamic-option">
-              <text class="option-icon-text">动</text>
-            </view>
-            <view class="option-content">
-              <text class="option-title">发布动态</text>
-              <text class="option-desc">实名分享，连接好友</text>
-            </view>
-          </view>
-          <view class="sheet-option" @tap="handlePublishOption('diary')">
-            <view class="option-icon-wrapper diary-option">
-              <text class="option-icon-text">记</text>
-            </view>
-            <view class="option-content">
-              <text class="option-title">记录情绪</text>
-              <text class="option-desc">写下今天的心情</text>
-            </view>
+          <view class="option-content">
+            <text class="option-title">发布树洞吐槽</text>
+            <text class="option-desc">匿名宣泄，获得共鸣</text>
           </view>
         </view>
-        <view class="sheet-cancel" @tap="closeActionSheet">
-          <text class="cancel-text">取消</text>
+        <view class="sheet-option" @tap="handlePublishOption('dynamic')">
+          <view class="option-icon-wrapper dynamic-option">
+            <wd-icon name="star" size="24px" color="var(--brand-primary)" />
+          </view>
+          <view class="option-content">
+            <text class="option-title">发布动态</text>
+            <text class="option-desc">实名分享，连接好友</text>
+          </view>
+        </view>
+        <view class="sheet-option" @tap="handlePublishOption('diary')">
+          <view class="option-icon-wrapper diary-option">
+            <wd-icon name="calendar" size="24px" color="var(--mood-warm)" />
+          </view>
+          <view class="option-content">
+            <text class="option-title">记录情绪</text>
+            <text class="option-desc">写下今天的心情</text>
+          </view>
         </view>
       </view>
-    </view>
+    </wd-action-sheet>
   </view>
 </template>
 
@@ -179,6 +167,7 @@
  * 文件：src/pages/home/index.vue
  * 说明：应用主首页，入口A — 首页轻引导
  * 功能：情绪色调条、AI对话入口、通知入口、快捷功能、底部ActionSheet
+ * 设计风格：纯净白 · 暖橘
  */
 
 import { ref, computed, onMounted } from 'vue'
@@ -218,9 +207,6 @@ const todayEmotion = ref<EmotionTone | null>(null)
 /** 连续记录天数 */
 const streakDays = ref(0)
 
-/** 未读消息数 */
-// unreadCount 已通过 useNotification 获取
-
 /** 最近动态列表 */
 interface FeedItem {
   id: string
@@ -258,9 +244,9 @@ const currentPersonalityName = computed(() => {
 /** 当前AI性格颜色 */
 const currentPersonalityColor = computed(() => {
   const colorMap: Record<string, string> = {
-    xiaowen: '#FFB5BA',  // 小温 - 温暖粉
-    laohei: '#8B9DC3',   // 老黑 - 冷静灰蓝
-    ali: '#7CB9A0',      // 阿理 - 沉稳绿
+    xiaowen: '#FFB5BA',
+    laohei: '#8B9DC3',
+    ali: '#7CB9A0',
   }
   return colorMap[currentPersonality.value] || '#FFB5BA'
 })
@@ -281,18 +267,12 @@ const lastMessagePreview = computed(() => {
 
 // ==================== 方法 ====================
 
-/**
- * 获取系统信息
- */
 function getSystemInfo(): void {
   const systemInfo = uni.getSystemInfoSync()
   statusBarHeight.value = systemInfo.statusBarHeight || 44
   safeAreaBottom.value = systemInfo.safeAreaInsets?.bottom || 0
 }
 
-/**
- * 加载今日记录状态
- */
 async function loadTodayRecordStatus(): Promise<void> {
   try {
     const today = new Date().toISOString().split('T')[0]
@@ -305,19 +285,14 @@ async function loadTodayRecordStatus(): Promise<void> {
     hasRecordToday.value = !!todayDiary
     todayEmotion.value = todayDiary?.emotion_tone || null
 
-    // 计算连续天数
     if (stats) {
       streakDays.value = calculateStreak(diaryList.data)
     }
   } catch (error) {
     console.error('加载今日记录状态失败', error)
-    // 静默失败，不影响用户使用其他功能
   }
 }
 
-/**
- * 计算连续记录天数
- */
 function calculateStreak(diaries: any[]): number {
   if (diaries.length === 0) return 0
 
@@ -340,9 +315,6 @@ function calculateStreak(diaries: any[]): number {
   return streak
 }
 
-/**
- * 处理下拉刷新
- */
 async function handleRefresh(): Promise<void> {
   isRefreshing.value = true
 
@@ -357,48 +329,29 @@ async function handleRefresh(): Promise<void> {
   }
 }
 
-/**
- * 处理情绪色调条点击
- */
 function handleEmotionBarTap(): void {
-  if (hasRecordToday.value) {
-    // 查看今日日记
-    uni.navigateTo({ url: '/pages/diary/edit' })
-  } else {
-    // 去记录
-    uni.navigateTo({ url: '/pages/diary/edit' })
-  }
+  uni.navigateTo({ url: '/pages/diary/edit' })
 }
 
-/**
- * 处理AI对话入口点击
- */
 function handleAIEntry(): void {
   track(EventName.PAGE_VIEW, { page: 'chat_entry' })
-  uni.switchTab({ url: '/pages/chat/index' })
+  uni.navigateTo({ url: '/pages/chat/index' })
 }
 
-/**
- * 处理通知点击
- */
 function handleNotification(): void {
   track(EventName.NOTIFICATION_LIST_VIEW, { action: 'from_home' })
   uni.navigateTo({ url: '/pages/notification/list' })
 }
 
-/**
- * 处理快捷功能点击
- */
 function handleQuickAction(action: string): void {
-  // 青少年模式检查
   if (action === 'treehole' && !checkAccess('treehole')) {
     return
   }
 
   const routeConfig: Record<string, { url: string; type: 'navigate' | 'switchTab' }> = {
     diary: { url: '/pages/diary/edit', type: 'navigate' },
-    treehole: { url: '/pages/treehole/index', type: 'navigate' },
-    square: { url: '/pages/community/index', type: 'switchTab' },
+    treehole: { url: '/pagesSocial/treehole/index', type: 'navigate' },
+    square: { url: '/pagesSocial/square/index', type: 'switchTab' },
     report: { url: '/pages/diary/weekly-report', type: 'navigate' },
   }
 
@@ -412,24 +365,14 @@ function handleQuickAction(action: string): void {
   }
 }
 
-/**
- * 处理更多动态点击
- */
 function handleMoreFeeds(): void {
-  uni.switchTab({ url: '/pages/community/index' })
+  uni.switchTab({ url: '/pagesSocial/square/index' })
 }
 
-/**
- * 处理动态点击
- */
 function handleFeedTap(feed: FeedItem): void {
-  // 动态详情页待实现
   uni.showToast({ title: '功能开发中', icon: 'none' })
 }
 
-/**
- * 格式化时间
- */
 function formatTime(timeStr: string): string {
   const date = new Date(timeStr)
   const now = new Date()
@@ -445,34 +388,24 @@ function formatTime(timeStr: string): string {
   return `${date.getMonth() + 1}月${date.getDate()}日`
 }
 
-/**
- * 打开发布选择
- */
 function openActionSheet(): void {
   showActionSheet.value = true
 }
 
-/**
- * 关闭发布选择
- */
 function closeActionSheet(): void {
   showActionSheet.value = false
 }
 
-/**
- * 处理发布选项
- */
 function handlePublishOption(type: string): void {
   closeActionSheet()
 
-  // 青少年模式检查
   if (type === 'treehole' && !checkAccess('treehole')) {
     return
   }
 
   const routeConfig: Record<string, { url: string; type: 'navigate' | 'switchTab' }> = {
-    treehole: { url: '/pages/treehole/index', type: 'switchTab' },
-    dynamic: { url: '/pages/community/index', type: 'switchTab' },
+    treehole: { url: '/pagesSocial/treehole/index', type: 'navigate' },
+    dynamic: { url: '/pagesSocial/square/index', type: 'switchTab' },
     diary: { url: '/pages/diary/edit', type: 'navigate' },
   }
 
@@ -508,19 +441,19 @@ onPullDownRefresh(() => {
 </script>
 
 <style lang="scss" scoped>
-// ==================== Lovable Design 首页样式 ====================
+// ==================== 纯净白 · 暖橘 首页样式 ====================
 
 .home-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
 }
 
 // ==================== 状态栏 ====================
 
 .status-bar {
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
 }
 
 // ==================== 导航栏 ====================
@@ -531,7 +464,7 @@ onPullDownRefresh(() => {
   justify-content: space-between;
   height: 88rpx;
   padding: 0 var(--space-sm);
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
 }
 
 .header-left {
@@ -542,12 +475,12 @@ onPullDownRefresh(() => {
 .brand-name {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .brand-slogan {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .header-right {
@@ -560,12 +493,12 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 80rpx;
+  min-width: 72rpx;
   height: 64rpx;
-  padding: 0 var(--space-2xs);
+  padding: 0 var(--space-xs);
   border-radius: var(--radius-std);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
+  background-color: var(--bg-elevated);
+  box-shadow: var(--shadow-card);
 
   &:active {
     opacity: 0.8;
@@ -576,11 +509,6 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.nav-icon-text {
-  font-size: var(--font-size-sm);
-  color: var(--gray-muted);
 }
 
 .unread-badge {
@@ -599,7 +527,7 @@ onPullDownRefresh(() => {
 
 .badge-text {
   font-size: 18rpx;
-  color: var(--text-off-white);
+  color: var(--text-inverse);
   font-weight: 600;
 }
 
@@ -616,9 +544,9 @@ onPullDownRefresh(() => {
   align-items: center;
   margin: var(--space-sm);
   padding: var(--space-md);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 
   &:active {
     opacity: 0.8;
@@ -633,13 +561,12 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: center;
   margin-right: var(--space-sm);
-  background-color: var(--bg-secondary);
 }
 
 .avatar-text {
   font-size: 36rpx;
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-inverse);
 }
 
 .ai-content {
@@ -659,7 +586,7 @@ onPullDownRefresh(() => {
 .ai-name {
   font-size: var(--font-size-md);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .online-dot {
@@ -671,24 +598,12 @@ onPullDownRefresh(() => {
 
 .ai-preview {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-}
-
-.ai-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: var(--space-xs);
-}
-
-.arrow-text {
-  font-size: var(--font-size-lg);
-  color: var(--gray-muted);
 }
 
 // ==================== 快捷功能入口 ====================
@@ -698,9 +613,9 @@ onPullDownRefresh(() => {
   justify-content: space-around;
   margin: var(--space-sm);
   padding: var(--space-md);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 }
 
 .action-item {
@@ -717,38 +632,32 @@ onPullDownRefresh(() => {
 .action-icon {
   width: 88rpx;
   height: 88rpx;
-  border-radius: var(--radius-std);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 4rpx;
 }
 
-.action-icon-text {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: var(--text-charcoal);
-}
-
 .diary-icon {
-  background-color: rgba(255, 154, 92, 0.15);
+  background-color: var(--mood-warm-bg);
 }
 
 .treehole-icon {
-  background-color: rgba(139, 167, 196, 0.15);
+  background-color: var(--mood-low-bg);
 }
 
 .square-icon {
-  background-color: rgba(124, 111, 224, 0.15);
+  background-color: var(--brand-light);
 }
 
 .report-icon {
-  background-color: rgba(143, 204, 160, 0.15);
+  background-color: var(--mood-calm-bg);
 }
 
 .action-label {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 // ==================== 近期动态 ====================
@@ -767,7 +676,7 @@ onPullDownRefresh(() => {
 .section-title {
   font-size: var(--font-size-md);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .section-more {
@@ -782,12 +691,7 @@ onPullDownRefresh(() => {
 
 .more-text {
   font-size: var(--font-size-sm);
-  color: var(--text-charcoal);
-}
-
-.more-arrow {
-  font-size: var(--font-size-sm);
-  color: var(--text-charcoal);
+  color: var(--text-muted);
 }
 
 .feeds-preview {
@@ -798,9 +702,9 @@ onPullDownRefresh(() => {
 
 .feed-card {
   padding: var(--space-md);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 
   &:active {
     opacity: 0.8;
@@ -824,9 +728,9 @@ onPullDownRefresh(() => {
   margin-right: var(--space-xs);
 }
 
-.avatar-text {
+.feed-avatar-text {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .feed-info {
@@ -837,17 +741,17 @@ onPullDownRefresh(() => {
 .feed-author {
   font-size: var(--font-size-sm);
   font-weight: 500;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .feed-time {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .feed-content {
   font-size: var(--font-size-base);
-  color: var(--text-charcoal);
+  color: var(--text-primary);
   line-height: 1.6;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -864,7 +768,7 @@ onPullDownRefresh(() => {
 
 .stat-item {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 // ==================== 空状态 ====================
@@ -876,66 +780,25 @@ onPullDownRefresh(() => {
   justify-content: center;
   padding: var(--space-xl);
   margin: var(--space-sm);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
-}
-
-.empty-illustration {
-  margin-bottom: var(--space-sm);
-}
-
-.empty-icon {
-  font-size: 48rpx;
-  color: var(--gray-muted);
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 }
 
 .empty-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
   margin-bottom: var(--space-xs);
 }
 
 .empty-hint {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
   text-align: center;
 }
 
 // ==================== ActionSheet ====================
-
-.action-sheet-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: var(--z-modal);
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.action-sheet {
-  width: 100%;
-  background-color: var(--bg-cream);
-  border-radius: var(--radius-container) var(--radius-container) 0 0;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.sheet-title {
-  padding: var(--space-md);
-  text-align: center;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.title-text {
-  font-size: var(--font-size-md);
-  font-weight: 600;
-  color: var(--text-charcoal);
-}
 
 .sheet-options {
   padding: var(--space-xs);
@@ -945,39 +808,33 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   padding: var(--space-md);
-  border-radius: var(--radius-std);
+  border-radius: var(--radius-md);
 
   &:active {
-    background-color: var(--gray-4);
+    background-color: var(--bg-tertiary);
   }
 }
 
 .option-icon-wrapper {
   width: 72rpx;
   height: 72rpx;
-  border-radius: var(--radius-std);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: var(--space-sm);
 }
 
-.option-icon-text {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: var(--text-charcoal);
-}
-
 .treehole-option {
-  background-color: rgba(139, 167, 196, 0.2);
+  background-color: var(--mood-low-bg);
 }
 
 .dynamic-option {
-  background-color: rgba(124, 111, 224, 0.2);
+  background-color: var(--brand-light);
 }
 
 .diary-option {
-  background-color: rgba(255, 154, 92, 0.2);
+  background-color: var(--mood-warm-bg);
 }
 
 .option-content {
@@ -989,30 +846,13 @@ onPullDownRefresh(() => {
 .option-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .option-desc {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
   margin-top: 4rpx;
-}
-
-.sheet-cancel {
-  margin: var(--space-xs);
-  padding: var(--space-md);
-  text-align: center;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-std);
-
-  &:active {
-    opacity: 0.8;
-  }
-}
-
-.cancel-text {
-  font-size: var(--font-size-md);
-  color: var(--gray-muted);
 }
 
 // ==================== 安全区 ====================

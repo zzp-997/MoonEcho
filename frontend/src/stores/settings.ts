@@ -8,7 +8,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 /** 主题模式 */
-export type ThemeMode = 'light' | 'dark' | 'system'
+export type ThemeMode = 'light' | 'dark' | 'system' | 'auto'
 
 /** 设置存储键 */
 const SETTINGS_KEY = 'huisheng_settings'
@@ -26,7 +26,7 @@ export interface Settings {
 
 /** 默认设置 */
 const DEFAULT_SETTINGS: Settings = {
-  theme: 'dark', // 默认夜间模式
+  theme: 'auto', // 默认自动切换（8:00-20:00日间，其余夜间）
   deviceId: '',
   appVersion: '1.0.0',
   teenMode: false,
@@ -55,13 +55,23 @@ export const useSettingsStore = defineStore('settings', () => {
 
   /** 是否为暗色模式 */
   const isDarkMode = computed(() => {
+    if (settings.value.theme === 'dark') {
+      return true
+    }
+    if (settings.value.theme === 'light') {
+      return false
+    }
     if (settings.value.theme === 'system') {
-      // 获取系统主题
       const systemInfo = uni.getSystemInfoSync()
       // @ts-ignore
       return systemInfo.osTheme === 'dark'
     }
-    return settings.value.theme === 'dark'
+    if (settings.value.theme === 'auto') {
+      // 自动切换：8:00-20:00 日间，其余夜间
+      const hour = new Date().getHours()
+      return hour < 8 || hour >= 20
+    }
+    return false
   })
 
   // ==================== 方法 ====================
@@ -104,24 +114,41 @@ export const useSettingsStore = defineStore('settings', () => {
 
   /**
    * 应用主题
+   * 实际操作 DOM 的 .dark 类
    */
   function applyTheme() {
     const dark = isDarkMode.value
-    // 通过 CSS 变量切换主题
-    // 在实际应用中，需要在页面根元素添加/移除 class
-    if (dark) {
-      // 移除 light class，添加 dark class
-      // 具体实现在 useTheme composable 中
-    } else {
-      // 移除 dark class，添加 light class
+
+    // 设置页面 class
+    const pages = getCurrentPages()
+    if (pages.length > 0) {
+      const page = pages[pages.length - 1]
+      const pageEl = (page as any).$el
+      if (pageEl) {
+        if (dark) {
+          pageEl.classList.add('dark')
+          pageEl.classList.remove('light')
+        } else {
+          pageEl.classList.add('light')
+          pageEl.classList.remove('dark')
+        }
+      }
     }
+
+    // 设置页面背景色（uni-app API）
+    // 纯净白 · 暖橘设计系统：日间 #FFF9F5（微暖白），夜间 #12111a（暖调深色）
+    uni.setPageStyle({
+      style: {
+        backgroundColor: dark ? '#12111a' : '#FFF9F5',
+      },
+    })
   }
 
   /**
    * 切换主题
    */
   function toggleTheme() {
-    const themes: ThemeMode[] = ['light', 'dark', 'system']
+    const themes: ThemeMode[] = ['light', 'dark', 'system', 'auto']
     const currentIndex = themes.indexOf(settings.value.theme)
     const nextIndex = (currentIndex + 1) % themes.length
     setTheme(themes[nextIndex])

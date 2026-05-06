@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon">&lt;</text>
+        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
       </view>
       <text class="header-title">设置</text>
       <view class="placeholder" />
@@ -16,7 +16,7 @@
         <!-- 手机号 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[手机]</text>
+            <wd-icon name="phone" size="20px" color="var(--text-muted)" />
             <text class="setting-label">手机号</text>
           </view>
           <text class="setting-value">{{ maskedPhone }}</text>
@@ -25,19 +25,19 @@
         <!-- 修改密码 -->
         <view class="setting-item" @tap="handleChangePassword">
           <view class="setting-left">
-            <text class="setting-icon">[锁]</text>
+            <wd-icon name="lock" size="20px" color="var(--text-muted)" />
             <text class="setting-label">修改密码</text>
           </view>
-          <text class="setting-arrow">></text>
+          <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
         </view>
 
         <!-- 注销账户 -->
         <view class="setting-item" @tap="handleDeleteAccount">
           <view class="setting-left">
-            <text class="setting-icon danger">[退出]</text>
+            <wd-icon name="close" size="20px" color="var(--color-error)" />
             <text class="setting-label danger-text">注销账户</text>
           </view>
-          <text class="setting-arrow">></text>
+          <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
         </view>
       </view>
     </view>
@@ -49,19 +49,19 @@
         <!-- AI性格 -->
         <view class="setting-item" @tap="handleGoPersonality">
           <view class="setting-left">
-            <text class="setting-icon">[AI]</text>
+            <wd-icon name="robot" size="20px" color="var(--text-muted)" />
             <text class="setting-label">AI性格</text>
           </view>
           <view class="setting-right">
             <text class="setting-value">{{ aiPersonalityName }}</text>
-            <text class="setting-arrow">></text>
+            <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
           </view>
         </view>
 
         <!-- AI主动关怀 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[心]</text>
+            <wd-icon name="heart" size="20px" color="var(--text-muted)" />
             <text class="setting-label">AI主动关怀</text>
           </view>
           <wd-switch v-model="settings.ai_care_enabled" @change="handleSettingChange('ai_care_enabled', $event)" />
@@ -70,12 +70,12 @@
         <!-- AI打招呼风格 -->
         <view class="setting-item" @tap="handleShowGreetingStyle">
           <view class="setting-left">
-            <text class="setting-icon">[语]</text>
+            <wd-icon name="chat" size="20px" color="var(--text-muted)" />
             <text class="setting-label">AI打招呼风格</text>
           </view>
           <view class="setting-right">
             <text class="setting-value">{{ greetingStyleName }}</text>
-            <text class="setting-arrow">></text>
+            <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
           </view>
         </view>
       </view>
@@ -88,19 +88,19 @@
         <!-- 资料可见性 -->
         <view class="setting-item" @tap="handleShowVisibility">
           <view class="setting-left">
-            <text class="setting-icon">[眼]</text>
+            <wd-icon name="view" size="20px" color="var(--text-muted)" />
             <text class="setting-label">资料可见性</text>
           </view>
           <view class="setting-right">
             <text class="setting-value">{{ visibilityName }}</text>
-            <text class="setting-arrow">></text>
+            <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
           </view>
         </view>
 
         <!-- 展示在线状态 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[状态]</text>
+            <wd-icon name="eye" size="20px" color="var(--text-muted)" />
             <text class="setting-label">展示在线状态</text>
           </view>
           <wd-switch v-model="settings.show_online_status" @change="handleSettingChange('show_online_status', $event)" />
@@ -109,7 +109,7 @@
         <!-- 展示AI画像标签 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[标签]</text>
+            <wd-icon name="tag" size="20px" color="var(--text-muted)" />
             <text class="setting-label">展示AI画像标签</text>
           </view>
           <wd-switch v-model="settings.show_profile_tags" @change="handleSettingChange('show_profile_tags', $event)" />
@@ -118,7 +118,7 @@
         <!-- 允许好友申请 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[好友]</text>
+            <wd-icon name="user" size="20px" color="var(--text-muted)" />
             <text class="setting-label">允许好友申请</text>
           </view>
           <wd-switch v-model="settings.allow_friend_request" @change="handleSettingChange('allow_friend_request', $event)" />
@@ -127,7 +127,7 @@
         <!-- 云端同步 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[云]</text>
+            <wd-icon name="cloud" size="20px" color="var(--text-muted)" />
             <text class="setting-label">云端同步</text>
           </view>
           <wd-switch v-model="settings.cloud_sync_enabled" @change="handleSettingChange('cloud_sync_enabled', $event)" />
@@ -136,10 +136,10 @@
         <!-- 隐私声明 -->
         <view class="setting-item" @tap="handleGoPrivacy">
           <view class="setting-left">
-            <text class="setting-icon">[文档]</text>
+            <wd-icon name="file" size="20px" color="var(--text-muted)" />
             <text class="setting-label">日记隐私声明</text>
           </view>
-          <text class="setting-arrow">></text>
+          <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
         </view>
       </view>
     </view>
@@ -151,7 +151,7 @@
         <!-- 推送开关 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[铃铛]</text>
+            <wd-icon name="bell" size="20px" color="var(--text-muted)" />
             <text class="setting-label">推送通知</text>
           </view>
           <wd-switch v-model="settings.notification_enabled" @change="handleSettingChange('notification_enabled', $event)" />
@@ -160,7 +160,7 @@
         <!-- 日记提醒 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[日记]</text>
+            <wd-icon name="calendar" size="20px" color="var(--text-muted)" />
             <text class="setting-label">日记记录提醒</text>
           </view>
           <wd-switch v-model="settings.notification_diary_reminder" :disabled="!settings.notification_enabled" @change="handleSettingChange('notification_diary_reminder', $event)" />
@@ -169,7 +169,7 @@
         <!-- 好友申请通知 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[申请]</text>
+            <wd-icon name="add-user" size="20px" color="var(--text-muted)" />
             <text class="setting-label">好友申请通知</text>
           </view>
           <wd-switch v-model="settings.notification_friend_request" :disabled="!settings.notification_enabled" @change="handleSettingChange('notification_friend_request', $event)" />
@@ -178,7 +178,7 @@
         <!-- 消息通知 -->
         <view class="setting-item">
           <view class="setting-left">
-            <text class="setting-icon">[消息]</text>
+            <wd-icon name="message" size="20px" color="var(--text-muted)" />
             <text class="setting-label">私聊消息通知</text>
           </view>
           <wd-switch v-model="settings.notification_chat_message" :disabled="!settings.notification_enabled" @change="handleSettingChange('notification_chat_message', $event)" />
@@ -187,12 +187,12 @@
         <!-- 免打扰时段 -->
         <view class="setting-item" @tap="handleSetQuietHours">
           <view class="setting-left">
-            <text class="setting-icon">[月]</text>
+            <wd-icon name="moon" size="20px" color="var(--text-muted)" />
             <text class="setting-label">免打扰时段</text>
           </view>
           <view class="setting-right">
             <text class="setting-value">{{ quietHoursText }}</text>
-            <text class="setting-arrow">></text>
+            <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
           </view>
         </view>
       </view>
@@ -205,12 +205,12 @@
         <!-- 主题 -->
         <view class="setting-item" @tap="handleShowThemePicker">
           <view class="setting-left">
-            <text class="setting-icon">[月亮]</text>
+            <wd-icon name="moon" size="20px" color="var(--text-muted)" />
             <text class="setting-label">主题</text>
           </view>
           <view class="setting-right">
             <text class="setting-value">{{ themeName }}</text>
-            <text class="setting-arrow">></text>
+            <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
           </view>
         </view>
       </view>
@@ -223,52 +223,52 @@
         <!-- 青少年模式 -->
         <view class="setting-item" @tap="handleTeenMode">
           <view class="setting-left">
-            <text class="setting-icon">[盾牌]</text>
+            <wd-icon name="shield" size="20px" color="var(--text-muted)" />
             <text class="setting-label">青少年模式</text>
           </view>
           <view class="setting-right">
             <text class="setting-value">{{ isTeenMode ? '已开启' : '已关闭' }}</text>
-            <text class="setting-arrow">></text>
+            <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
           </view>
         </view>
 
         <!-- 清除缓存 -->
         <view class="setting-item" @tap="handleClearCache">
           <view class="setting-left">
-            <text class="setting-icon">[清理]</text>
+            <wd-icon name="delete" size="20px" color="var(--text-muted)" />
             <text class="setting-label">清除缓存</text>
           </view>
           <view class="setting-right">
             <text class="setting-value">{{ cacheSize }}</text>
-            <text class="setting-arrow">></text>
+            <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
           </view>
         </view>
 
         <!-- 关于与帮助 -->
         <view class="setting-item" @tap="handleGoAbout">
           <view class="setting-left">
-            <text class="setting-icon">[问号]</text>
+            <wd-icon name="info" size="20px" color="var(--text-muted)" />
             <text class="setting-label">关于与帮助</text>
           </view>
-          <text class="setting-arrow">></text>
+          <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
         </view>
 
         <!-- 用户协议 -->
         <view class="setting-item" @tap="handleGoUserAgreement">
           <view class="setting-left">
-            <text class="setting-icon">[协议]</text>
+            <wd-icon name="file-text" size="20px" color="var(--text-muted)" />
             <text class="setting-label">用户协议</text>
           </view>
-          <text class="setting-arrow">></text>
+          <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
         </view>
 
         <!-- 隐私政策 -->
         <view class="setting-item" @tap="handleGoPrivacyPolicy">
           <view class="setting-left">
-            <text class="setting-icon">[隐私]</text>
+            <wd-icon name="lock" size="20px" color="var(--text-muted)" />
             <text class="setting-label">隐私政策</text>
           </view>
-          <text class="setting-arrow">></text>
+          <wd-icon name="arrow-right" size="14px" color="var(--text-muted)" />
         </view>
       </view>
     </view>
@@ -294,7 +294,7 @@
           @tap="handleSetTheme('dark')"
         >
           <text class="theme-option-label">暗色</text>
-          <text v-if="theme === 'dark'" class="theme-check">[已选]</text>
+          <wd-icon v-if="theme === 'dark'" name="check" size="16px" color="var(--brand-primary)" />
         </view>
         <view
           class="theme-option"
@@ -302,7 +302,7 @@
           @tap="handleSetTheme('light')"
         >
           <text class="theme-option-label">亮色</text>
-          <text v-if="theme === 'light'" class="theme-check">[已选]</text>
+          <wd-icon v-if="theme === 'light'" name="check" size="16px" color="var(--brand-primary)" />
         </view>
         <view
           class="theme-option"
@@ -310,7 +310,16 @@
           @tap="handleSetTheme('system')"
         >
           <text class="theme-option-label">跟随系统</text>
-          <text v-if="theme === 'system'" class="theme-check">[已选]</text>
+          <wd-icon v-if="theme === 'system'" name="check" size="16px" color="var(--brand-primary)" />
+        </view>
+        <view
+          class="theme-option"
+          :class="{ 'is-active': theme === 'auto' }"
+          @tap="handleSetTheme('auto')"
+        >
+          <text class="theme-option-label">自动切换</text>
+          <text class="theme-option-desc">8:00-20:00日间，其余夜间</text>
+          <wd-icon v-if="theme === 'auto'" name="check" size="16px" color="var(--brand-primary)" />
         </view>
       </view>
     </wd-action-sheet>
@@ -325,7 +334,7 @@
         >
           <text class="visibility-option-label">所有人可见</text>
           <text class="visibility-option-desc">任何人都可查看你的资料</text>
-          <text v-if="settings.profile_visibility === 'public'" class="option-check">[已选]</text>
+          <wd-icon v-if="settings.profile_visibility === 'public'" name="check" size="16px" color="var(--brand-primary)" class="option-check-icon" />
         </view>
         <view
           class="visibility-option"
@@ -334,7 +343,7 @@
         >
           <text class="visibility-option-label">仅好友可见</text>
           <text class="visibility-option-desc">只有你的好友可以查看</text>
-          <text v-if="settings.profile_visibility === 'friends'" class="option-check">[已选]</text>
+          <wd-icon v-if="settings.profile_visibility === 'friends'" name="check" size="16px" color="var(--brand-primary)" class="option-check-icon" />
         </view>
         <view
           class="visibility-option"
@@ -343,7 +352,7 @@
         >
           <text class="visibility-option-label">完全私密</text>
           <text class="visibility-option-desc">不对外展示任何资料</text>
-          <text v-if="settings.profile_visibility === 'private'" class="option-check">[已选]</text>
+          <wd-icon v-if="settings.profile_visibility === 'private'" name="check" size="16px" color="var(--brand-primary)" class="option-check-icon" />
         </view>
       </view>
     </wd-action-sheet>
@@ -358,7 +367,7 @@
         >
           <text class="greeting-option-label">温柔暖心</text>
           <text class="greeting-option-desc">温暖细腻的问候</text>
-          <text v-if="settings.ai_greeting_style === 'warm'" class="option-check">[已选]</text>
+          <wd-icon v-if="settings.ai_greeting_style === 'warm'" name="check" size="16px" color="var(--brand-primary)" class="option-check-icon" />
         </view>
         <view
           class="greeting-option"
@@ -367,7 +376,7 @@
         >
           <text class="greeting-option-label">活泼俏皮</text>
           <text class="greeting-option-desc">轻松有趣的互动</text>
-          <text v-if="settings.ai_greeting_style === 'playful'" class="option-check">[已选]</text>
+          <wd-icon v-if="settings.ai_greeting_style === 'playful'" name="check" size="16px" color="var(--brand-primary)" class="option-check-icon" />
         </view>
         <view
           class="greeting-option"
@@ -376,7 +385,7 @@
         >
           <text class="greeting-option-label">沉稳平和</text>
           <text class="greeting-option-desc">简洁淡然的交流</text>
-          <text v-if="settings.ai_greeting_style === 'calm'" class="option-check">[已选]</text>
+          <wd-icon v-if="settings.ai_greeting_style === 'calm'" name="check" size="16px" color="var(--brand-primary)" class="option-check-icon" />
         </view>
       </view>
     </wd-action-sheet>
@@ -388,6 +397,7 @@
  * 回声 - 设置页
  * 文件：src/pages/settings/index.vue
  * 说明：应用设置，包括账号安全、AI设置、隐私、外观等
+ * 设计风格：纯净白 · 暖橘
  */
 
 import { ref, computed, onMounted } from 'vue'
@@ -460,8 +470,9 @@ const themeName = computed(() => {
     dark: '暗色',
     light: '亮色',
     system: '跟随系统',
+    auto: '自动切换',
   }
-  return themeMap[settingsStore.theme] || '暗色'
+  return themeMap[settingsStore.theme] || '自动切换'
 })
 
 /** 当前主题 */
@@ -798,7 +809,7 @@ onMounted(() => {
   padding: var(--space-md);
   padding-top: calc(env(safe-area-inset-top) + var(--space-md));
   background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .back-btn {
@@ -807,11 +818,6 @@ onMounted(() => {
   justify-content: center;
   width: 64rpx;
   height: 64rpx;
-}
-
-.back-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
 }
 
 .header-title {
@@ -832,7 +838,7 @@ onMounted(() => {
 
 .section-title {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   padding: var(--space-sm) var(--space-md);
 }
 
@@ -847,7 +853,7 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 
   &:last-child {
     border-bottom: none;
@@ -862,15 +868,6 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-}
-
-.setting-icon {
-  font-size: var(--font-size-md);
-  color: var(--text-secondary);
-
-  &.danger {
-    color: var(--color-error);
-  }
 }
 
 .setting-label {
@@ -890,12 +887,7 @@ onMounted(() => {
 
 .setting-value {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
-}
-
-.setting-arrow {
-  font-size: var(--font-size-md);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 退出登录 ====================
@@ -933,7 +925,7 @@ onMounted(() => {
 
 .version-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 主题选择 ====================
@@ -953,7 +945,7 @@ onMounted(() => {
   margin-bottom: var(--space-sm);
 
   &.is-active {
-    background-color: rgba(124, 111, 224, 0.15);
+    background-color: var(--brand-light);
   }
 
   &:active {
@@ -966,9 +958,10 @@ onMounted(() => {
   color: var(--text-primary);
 }
 
-.theme-check {
+.theme-option-desc {
   font-size: var(--font-size-sm);
-  color: var(--brand-primary);
+  color: var(--text-muted);
+  margin-top: 4rpx;
 }
 
 // ==================== 资料可见性 ====================
@@ -988,7 +981,7 @@ onMounted(() => {
   position: relative;
 
   &.is-active {
-    background-color: rgba(124, 111, 224, 0.15);
+    background-color: var(--brand-light);
   }
 
   &:active {
@@ -1004,16 +997,14 @@ onMounted(() => {
 
 .visibility-option-desc {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
-.option-check {
+.option-check-icon {
   position: absolute;
   right: var(--space-md);
   top: 50%;
   transform: translateY(-50%);
-  font-size: var(--font-size-sm);
-  color: var(--brand-primary);
 }
 
 // ==================== AI打招呼风格 ====================
@@ -1033,7 +1024,7 @@ onMounted(() => {
   position: relative;
 
   &.is-active {
-    background-color: rgba(124, 111, 224, 0.15);
+    background-color: var(--brand-light);
   }
 
   &:active {
@@ -1049,6 +1040,6 @@ onMounted(() => {
 
 .greeting-option-desc {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 </style>

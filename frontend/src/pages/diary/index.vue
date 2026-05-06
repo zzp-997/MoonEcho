@@ -7,7 +7,7 @@
       </view>
       <view class="header-actions">
         <view class="action-btn" @tap="handleExport">
-          <text class="action-icon">导出</text>
+          <wd-icon name="download" size="16px" color="var(--text-muted)" />
         </view>
       </view>
     </view>
@@ -48,7 +48,7 @@
           </template>
         </view>
         <view class="card-arrow">
-          <text class="arrow-icon">&gt;</text>
+          <wd-icon name="arrow-right" size="18px" color="var(--text-muted)" />
         </view>
       </view>
 
@@ -73,7 +73,7 @@
           </view>
         </view>
         <view class="report-card-arrow">
-          <text class="arrow-icon">&gt;</text>
+          <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
         </view>
       </view>
 
@@ -623,7 +623,7 @@ onPullDownRefresh(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
 }
 
 // ==================== 顶部导航栏 ====================
@@ -634,7 +634,7 @@ onPullDownRefresh(() => {
   justify-content: space-between;
   height: 88rpx;
   padding: 0 var(--space-md);
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -645,7 +645,7 @@ onPullDownRefresh(() => {
 .title-text {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .header-actions {
@@ -659,8 +659,8 @@ onPullDownRefresh(() => {
   justify-content: center;
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-std);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
+  background-color: var(--bg-elevated);
+  box-shadow: var(--shadow-card);
 
   &:active {
     opacity: 0.8;
@@ -669,7 +669,7 @@ onPullDownRefresh(() => {
 
 .action-icon {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 // ==================== 内容区域 ====================
@@ -686,9 +686,9 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-lg);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
   margin-bottom: var(--space-md);
 
   &:active {
@@ -720,12 +720,12 @@ onPullDownRefresh(() => {
 .record-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .record-emotion {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .edit-hint {
@@ -734,7 +734,7 @@ onPullDownRefresh(() => {
 
 .hint-text {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .unrecorded-status {
@@ -745,13 +745,13 @@ onPullDownRefresh(() => {
 .prompt-text {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
   margin-bottom: var(--space-xs);
 }
 
 .prompt-hint {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .card-arrow {
@@ -762,7 +762,7 @@ onPullDownRefresh(() => {
 
 .arrow-icon {
   font-size: var(--font-size-lg);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 // ==================== 周报入口卡片 ====================
@@ -772,10 +772,10 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-left: 4rpx solid var(--text-charcoal);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  border-left: 4rpx solid var(--brand-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
   margin-bottom: var(--space-md);
 
   &:active {
@@ -797,12 +797,12 @@ onPullDownRefresh(() => {
 .report-card-title {
   font-size: var(--font-size-base);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .report-card-date {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .report-card-body {
@@ -813,7 +813,7 @@ onPullDownRefresh(() => {
 
 .report-card-insight {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -834,11 +834,11 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: center;
   padding: 2rpx var(--space-sm);
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-micro);
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .report-card-arrow {
@@ -855,9 +855,9 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: space-around;
   padding: var(--space-md);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
   margin-bottom: var(--space-md);
 }
 
@@ -870,12 +870,12 @@ onPullDownRefresh(() => {
 .stats-value {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .stats-label {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
   margin-top: var(--space-xs);
 }
 
@@ -900,15 +900,15 @@ onPullDownRefresh(() => {
   justify-content: center;
   height: 72rpx;
   border-radius: var(--radius-std);
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-light);
   transition: all var(--transition-fast);
 
   &.is-active {
-    background-color: var(--text-charcoal);
+    background-color: var(--brand-primary);
 
     .tab-text {
-      color: var(--text-off-white);
+      color: var(--text-inverse);
     }
   }
 
@@ -919,7 +919,7 @@ onPullDownRefresh(() => {
 
 .tab-text {
   font-size: var(--font-size-base);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 // ==================== 日历视图 ====================
@@ -964,13 +964,13 @@ onPullDownRefresh(() => {
 
 .empty-text {
   font-size: var(--font-size-md);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-bottom: var(--space-xs);
 }
 
 .empty-hint {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 加载更多 ====================
@@ -984,7 +984,7 @@ onPullDownRefresh(() => {
 
 .load-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 删除全部 ====================

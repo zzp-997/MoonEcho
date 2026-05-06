@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon">&lt;</text>
+        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
       </view>
       <text class="header-title">动态详情</text>
       <view v-if="post?.author?.is_me" class="header-actions">
@@ -13,7 +13,7 @@
       </view>
       <view v-else class="header-actions">
         <view class="action-btn" @tap="handleShowMoreActions">
-          <text class="more-icon">...</text>
+          <wd-icon name="more" size="20px" color="var(--text-muted)" />
         </view>
       </view>
     </view>
@@ -42,7 +42,7 @@
               class="avatar-placeholder"
               :style="{ backgroundColor: anonAvatarColor }"
             >
-              <text class="avatar-icon">~</text>
+              <wd-icon name="user" size="24px" color="var(--text-inverse)" />
             </view>
           </view>
           <view class="identity-info">
@@ -126,7 +126,7 @@
                 mode="aspectFill"
               />
               <view v-else class="comment-avatar-placeholder">
-                <text class="avatar-icon">~</text>
+                <wd-icon name="user" size="20px" color="var(--text-inverse)" />
               </view>
             </view>
             <view class="comment-content">

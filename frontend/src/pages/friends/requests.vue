@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon"><</text>
+        <wd-icon name="arrow-left" class="back-icon" />
       </view>
       <text class="title">好友申请</text>
       <view class="placeholder" />
@@ -19,7 +19,7 @@
     >
       <!-- 空状态 -->
       <view v-if="!isLoading && requests.length === 0" class="empty-state">
-        <text class="empty-icon">📬</text>
+        <wd-icon name="add-user" class="empty-icon" />
         <text class="empty-text">暂无好友申请</text>
       </view>
 
@@ -221,7 +221,7 @@ onShow(() => {
   justify-content: space-between;
   padding: var(--space-md);
   background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1rpx solid var(--border-standard);
 }
 
 .back-btn {
@@ -291,7 +291,7 @@ onShow(() => {
 
 .loading-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-top: var(--space-sm);
 }
 

@@ -189,7 +189,7 @@ function handleGenerateTopic(): void {
 .hint-icon-text {
   font-size: 18rpx;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--text-inverse);
 }
 
 .hint-title {

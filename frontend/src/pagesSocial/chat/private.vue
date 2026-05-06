@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon"><</text>
+        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
       </view>
       <view class="header-info" @tap="handleViewProfile">
         <image
@@ -17,7 +17,7 @@
         </view>
       </view>
       <view class="more-btn" @tap="handleShowMore">
-        <text class="more-icon">...</text>
+        <wd-icon name="more" size="20px" color="var(--text-primary)" />
       </view>
     </view>
 

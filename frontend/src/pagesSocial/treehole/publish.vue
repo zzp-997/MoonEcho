@@ -1,9 +1,9 @@
 <template>
-  <view class="publish-page treehole-force-dark">
+  <view class="publish-page">
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <text class="back-icon">&lt;</text>
+        <wd-icon name="arrow-left" class="back-icon" />
       </view>
       <text class="header-title">发布吐槽</text>
       <view class="header-actions">
@@ -28,7 +28,7 @@
               class="avatar-placeholder"
               :style="{ backgroundColor: previewAvatarColor }"
             >
-              <text class="avatar-icon">~</text>
+              <wd-icon name="user" size="24px" color="var(--text-inverse)" />
             </view>
           </view>
           <view class="identity-info">
@@ -78,7 +78,7 @@
       <!-- AI润色区域 -->
       <view class="ai-section">
         <view class="ai-header" @tap="handleAiRewrite">
-          <text class="ai-icon">~</text>
+          <wd-icon name="magic" size="20px" color="var(--brand-primary)" />
           <text class="ai-title">AI润色</text>
           <text class="ai-hint">让表达更温暖</text>
         </view>

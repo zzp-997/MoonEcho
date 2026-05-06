@@ -5,7 +5,7 @@
       <text class="header-title">回声</text>
       <view class="header-right">
         <view class="settings-btn" @tap="handleGoSettings">
-          <text class="settings-icon">[设置]</text>
+          <wd-icon name="setting" size="22px" color="var(--text-primary)" />
         </view>
       </view>
     </view>
@@ -23,7 +23,7 @@
           <text class="user-nickname">{{ userInfo?.nickname || '回声用户' }}</text>
           <text class="user-meta">{{ formatUserMeta }}</text>
         </view>
-        <text class="edit-arrow">></text>
+        <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
       </view>
 
       <!-- 社交能量 -->
@@ -78,7 +78,7 @@
       </view>
       <view class="level-hint">
         <text class="level-hint-text">{{ socialLevel?.progress_description || '开始你的社交旅程' }}</text>
-        <text class="level-hint-arrow">></text>
+        <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
       </view>
     </view>
 
@@ -86,7 +86,7 @@
     <view class="ai-profile-section" @tap="handleGoAITags">
       <view class="section-header">
         <text class="section-title">AI画像</text>
-        <text class="section-arrow">></text>
+        <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
       </view>
       <view v-if="profileTags && profileTags.length > 0" class="profile-tags-preview">
         <text
@@ -106,19 +106,19 @@
       <!-- 情绪日记 -->
       <view class="menu-item" @tap="handleGoDiary">
         <view class="menu-icon diary-icon">
-          <text class="icon-emoji">[日记]</text>
+          <wd-icon name="calendar" size="22px" color="var(--mood-warm)" />
         </view>
         <view class="menu-content">
           <text class="menu-title">情绪日记</text>
           <text class="menu-desc">已记录 {{ diaryDays }} 天</text>
         </view>
-        <text class="menu-arrow">></text>
+        <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
       </view>
 
       <!-- 好友 -->
       <view class="menu-item" @tap="handleGoFriends">
         <view class="menu-icon friends-icon">
-          <text class="icon-emoji">[好友]</text>
+          <wd-icon name="user" size="22px" color="var(--mood-calm)" />
         </view>
         <view class="menu-content">
           <text class="menu-title">好友</text>
@@ -127,31 +127,31 @@
         <view v-if="pendingRequestCount > 0" class="menu-badge">
           <text class="badge-text">{{ pendingRequestCount }}</text>
         </view>
-        <text class="menu-arrow">></text>
+        <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
       </view>
 
       <!-- 收藏 -->
       <view class="menu-item" @tap="handleGoFavorites">
         <view class="menu-icon favorite-icon">
-          <text class="icon-emoji">[收藏]</text>
+          <wd-icon name="star" size="22px" color="var(--brand-primary)" />
         </view>
         <view class="menu-content">
           <text class="menu-title">收藏</text>
           <text class="menu-desc">已收藏 {{ favoriteCount }} 条内容</text>
         </view>
-        <text class="menu-arrow">></text>
+        <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
       </view>
 
       <!-- 我的动态 -->
       <view class="menu-item" @tap="handleGoMyPosts">
         <view class="menu-icon posts-icon">
-          <text class="icon-emoji">[动态]</text>
+          <wd-icon name="chat" size="22px" color="var(--mood-low)" />
         </view>
         <view class="menu-content">
           <text class="menu-title">我的动态</text>
           <text class="menu-desc">已发布 {{ postCount }} 条动态</text>
         </view>
-        <text class="menu-arrow">></text>
+        <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
       </view>
     </view>
 
@@ -259,6 +259,7 @@
  * 回声 - 个人中心主页
  * 文件：src/pages/mine/index.vue
  * 说明：展示用户信息、社交能量、功能入口等
+ * 设计风格：纯净白 · 暖橘
  */
 
 import { ref, computed, onMounted } from 'vue'
@@ -608,13 +609,13 @@ onPullDownRefresh(() => {
 </script>
 
 <style lang="scss" scoped>
-// ==================== Lovable Design 我的页样式 ====================
+// ==================== 纯净白 · 暖橘 我的页样式 ====================
 
 .mine-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -626,13 +627,13 @@ onPullDownRefresh(() => {
   justify-content: space-between;
   padding: var(--space-md);
   padding-top: calc(env(safe-area-inset-top) + var(--space-md));
-  background-color: var(--bg-cream);
+  background-color: var(--bg-primary);
 }
 
 .header-title {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .header-right {
@@ -648,11 +649,6 @@ onPullDownRefresh(() => {
   height: 72rpx;
 }
 
-.settings-icon {
-  font-size: var(--font-size-xl);
-  color: var(--text-charcoal);
-}
-
 // ==================== 用户信息卡片 ====================
 
 .user-card {
@@ -660,9 +656,9 @@ onPullDownRefresh(() => {
   flex-direction: column;
   margin: var(--space-md);
   padding: var(--space-lg);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-md);
 }
 
 .user-info {
@@ -692,25 +688,20 @@ onPullDownRefresh(() => {
 .user-nickname {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
   margin-bottom: 8rpx;
 }
 
 .user-meta {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
-}
-
-.edit-arrow {
-  font-size: var(--font-size-lg);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 // ==================== 社交能量 ====================
 
 .energy-section {
   padding: var(--space-md);
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-elevated);
   border-radius: var(--radius-std);
   margin-bottom: var(--space-lg);
 
@@ -728,7 +719,7 @@ onPullDownRefresh(() => {
 
 .energy-label {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .energy-percent {
@@ -738,7 +729,7 @@ onPullDownRefresh(() => {
 
 .energy-bar {
   height: 12rpx;
-  background-color: var(--bg-cream);
+  background-color: var(--bg-secondary);
   border-radius: var(--radius-full);
   overflow: hidden;
   margin-bottom: var(--space-sm);
@@ -758,12 +749,12 @@ onPullDownRefresh(() => {
 
 .energy-status {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .rest-btn {
   padding: 8rpx 20rpx;
-  background-color: var(--text-charcoal);
+  background-color: var(--brand-primary);
   border-radius: var(--radius-full);
 
   &:active {
@@ -773,7 +764,7 @@ onPullDownRefresh(() => {
 
 .rest-text {
   font-size: var(--font-size-xs);
-  color: var(--text-off-white);
+  color: var(--text-inverse);
 }
 
 // ==================== 统计数据 ====================
@@ -799,13 +790,13 @@ onPullDownRefresh(() => {
 .stat-value {
   font-size: var(--font-size-2xl);
   font-weight: 600;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
   margin-bottom: 4rpx;
 }
 
 .stat-label {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 .stat-divider {
@@ -821,9 +812,9 @@ onPullDownRefresh(() => {
   flex-direction: column;
   margin: 0 var(--space-md) var(--space-md);
   padding: var(--space-md);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-md);
 
   &:active {
     opacity: 0.98;
@@ -840,12 +831,12 @@ onPullDownRefresh(() => {
 .level-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-charcoal);
+  color: var(--text-primary);
 }
 
 .level-current {
   font-size: var(--font-size-sm);
-  color: var(--text-charcoal);
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -867,16 +858,16 @@ onPullDownRefresh(() => {
   transition: all 0.3s ease;
 
   &.is-unlocked {
-    background-color: var(--text-charcoal);
+    background-color: var(--brand-primary);
   }
 }
 
 .level-dot-num {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 
   .is-unlocked & {
-    color: var(--text-off-white);
+    color: var(--text-inverse);
   }
 }
 
@@ -888,14 +879,8 @@ onPullDownRefresh(() => {
 
 .level-hint-text {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
   flex: 1;
-}
-
-.level-hint-arrow {
-  font-size: var(--font-size-md);
-  color: var(--gray-muted);
-  margin-left: var(--space-sm);
 }
 
 // ==================== AI画像预览 ====================
@@ -903,9 +888,9 @@ onPullDownRefresh(() => {
 .ai-profile-section {
   margin: 0 var(--space-md) var(--space-md);
   padding: var(--space-md);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-md);
 
   &:active {
     opacity: 0.98;
@@ -922,12 +907,7 @@ onPullDownRefresh(() => {
 .section-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-charcoal);
-}
-
-.section-arrow {
-  font-size: var(--font-size-md);
-  color: var(--gray-muted);
+  color: var(--text-primary);
 }
 
 .profile-tags-preview {
@@ -938,16 +918,15 @@ onPullDownRefresh(() => {
 
 .profile-tag {
   font-size: var(--font-size-xs);
-  color: var(--gray-muted);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  background-color: var(--bg-secondary);
   padding: 8rpx 16rpx;
   border-radius: var(--radius-full);
 }
 
 .more-tags {
   font-size: var(--font-size-xs);
-  color: var(--text-charcoal);
+  color: var(--text-primary);
   padding: 8rpx 16rpx;
 }
 
@@ -957,7 +936,7 @@ onPullDownRefresh(() => {
 
 .empty-text {
   font-size: var(--font-size-sm);
-  color: var(--gray-muted);
+  color: var(--text-muted);
 }
 
 // ==================== 功能入口列表 ====================
@@ -966,9 +945,9 @@ onPullDownRefresh(() => {
   display: flex;
   flex-direction: column;
   margin: 0 var(--space-md);
-  background-color: var(--bg-cream);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-elevated);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -983,7 +962,7 @@ onPullDownRefresh(() => {
   }
 
   &:active {
-    background-color: var(--gray-4);
+    background-color: var(--bg-secondary);
   }
 }
 
@@ -997,10 +976,6 @@ onPullDownRefresh(() => {
   margin-right: var(--space-sm);
 }
 
-.icon-emoji {
-  font-size: var(--font-size-lg);
-}
-
 .diary-icon {
   background-color: var(--mood-warm-bg);
 }
@@ -1010,11 +985,11 @@ onPullDownRefresh(() => {
 }
 
 .favorite-icon {
-  background-color: rgba(124, 111, 224, 0.15);
+  background-color: var(--brand-light);
 }
 
 .posts-icon {
-  background-color: rgba(59, 130, 246, 0.15);
+  background-color: var(--mood-low-bg);
 }
 
 .menu-content {
@@ -1031,7 +1006,7 @@ onPullDownRefresh(() => {
 
 .menu-desc {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .menu-badge {
@@ -1049,11 +1024,6 @@ onPullDownRefresh(() => {
 .badge-text {
   font-size: var(--font-size-xs);
   color: #fff;
-}
-
-.menu-arrow {
-  font-size: var(--font-size-md);
-  color: var(--text-tertiary);
 }
 
 // ==================== 弹窗样式 ====================
@@ -1112,7 +1082,7 @@ onPullDownRefresh(() => {
 
 .levels-title {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-bottom: var(--space-sm);
 }
 
@@ -1149,7 +1119,7 @@ onPullDownRefresh(() => {
 
 .cooldown-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 社交级别详情 ====================
@@ -1162,7 +1132,7 @@ onPullDownRefresh(() => {
 }
 
 .level-value {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   font-weight: 700;
   color: var(--brand-primary);
   margin-bottom: 8rpx;
@@ -1200,7 +1170,7 @@ onPullDownRefresh(() => {
   }
 
   &.is-current {
-    background-color: rgba(124, 111, 224, 0.2);
+    background-color: var(--brand-light);
   }
 }
 
@@ -1221,7 +1191,7 @@ onPullDownRefresh(() => {
 
 .step-num {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 
   .is-unlocked & {
     color: var(--text-on-brand);
@@ -1242,7 +1212,7 @@ onPullDownRefresh(() => {
 
 .stats-title {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
   margin-bottom: var(--space-sm);
 }
 
@@ -1266,12 +1236,12 @@ onPullDownRefresh(() => {
 
 .stats-label {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .next-action {
   padding: var(--space-md);
-  background-color: var(--color-info-bg);
+  background-color: var(--brand-light);
   border-radius: var(--radius-md);
 }
 

@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="header-back" @tap="handleBack">
-        <text class="back-icon">←</text>
+        <wd-icon name="arrow-left" class="back-icon" />
       </view>
       <view class="header-title">
         <text class="title-text">记录心情</text>
@@ -304,7 +304,7 @@ onHide(() => {
   height: 88rpx;
   padding: 0 var(--space-md);
   background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-standard);
 }
 
 .header-back {
@@ -385,7 +385,7 @@ onHide(() => {
 }
 
 .textarea-placeholder {
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .char-counter {
@@ -396,7 +396,7 @@ onHide(() => {
 
 .counter-text {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 
   &.is-warning {
     color: var(--color-warning);
@@ -462,7 +462,7 @@ onHide(() => {
 
 .tip-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .content-tip.is-overlong {
@@ -478,7 +478,7 @@ onHide(() => {
   align-items: center;
   padding: var(--space-md);
   background-color: var(--bg-primary);
-  border-top: 1px solid var(--border-primary);
+  border-top: 1px solid var(--border-standard);
 }
 
 .submit-btn {
@@ -512,6 +512,6 @@ onHide(() => {
 .btn-text {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 </style>

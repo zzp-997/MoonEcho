@@ -1,48 +1,35 @@
 // ============================================
-// 回声 - 暗色模式样式 (Lovable Design)
+// 回声 - 夜间模式组件补丁
 // 文件：src/styles/dark.scss
-// 说明：暗色模式专属样式、夜间模式特殊处理
+// 说明：夜间模式下 wot-design-uni 组件的样式补丁
+// 核心变量已在 variables.scss .dark 中定义
 // ============================================
 
-// ==================== 暗色模式状态栏 ====================
+// 夜间模式下卡片用边框替代阴影
+.dark .wd-card {
+  border: 1px solid var(--border-standard);
+  box-shadow: none;
+}
 
-.dark .wd-navbar,
-.theme-dark .wd-navbar {
+// 夜间模式输入框
+.dark .wd-input {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+// 夜间模式弹窗
+.dark .wd-popup {
+  background-color: var(--bg-elevated);
+}
+
+// 夜间模式导航栏
+.dark .wd-navbar {
   background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-light);
 }
 
-// ==================== 暗色模式输入框 ====================
-
-.dark .wd-input,
-.theme-dark .wd-input {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-// ==================== 暗色模式卡片 ====================
-
-.dark .wd-card,
-.theme-dark .wd-card {
-  background-color: var(--bg-secondary);
-  border-color: var(--border-primary);
-}
-
-// ==================== AI 对话气泡暗色模式 ====================
-
-// AI气泡 - 左对齐，charcoal 背景
-.bubble-ai {
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-card) var(--radius-card) var(--radius-card) var(--radius-micro);
-  max-width: 80%;
-  padding: var(--space-sm) var(--space-md);
-  color: var(--text-primary);
-}
-
-// 用户气泡 - 右对齐，cream 背景
-.bubble-user {
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-card) var(--radius-card) var(--radius-micro) var(--radius-card);
-  max-width: 80%;
-  padding: var(--space-sm) var(--space-md);
-  color: var(--text-on-brand);
+// 夜间模式自定义TabBar
+.dark .custom-tabbar {
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-light);
 }

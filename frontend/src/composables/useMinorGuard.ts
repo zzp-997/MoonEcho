@@ -22,10 +22,10 @@ export type RestrictedFeature = 'treehole' | 'ai_sensitive' | 'chat_image' | 'dy
 
 /** 受限页面路径 */
 export const RESTRICTED_PAGES: Record<RestrictedFeature, string[]> = {
-  treehole: ['/pages/treehole/index', '/pages/treehole/publish'],
+  treehole: ['/pagesSocial/treehole/index', '/pagesSocial/treehole/publish'],
   ai_sensitive: ['/pages/chat/index'],
   chat_image: ['/pages/message/index'],
-  dynamic_publish: ['/pages/community/publish', '/pages/community/edit'],
+  dynamic_publish: ['/pagesSocial/square/publish', '/pagesSocial/square/detail'],
   private_chat_image: ['/pages/message/index'],
 }
 

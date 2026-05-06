@@ -17,14 +17,12 @@
     </view>
 
     <!-- 跳过按钮 -->
-    <view class="skip-area" @tap="handleSkip">
-      <text class="skip-text">跳过</text>
-    </view>
+    <wd-button type="ghost" size="small" custom-class="skip-btn" @click="handleSkip">
+      跳过
+    </wd-button>
 
     <!-- 进度指示 -->
-    <view class="progress-bar">
-      <view class="progress-fill" :style="{ width: progressWidth }" />
-    </view>
+    <wd-progress :percentage="progressPercent" :show-text="false" :stroke-width="3" />
   </view>
 </template>
 
@@ -74,11 +72,6 @@ const ageRange = ref('')
 
 // ==================== 计算属性 ====================
 
-/** 进度条宽度 */
-const progressWidth = computed(() => {
-  return `${progressPercent.value}%`
-})
-
 /** 根据当前时间生成开场白 */
 const greetingMessage = computed(() => {
   const hour = new Date().getHours()
@@ -126,7 +119,7 @@ function navigateToNext() {
   } else {
     // 其他用户直接进首页
     uni.switchTab({
-      url: '/pages/chat/index',
+      url: '/pages/home/index',
     })
   }
 }
@@ -264,32 +257,18 @@ onUnmounted(() => {
 
 // ==================== 跳过按钮 ====================
 
-.skip-area {
+:deep(.skip-btn) {
   position: absolute;
   top: calc(env(safe-area-inset-top) + 40rpx);
   right: var(--space-lg);
-  padding: var(--space-sm) var(--space-md);
-}
-
-.skip-text {
-  font-size: 28rpx;
-  color: var(--text-tertiary);
 }
 
 // ==================== 进度条 ====================
 
-.progress-bar {
+:deep(.wd-progress) {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 6rpx;
-  background-color: var(--bg-tertiary);
-}
-
-.progress-fill {
-  height: 100%;
-  background-color: var(--brand-primary);
-  transition: width 50ms linear;
 }
 </style>

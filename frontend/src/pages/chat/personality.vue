@@ -181,7 +181,7 @@ function markAsShown(): void {
  * 跳转到对话页
  */
 function navigateToChat(): void {
-  uni.switchTab({
+  uni.redirectTo({
     url: '/pages/chat/index',
   })
 }
@@ -204,7 +204,7 @@ function checkShouldShow(): void {
   if (hasSelected) {
     isFirstSelect.value = false
     // 直接跳转
-    uni.switchTab({
+    uni.redirectTo({
       url: '/pages/chat/index',
     })
     return
@@ -357,7 +357,7 @@ onMounted(() => {
 
 .tag-text {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 // ==================== 选中指示 ====================
@@ -404,7 +404,7 @@ onMounted(() => {
 
 .skip-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .confirm-btn {
@@ -431,6 +431,6 @@ onMounted(() => {
 .confirm-text {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 </style>

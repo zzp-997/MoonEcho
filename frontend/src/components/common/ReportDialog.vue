@@ -12,7 +12,7 @@
         <view class="dialog-header">
           <text class="dialog-title">选择举报原因</text>
           <view class="close-btn" @tap="handleClose">
-            <text class="close-icon">x</text>
+            <wd-icon name="close" size="20px" color="var(--text-muted)" />
           </view>
         </view>
 
@@ -32,7 +32,7 @@
               </text>
             </view>
             <view v-if="selectedType === option.value" class="type-check">
-              <text class="check-icon">v</text>
+              <wd-icon name="check" size="16px" color="var(--text-on-brand)" />
             </view>
           </view>
         </view>
@@ -54,11 +54,11 @@
         <!-- 标题区域 -->
         <view class="dialog-header">
           <view class="back-btn" @tap="handlePrevStep">
-            <text class="back-icon">&lt;</text>
+            <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
           </view>
           <text class="dialog-title">补充说明</text>
           <view class="close-btn" @tap="handleClose">
-            <text class="close-icon">x</text>
+            <wd-icon name="close" size="20px" color="var(--text-muted)" />
           </view>
         </view>
 

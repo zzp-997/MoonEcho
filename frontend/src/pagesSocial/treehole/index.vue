@@ -1,5 +1,5 @@
 <template>
-  <view class="treehole-page treehole-force-dark">
+  <view class="treehole-page">
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="header-title">
@@ -48,7 +48,7 @@
 
       <!-- 空状态 -->
       <view v-else-if="!isLoading" class="empty-state">
-        <text class="empty-icon">~</text>
+        <wd-icon name="chat" size="48px" color="var(--text-muted)" custom-style="margin-bottom: var(--space-md)" />
         <text class="empty-text">树洞里空空的</text>
         <text class="empty-hint">做第一个说话的人吧</text>
       </view>
@@ -212,7 +212,7 @@ function handlePostTap(post: TreeholePost): void {
   track(EventName.TREEHOLE_POST_VIEW, { post_id: post.id })
 
   uni.navigateTo({
-    url: `/pages/treehole/detail?id=${post.id}`,
+    url: `/pagesSocial/treehole/detail?id=${post.id}`,
   })
 }
 
@@ -260,7 +260,7 @@ function handleCommentTap(post: TreeholePost): void {
   track(EventName.TREEHOLE_COMMENT_VIEW, { post_id: post.id })
 
   uni.navigateTo({
-    url: `/pages/treehole/detail?id=${post.id}&focus=comment`,
+    url: `/pagesSocial/treehole/detail?id=${post.id}&focus=comment`,
   })
 }
 
@@ -271,7 +271,7 @@ function handleGoPublish(): void {
   track(EventName.TREEHOLE_CREATE_START, { source: 'header_btn' })
 
   uni.navigateTo({
-    url: '/pages/treehole/publish',
+    url: '/pagesSocial/treehole/publish',
   })
 }
 
@@ -334,7 +334,7 @@ async function handleQuickPublish(data: { content: string; topicTag: string | nu
 function handleAiRewrite(content: string): void {
   // 跳转到发布页面并传递内容
   uni.navigateTo({
-    url: `/pages/treehole/publish?content=${encodeURIComponent(content)}&ai_rewrite=true`,
+    url: `/pagesSocial/treehole/publish?content=${encodeURIComponent(content)}&ai_rewrite=true`,
   })
 }
 

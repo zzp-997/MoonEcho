@@ -2,7 +2,7 @@
   <view class="square-page">
     <!-- 离线提示 -->
     <view v-if="isOffline" class="offline-banner" @tap="handleRetry">
-      <text class="offline-icon">⚠</text>
+      <wd-icon name="warning" size="16px" color="#D97706" />
       <text class="offline-text">网络已断开</text>
       <text class="offline-retry">点击重试</text>
     </view>
@@ -15,7 +15,7 @@
       </view>
       <view class="header-actions">
         <view class="action-btn" @tap="handleGoPublish">
-          <text class="action-icon">+</text>
+          <wd-icon name="add" size="24px" color="var(--text-on-brand)" />
         </view>
       </view>
     </view>
@@ -71,7 +71,7 @@
 
       <!-- 空状态 -->
       <view v-else-if="!isLoading" class="empty-state">
-        <text class="empty-icon">~</text>
+        <wd-icon name="inbox" size="48px" color="var(--text-muted)" custom-style="margin-bottom: var(--space-md)" />
         <text class="empty-text">广场空空的</text>
         <text class="empty-hint">发布一条动态吧</text>
       </view>
@@ -474,23 +474,18 @@ onHide(() => {
   justify-content: center;
   gap: 12rpx;
   padding: 20rpx var(--space-md);
-  background-color: #FEF3C7;
-  border-bottom: 1px solid #FCD34D;
-}
-
-.offline-icon {
-  font-size: 28rpx;
-  color: #D97706;
+  background-color: var(--color-warning-bg);
+  border-bottom: 1px solid var(--color-warning);
 }
 
 .offline-text {
   font-size: 26rpx;
-  color: #92400E;
+  color: var(--color-warning);
 }
 
 .offline-retry {
   font-size: 26rpx;
-  color: #D97706;
+  color: var(--color-warning);
   text-decoration: underline;
 }
 
