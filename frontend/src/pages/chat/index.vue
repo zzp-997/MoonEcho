@@ -532,11 +532,13 @@ onShow(() => {
 </script>
 
 <style lang="scss" scoped>
+// ==================== Lovable Design 聊天页样式 ====================
+
 .chat-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-cream);
 }
 
 // ==================== 消息列表 ====================
@@ -560,7 +562,7 @@ onShow(() => {
 
 .loading-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 // ==================== 空状态 ====================
@@ -588,7 +590,7 @@ onShow(() => {
 .avatar-label {
   font-size: 48rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .empty-content {
@@ -599,13 +601,13 @@ onShow(() => {
 .empty-title {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
   margin-bottom: var(--space-sm);
 }
 
 .empty-message {
   font-size: var(--font-size-md);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
   line-height: 1.8;
 }
 
@@ -615,7 +617,7 @@ onShow(() => {
 
 .guide-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 // ==================== 生成中指示器 ====================
@@ -638,10 +640,11 @@ onShow(() => {
 }
 
 .generating-bubble {
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
   padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-lg);
-  border-bottom-left-radius: var(--radius-xs);
+  border-radius: var(--radius-card);
+  border-bottom-left-radius: var(--radius-micro);
 }
 
 .typing-indicator {
@@ -654,7 +657,7 @@ onShow(() => {
   width: 12rpx;
   height: 12rpx;
   border-radius: 50%;
-  background-color: var(--text-tertiary);
+  background-color: var(--gray-muted);
   animation: typingBounce 1.4s ease-in-out infinite;
 
   &:nth-child(1) {
@@ -696,7 +699,7 @@ onShow(() => {
   right: 0;
   bottom: 0;
   z-index: var(--z-modal);
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -704,8 +707,8 @@ onShow(() => {
 
 .personality-picker {
   width: 100%;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background-color: var(--bg-cream);
+  border-radius: var(--radius-container) var(--radius-container) 0 0;
   padding: var(--space-lg);
   padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
 }
@@ -718,7 +721,7 @@ onShow(() => {
 .title-text {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .picker-options {
@@ -732,42 +735,43 @@ onShow(() => {
   display: flex;
   align-items: center;
   padding: var(--space-md);
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-lg);
-  border: 2px solid transparent;
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
 
   &:active {
-    background-color: var(--bg-primary);
+    border-color: var(--border-interactive);
   }
 
   &.is-current {
-    border-color: var(--brand-primary);
+    border-color: var(--text-charcoal);
+    border-width: 2px;
   }
 }
 
 .option-label {
   font-size: 28rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
   margin-right: var(--space-sm);
 }
 
 .option-name {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .current-mark {
   margin-left: auto;
   padding: 4rpx 12rpx;
-  border-radius: var(--radius-sm);
-  background-color: var(--brand-primary);
+  border-radius: var(--radius-micro);
+  background-color: var(--text-charcoal);
 }
 
 .mark-text {
   font-size: var(--font-size-xs);
-  color: var(--text-on-brand);
+  color: var(--text-off-white);
 }
 
 .picker-close {
@@ -775,8 +779,8 @@ onShow(() => {
   align-items: center;
   justify-content: center;
   height: 88rpx;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-lg);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-card);
 
   &:active {
     opacity: 0.8;
@@ -785,6 +789,6 @@ onShow(() => {
 
 .close-text {
   font-size: var(--font-size-md);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
 }
 </style>

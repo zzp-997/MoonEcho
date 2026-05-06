@@ -126,7 +126,11 @@
       "Bash(PYTHONPATH=/c/Users/Administrator/AppData/Local/Python/pythoncore-3.14-64/Lib/site-packages python3:*)",
       "Bash(pip show:*)",
       "Bash(ls:*)",
-      "Bash(docker exec howtoai-mysql:*)"
+      "Bash(docker exec howtoai-mysql:*)",
+      "Bash(pkill -f 'uvicorn.*8001')",
+      "Bash(taskkill /F /IM python.exe)",
+      "Bash(taskkill //F //PID 30864)",
+      "Bash(pnpm dev:h5)"
     ]
   }
 }

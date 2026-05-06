@@ -1,96 +1,79 @@
 // ============================================
-// 回声 - CSS 变量主题系统
+// 回声 - CSS 变量主题系统 (Lovable Design)
 // 文件：src/styles/variables.scss
-// 说明：所有颜色必须使用 CSS 变量，禁止硬编码
-// 参考：modules_design.md 9.2-9.3 | ui_design.md 1.2 | PRD 核心规则
-// 注意：pages.json 中的 globalStyle 和 tabBar 颜色因 uni-app 平台限制
-//       无法使用 CSS 变量，必须使用实际颜色值，其值应与此文件定义一致：
-//       #121212 = --bg-primary (暗色) / #F5F5F7 = --bg-primary (亮色)
-//       #808080 = --text-tertiary / #7C6FE0 = --brand-primary
+// 说明：基于 Lovable 温暖 humanist 设计风格
+// 参考：docs/ui/DESIGN.md
 // ============================================
 
-// ==================== 主题变量定义 ====================
+// ==================== Lovable 核心变量 ====================
 
-// 夜间模式（默认）- 深夜情绪场景
 :root {
-  // ========== 背景色系统 ==========
-  // 一级背景 - 页面底色
-  --bg-primary: #121212;
-  // 二级背景 - 卡片、输入框
-  --bg-secondary: #1E1E1E;
-  // 三级背景 - 弹窗、浮层
-  --bg-tertiary: #2A2A2A;
-  // 透明背景变体
-  --bg-secondary-60: rgba(30, 30, 30, 0.6);
-  --bg-secondary-80: rgba(30, 30, 30, 0.8);
-  --bg-tertiary-90: rgba(42, 42, 42, 0.9);
+  // ========== 核心色板 ==========
+  // 温暖奶油色背景 - 品牌签名色，不是纯白或米色
+  --bg-cream: #f7f4ed;
+  // 近黑色主文字 - 不是纯黑，有温暖感
+  --text-charcoal: #1c1c1c;
+  // 暗色按钮上的文字
+  --text-off-white: #fcfbf8;
 
-  // ========== 暗色主题固定变量（用于强制暗色区域如树洞） ==========
-  // 这些变量始终是暗色值，不受主题切换影响
-  --dark-bg-primary: #121212;
-  --dark-bg-secondary: #1E1E1E;
-  --dark-bg-tertiary: #2A2A2A;
-  --dark-text-primary: #F5F5F5;
-  --dark-text-secondary: #B3B3B3;
-  --dark-text-tertiary: #808080;
-  --dark-border-primary: #333333;
-
-  // ========== 文字色系统 ==========
-  // 主文字 - 标题、重要正文
-  --text-primary: #F5F5F5;
-  // 次文字 - 辅助说明、时间戳
-  --text-secondary: #B3B3B3;
-  // 弱文字 - 占位符、禁用状态
-  --text-tertiary: #808080;
-  // 品牌色上的文字 - 用户气泡等
-  --text-on-brand: #FFFFFF;
+  // ========== 不透明度灰度系统 ==========
+  // 所有灰度来自 #1c1c1c 不同透明度，形成统一视觉
+  --gray-100: #1c1c1c;                    // 主文字/深色表面
+  --gray-83: rgba(28, 28, 28, 0.83);       // 强次要文字
+  --gray-82: rgba(28, 28, 28, 0.82);       // 正文
+  --gray-muted: #5f5f5d;                   // 弱文字/占位符/次要说明
+  --gray-40: rgba(28, 28, 28, 0.4);       // 交互边框
+  --gray-4: rgba(28, 28, 28, 0.04);       // 微妙 hover 背景
+  --gray-3: rgba(28, 28, 28, 0.03);       // 几乎不可见的背景
 
   // ========== 边框色系统 ==========
-  // 分割线
-  --border-primary: #333333;
-  // 输入框边框
-  --border-input: #404040;
-  // 焦点边框
-  --border-focus: #5C5CFF;
+  // 温暖分割线 - 用于卡片、图片、分割线
+  --border-light: #eceae4;
+  // 交互边框 - 用于按钮、输入框等交互元素
+  --border-interactive: rgba(28, 28, 28, 0.4);
+
+  // ========== 背景色系统（日间模式） ==========
+  --bg-primary: var(--bg-cream);
+  --bg-secondary: #fcfbf8;  // Off-white for cards
+  --bg-tertiary: #f7f4ed;   // Same as cream
+  --bg-secondary-60: rgba(252, 251, 248, 0.6);
+  --bg-secondary-80: rgba(252, 251, 248, 0.8);
+  --bg-tertiary-90: rgba(247, 244, 237, 0.9);
+
+  // ========== 文字色系统（日间模式） ==========
+  --text-primary: var(--text-charcoal);
+  --text-secondary: var(--gray-82);
+  --text-tertiary: var(--gray-muted);
+  --text-on-brand: var(--text-off-white);
 
   // ========== 品牌色系统 ==========
-  // 品牌主色
-  --brand-primary: #7C6FE0;
-  // 品牌浅色 - 渐变起始、hover状态
-  --brand-light: #A89CF5;
-  // 品牌暗色 - 按下状态
-  --brand-dark: #5B4FC4;
+  // 日间模式：charcoal 用于主按钮
+  --brand-primary: #1c1c1c;
+  --brand-light: #f7f4ed;
+  --brand-dark: #5f5f5d;
 
-  // ========== 情绪色调系统 ==========
-  // 暖橘 - 充满能量、开心
+  // ========== 情绪色调系统（保持原有语义） ==========
   --mood-warm: #FF9A5C;
   --mood-warm-bg: rgba(255, 154, 92, 0.1);
   --mood-warm-text: #FFB88A;
-  // 浅绿 - 平静、安稳
   --mood-calm: #8FCCA0;
   --mood-calm-bg: rgba(143, 204, 160, 0.1);
   --mood-calm-text: #A8D9B5;
-  // 灰蓝 - 低落、沉闷
   --mood-low: #8BA7C4;
   --mood-low-bg: rgba(139, 167, 196, 0.1);
   --mood-low-text: #A5C0D6;
-  // 深蓝 - 难过、忧伤
   --mood-sad: #4A6FA5;
   --mood-sad-bg: rgba(74, 111, 165, 0.1);
   --mood-sad-text: #6B8FC0;
-  // 暗紫 - 崩溃、混乱
   --mood-chaos: #6B4C7A;
   --mood-chaos-bg: rgba(107, 76, 122, 0.1);
   --mood-chaos-text: #8B6C9A;
 
   // ========== AI 角色色系统 ==========
-  // 小温 - 温柔姐姐感
   --ai-xiaowen: #FFB5BA;
   --ai-xiaowen-bg: rgba(255, 181, 186, 0.15);
-  // 老黑 - 冷静损友感
   --ai-laohei: #8B9DC3;
   --ai-laohei-bg: rgba(139, 157, 195, 0.15);
-  // 阿理 - 可靠大哥感
   --ai-ali: #7CB9A0;
   --ai-ali-bg: rgba(124, 185, 160, 0.15);
 
@@ -104,7 +87,12 @@
   --color-info: #60A5FA;
   --color-info-bg: rgba(96, 165, 250, 0.1);
 
-  // ========== 间距系统（8px 网格）==========
+  // ========== 边框色系统（日间模式） ==========
+  --border-primary: var(--border-light);
+  --border-input: var(--border-light);
+  --border-focus: rgba(59, 130, 246, 0.5);  // Ring blue
+
+  // ========== 间距系统（8px 网格） ==========
   --space-2xs: 4px;
   --space-xs: 8px;
   --space-sm: 12px;
@@ -112,19 +100,33 @@
   --space-lg: 24px;
   --space-xl: 32px;
   --space-2xl: 48px;
+  // Lovable 扩展间距
+  --space-3xl: 56px;
+  --space-4xl: 80px;
+  --space-5xl: 96px;
+  --space-6xl: 128px;
 
   // ========== 圆角系统 ==========
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-full: 9999px;
+  --radius-micro: 4px;       // 小按钮
+  --radius-std: 6px;         // 标准按钮/输入框
+  --radius-compact: 8px;     // 紧凑卡片
+  --radius-card: 12px;       // 标准卡片
+  --radius-container: 16px;  // 大容器
+  --radius-full: 9999px;     // 药丸/图标按钮
 
-  // ========== 阴影系统 ==========
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  // ========== 阴影系统（Lovable 风格） ==========
+  // Lovable 哲学：卡片用边框而非阴影
+  --shadow-none: none;
+  --shadow-focus: rgba(0, 0, 0, 0.1) 0px 4px 12px;  // Focus 状态
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  // ========== Lovable 按钮 Inset Shadow（标志技术） ==========
+  --shadow-btn-inset:
+    rgba(255, 255, 255, 0.2) 0px 0.5px 0px 0px inset,
+    rgba(0, 0, 0, 0.2) 0px 0px 0px 0.5px inset,
+    rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
 
   // ========== 字体系统 ==========
   --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC',
@@ -154,38 +156,34 @@
   --z-toast: 700;
 }
 
-// ==================== 日间模式（浅色主题）====================
-// 通过在根元素添加 .theme-light 类来切换
+// ==================== 暗色模式 ====================
+// 在根元素添加 .theme-dark 类切换到暗色模式
 
-.theme-light,
-.light {
-  // ========== 背景色系统（日间）==========
-  --bg-primary: #F5F5F7;
-  --bg-secondary: #FFFFFF;
-  --bg-tertiary: #EEEEEE;
-  --bg-secondary-80: rgba(255, 255, 255, 0.8);
-  --bg-tertiary-90: rgba(238, 238, 238, 0.9);
+.theme-dark,
+.dark {
+  // ========== 背景色系统（暗色模式） ==========
+  --bg-primary: #1c1c1c;        // Charcoal
+  --bg-secondary: #2a2a2a;      // 暗色卡片
+  --bg-tertiary: #3a3a3a;       // 暗色浮层
+  --bg-secondary-60: rgba(42, 42, 42, 0.6);
+  --bg-secondary-80: rgba(42, 42, 42, 0.8);
+  --bg-tertiary-90: rgba(58, 58, 58, 0.9);
 
-  // ========== 文字色系统（日间）==========
-  --text-primary: #1A1A2E;
-  --text-secondary: #6B7280;
-  --text-tertiary: #9CA3AF;
-  --text-on-brand: #FFFFFF;
+  // ========== 文字色系统（暗色模式） ==========
+  --text-primary: #f7f4ed;      // Cream
+  --text-secondary: rgba(247, 244, 237, 0.82);
+  --text-tertiary: rgba(247, 244, 237, 0.5);
+  --text-on-brand: #f7f4ed;
 
-  // ========== 边框色系统（日间）==========
-  --border-primary: #E5E7EB;
-  --border-input: #D9D9D9;
-  --border-focus: #5C5CFF;
+  // ========== 边框色系统（暗色模式） ==========
+  --border-primary: #333333;
+  --border-input: #404040;
+  --border-focus: rgba(59, 130, 246, 0.5);
 
-  // ========== 品牌色系统（日间）==========
-  --brand-primary: #6C63FF;
-  --brand-light: #8B85FF;
-  --brand-dark: #5850E3;
-
-  // ========== 阴影系统（日间）==========
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  // ========== 品牌色系统（暗色模式） ==========
+  --brand-primary: #f7f4ed;     // Cream 用于按钮
+  --brand-light: #2a2a2a;
+  --brand-dark: #1c1c1c;
 }
 
 // ==================== 情绪色调变体 ====================

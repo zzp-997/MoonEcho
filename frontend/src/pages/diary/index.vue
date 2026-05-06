@@ -617,11 +617,13 @@ onPullDownRefresh(() => {
 </script>
 
 <style lang="scss" scoped>
+// ==================== Lovable Design 日记页样式 ====================
+
 .diary-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-cream);
 }
 
 // ==================== 顶部导航栏 ====================
@@ -632,8 +634,8 @@ onPullDownRefresh(() => {
   justify-content: space-between;
   height: 88rpx;
   padding: 0 var(--space-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-primary);
+  background-color: var(--bg-cream);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .header-title {
@@ -643,7 +645,7 @@ onPullDownRefresh(() => {
 .title-text {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .header-actions {
@@ -656,17 +658,18 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: center;
   padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-md);
-  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-std);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
 
   &:active {
-    opacity: 0.7;
+    opacity: 0.8;
   }
 }
 
 .action-icon {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
 }
 
 // ==================== 内容区域 ====================
@@ -683,12 +686,13 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-lg);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
   margin-bottom: var(--space-md);
 
   &:active {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
 
@@ -716,12 +720,12 @@ onPullDownRefresh(() => {
 .record-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .record-emotion {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
 }
 
 .edit-hint {
@@ -730,7 +734,7 @@ onPullDownRefresh(() => {
 
 .hint-text {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .unrecorded-status {
@@ -741,13 +745,13 @@ onPullDownRefresh(() => {
 .prompt-text {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
   margin-bottom: var(--space-xs);
 }
 
 .prompt-hint {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .card-arrow {
@@ -758,7 +762,7 @@ onPullDownRefresh(() => {
 
 .arrow-icon {
   font-size: var(--font-size-lg);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 // ==================== 周报入口卡片 ====================
@@ -768,13 +772,14 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-left: 4rpx solid var(--text-charcoal);
+  border-radius: var(--radius-card);
   margin-bottom: var(--space-md);
-  border-left: 4rpx solid var(--brand-primary);
 
   &:active {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
 
@@ -792,12 +797,12 @@ onPullDownRefresh(() => {
 .report-card-title {
   font-size: var(--font-size-base);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .report-card-date {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .report-card-body {
@@ -808,7 +813,7 @@ onPullDownRefresh(() => {
 
 .report-card-insight {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -829,10 +834,11 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: center;
   padding: 2rpx var(--space-sm);
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-micro);
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .report-card-arrow {
@@ -849,8 +855,9 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: space-around;
   padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
   margin-bottom: var(--space-md);
 }
 
@@ -863,19 +870,19 @@ onPullDownRefresh(() => {
 .stats-value {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .stats-label {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
   margin-top: var(--space-xs);
 }
 
 .stats-divider {
   width: 1px;
   height: 48rpx;
-  background-color: var(--border-primary);
+  background-color: var(--border-light);
 }
 
 // ==================== 视图切换 ====================
@@ -892,15 +899,16 @@ onPullDownRefresh(() => {
   align-items: center;
   justify-content: center;
   height: 72rpx;
-  border-radius: var(--radius-md);
-  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-std);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
   transition: all var(--transition-fast);
 
   &.is-active {
-    background-color: var(--brand-primary);
+    background-color: var(--text-charcoal);
 
     .tab-text {
-      color: var(--text-on-brand);
+      color: var(--text-off-white);
     }
   }
 
@@ -911,7 +919,7 @@ onPullDownRefresh(() => {
 
 .tab-text {
   font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
 }
 
 // ==================== 日历视图 ====================

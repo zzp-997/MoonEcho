@@ -508,17 +508,19 @@ onPullDownRefresh(() => {
 </script>
 
 <style lang="scss" scoped>
+// ==================== Lovable Design 首页样式 ====================
+
 .home-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-cream);
 }
 
 // ==================== 状态栏 ====================
 
 .status-bar {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-cream);
 }
 
 // ==================== 导航栏 ====================
@@ -529,7 +531,7 @@ onPullDownRefresh(() => {
   justify-content: space-between;
   height: 88rpx;
   padding: 0 var(--space-sm);
-  background-color: var(--bg-primary);
+  background-color: var(--bg-cream);
 }
 
 .header-left {
@@ -540,12 +542,12 @@ onPullDownRefresh(() => {
 .brand-name {
   font-size: var(--font-size-lg);
   font-weight: 600;
-  color: var(--brand-primary);
+  color: var(--text-charcoal);
 }
 
 .brand-slogan {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .header-right {
@@ -561,8 +563,9 @@ onPullDownRefresh(() => {
   min-width: 80rpx;
   height: 64rpx;
   padding: 0 var(--space-2xs);
-  border-radius: var(--radius-md);
-  background-color: var(--bg-secondary);
+  border-radius: var(--radius-std);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
 
   &:active {
     opacity: 0.8;
@@ -577,7 +580,7 @@ onPullDownRefresh(() => {
 
 .nav-icon-text {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
 }
 
 .unread-badge {
@@ -596,7 +599,7 @@ onPullDownRefresh(() => {
 
 .badge-text {
   font-size: 18rpx;
-  color: var(--text-on-brand);
+  color: var(--text-off-white);
   font-weight: 600;
 }
 
@@ -612,12 +615,13 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   margin: var(--space-sm);
-  padding: var(--space-sm);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
 
   &:active {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
 
@@ -628,13 +632,14 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--space-xs);
+  margin-right: var(--space-sm);
+  background-color: var(--bg-secondary);
 }
 
 .avatar-text {
   font-size: 36rpx;
   font-weight: 600;
-  color: #1E1E1E;
+  color: var(--text-charcoal);
 }
 
 .ai-content {
@@ -647,14 +652,14 @@ onPullDownRefresh(() => {
 .ai-header {
   display: flex;
   align-items: center;
-  gap: var(--space-3xs);
+  gap: var(--space-2xs);
   margin-bottom: 4rpx;
 }
 
 .ai-name {
   font-size: var(--font-size-md);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .online-dot {
@@ -666,7 +671,7 @@ onPullDownRefresh(() => {
 
 .ai-preview {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -683,7 +688,7 @@ onPullDownRefresh(() => {
 
 .arrow-text {
   font-size: var(--font-size-lg);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 // ==================== 快捷功能入口 ====================
@@ -692,16 +697,17 @@ onPullDownRefresh(() => {
   display: flex;
   justify-content: space-around;
   margin: var(--space-sm);
-  padding: var(--space-sm);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
 }
 
 .action-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-3xs);
+  gap: var(--space-2xs);
 
   &:active {
     opacity: 0.8;
@@ -711,7 +717,7 @@ onPullDownRefresh(() => {
 .action-icon {
   width: 88rpx;
   height: 88rpx;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-std);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -721,28 +727,28 @@ onPullDownRefresh(() => {
 .action-icon-text {
   font-size: 32rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .diary-icon {
-  background-color: rgba(255, 154, 92, 0.2);
+  background-color: rgba(255, 154, 92, 0.15);
 }
 
 .treehole-icon {
-  background-color: rgba(139, 167, 196, 0.2);
+  background-color: rgba(139, 167, 196, 0.15);
 }
 
 .square-icon {
-  background-color: rgba(124, 111, 224, 0.2);
+  background-color: rgba(124, 111, 224, 0.15);
 }
 
 .report-icon {
-  background-color: rgba(143, 204, 160, 0.2);
+  background-color: rgba(143, 204, 160, 0.15);
 }
 
 .action-label {
   font-size: var(--font-size-xs);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
 }
 
 // ==================== 近期动态 ====================
@@ -761,7 +767,7 @@ onPullDownRefresh(() => {
 .section-title {
   font-size: var(--font-size-md);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .section-more {
@@ -776,27 +782,28 @@ onPullDownRefresh(() => {
 
 .more-text {
   font-size: var(--font-size-sm);
-  color: var(--brand-primary);
+  color: var(--text-charcoal);
 }
 
 .more-arrow {
   font-size: var(--font-size-sm);
-  color: var(--brand-primary);
+  color: var(--text-charcoal);
 }
 
 .feeds-preview {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
 }
 
 .feed-card {
-  padding: var(--space-sm);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
 
   &:active {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
 
@@ -810,7 +817,7 @@ onPullDownRefresh(() => {
   width: 56rpx;
   height: 56rpx;
   border-radius: var(--radius-full);
-  background-color: var(--bg-tertiary);
+  background-color: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -819,7 +826,7 @@ onPullDownRefresh(() => {
 
 .avatar-text {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
 }
 
 .feed-info {
@@ -830,17 +837,17 @@ onPullDownRefresh(() => {
 .feed-author {
   font-size: var(--font-size-sm);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .feed-time {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .feed-content {
   font-size: var(--font-size-base);
-  color: var(--text-primary);
+  color: var(--text-charcoal);
   line-height: 1.6;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -857,7 +864,7 @@ onPullDownRefresh(() => {
 
 .stat-item {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 // ==================== 空状态 ====================
@@ -869,8 +876,9 @@ onPullDownRefresh(() => {
   justify-content: center;
   padding: var(--space-xl);
   margin: var(--space-sm);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
 }
 
 .empty-illustration {
@@ -879,19 +887,19 @@ onPullDownRefresh(() => {
 
 .empty-icon {
   font-size: 48rpx;
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .empty-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
   margin-bottom: var(--space-xs);
 }
 
 .empty-hint {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
   text-align: center;
 }
 
@@ -904,7 +912,7 @@ onPullDownRefresh(() => {
   right: 0;
   bottom: 0;
   z-index: var(--z-modal);
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -912,21 +920,21 @@ onPullDownRefresh(() => {
 
 .action-sheet {
   width: 100%;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background-color: var(--bg-cream);
+  border-radius: var(--radius-container) var(--radius-container) 0 0;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
 .sheet-title {
-  padding: var(--space-sm);
+  padding: var(--space-md);
   text-align: center;
-  border-bottom: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .title-text {
   font-size: var(--font-size-md);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .sheet-options {
@@ -936,40 +944,40 @@ onPullDownRefresh(() => {
 .sheet-option {
   display: flex;
   align-items: center;
-  padding: var(--space-sm);
-  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  border-radius: var(--radius-std);
 
   &:active {
-    background-color: var(--bg-secondary);
+    background-color: var(--gray-4);
   }
 }
 
 .option-icon-wrapper {
   width: 72rpx;
   height: 72rpx;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-std);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--space-xs);
+  margin-right: var(--space-sm);
 }
 
 .option-icon-text {
   font-size: 28rpx;
   font-weight: 600;
-  color: #1E1E1E;
+  color: var(--text-charcoal);
 }
 
 .treehole-option {
-  background-color: rgba(139, 167, 196, 0.3);
+  background-color: rgba(139, 167, 196, 0.2);
 }
 
 .dynamic-option {
-  background-color: rgba(124, 111, 224, 0.3);
+  background-color: rgba(124, 111, 224, 0.2);
 }
 
 .diary-option {
-  background-color: rgba(255, 154, 92, 0.3);
+  background-color: rgba(255, 154, 92, 0.2);
 }
 
 .option-content {
@@ -981,21 +989,21 @@ onPullDownRefresh(() => {
 .option-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .option-desc {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
   margin-top: 4rpx;
 }
 
 .sheet-cancel {
   margin: var(--space-xs);
-  padding: var(--space-sm);
+  padding: var(--space-md);
   text-align: center;
   background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-std);
 
   &:active {
     opacity: 0.8;
@@ -1004,7 +1012,7 @@ onPullDownRefresh(() => {
 
 .cancel-text {
   font-size: var(--font-size-md);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
 }
 
 // ==================== 安全区 ====================

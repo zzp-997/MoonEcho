@@ -137,13 +137,13 @@ const WECHAT_LOGIN_ENABLED = false
 // ==================== 响应式状态 ====================
 
 /** 手机号 */
-const phoneNumber = ref('')
+const phoneNumber = ref('13900139000')
 
 /** 验证码输入值 */
-const codeInput = ref('')
+const codeInput = ref('123456')
 
 /** 是否同意隐私政策 */
-const agreedPrivacy = ref(false)
+const agreedPrivacy = ref(true)
 
 /** 错误提示 */
 const errorMsg = ref('')

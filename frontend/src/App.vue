@@ -58,6 +58,12 @@ onHide(() => {
 })
 </script>
 
+<template>
+  <view class="app-container">
+    <slot />
+  </view>
+</template>
+
 <style lang="scss">
 /* 引入全局样式 - 使用 @import 确保 Uni-app 兼容 */
 @import '@/styles/variables.scss';
@@ -66,4 +72,9 @@ onHide(() => {
 @import '@/styles/dark.scss';
 @import '@/styles/animations.scss';
 @import '@/styles/common.scss';
+
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+}
 </style>

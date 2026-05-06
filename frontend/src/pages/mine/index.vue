@@ -608,11 +608,13 @@ onPullDownRefresh(() => {
 </script>
 
 <style lang="scss" scoped>
+// ==================== Lovable Design 我的页样式 ====================
+
 .mine-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-cream);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -624,13 +626,13 @@ onPullDownRefresh(() => {
   justify-content: space-between;
   padding: var(--space-md);
   padding-top: calc(env(safe-area-inset-top) + var(--space-md));
-  background-color: var(--bg-primary);
+  background-color: var(--bg-cream);
 }
 
 .header-title {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .header-right {
@@ -648,7 +650,7 @@ onPullDownRefresh(() => {
 
 .settings-icon {
   font-size: var(--font-size-xl);
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 // ==================== 用户信息卡片 ====================
@@ -658,8 +660,9 @@ onPullDownRefresh(() => {
   flex-direction: column;
   margin: var(--space-md);
   padding: var(--space-lg);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
 }
 
 .user-info {
@@ -668,7 +671,7 @@ onPullDownRefresh(() => {
   margin-bottom: var(--space-lg);
 
   &:active {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
 
@@ -676,7 +679,7 @@ onPullDownRefresh(() => {
   width: 120rpx;
   height: 120rpx;
   border-radius: var(--radius-full);
-  background-color: var(--bg-tertiary);
+  background-color: var(--bg-secondary);
   margin-right: var(--space-md);
 }
 
@@ -689,26 +692,26 @@ onPullDownRefresh(() => {
 .user-nickname {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
   margin-bottom: 8rpx;
 }
 
 .user-meta {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .edit-arrow {
   font-size: var(--font-size-lg);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 // ==================== 社交能量 ====================
 
 .energy-section {
   padding: var(--space-md);
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-md);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-std);
   margin-bottom: var(--space-lg);
 
   &:active {
@@ -725,7 +728,7 @@ onPullDownRefresh(() => {
 
 .energy-label {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
 }
 
 .energy-percent {
@@ -735,7 +738,7 @@ onPullDownRefresh(() => {
 
 .energy-bar {
   height: 12rpx;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-cream);
   border-radius: var(--radius-full);
   overflow: hidden;
   margin-bottom: var(--space-sm);
@@ -755,22 +758,22 @@ onPullDownRefresh(() => {
 
 .energy-status {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .rest-btn {
   padding: 8rpx 20rpx;
-  background-color: var(--brand-primary);
+  background-color: var(--text-charcoal);
   border-radius: var(--radius-full);
 
   &:active {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
 
 .rest-text {
   font-size: var(--font-size-xs);
-  color: var(--text-on-brand);
+  color: var(--text-off-white);
 }
 
 // ==================== 统计数据 ====================
@@ -789,26 +792,26 @@ onPullDownRefresh(() => {
   flex: 1;
 
   &:active {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
 
 .stat-value {
   font-size: var(--font-size-2xl);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
   margin-bottom: 4rpx;
 }
 
 .stat-label {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .stat-divider {
   width: 1rpx;
   height: 60rpx;
-  background-color: var(--border-primary);
+  background-color: var(--border-light);
 }
 
 // ==================== 社交进度卡片 ====================
@@ -818,8 +821,9 @@ onPullDownRefresh(() => {
   flex-direction: column;
   margin: 0 var(--space-md) var(--space-md);
   padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
 
   &:active {
     opacity: 0.98;
@@ -836,12 +840,12 @@ onPullDownRefresh(() => {
 .level-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .level-current {
   font-size: var(--font-size-sm);
-  color: var(--brand-primary);
+  color: var(--text-charcoal);
   font-weight: 600;
 }
 
@@ -858,21 +862,21 @@ onPullDownRefresh(() => {
   justify-content: center;
   width: 48rpx;
   height: 48rpx;
-  background-color: var(--bg-tertiary);
+  background-color: var(--bg-secondary);
   border-radius: var(--radius-full);
   transition: all 0.3s ease;
 
   &.is-unlocked {
-    background-color: var(--brand-primary);
+    background-color: var(--text-charcoal);
   }
 }
 
 .level-dot-num {
   font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 
   .is-unlocked & {
-    color: var(--text-on-brand);
+    color: var(--text-off-white);
   }
 }
 
@@ -884,13 +888,13 @@ onPullDownRefresh(() => {
 
 .level-hint-text {
   font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  color: var(--gray-muted);
   flex: 1;
 }
 
 .level-hint-arrow {
   font-size: var(--font-size-md);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
   margin-left: var(--space-sm);
 }
 
@@ -899,8 +903,9 @@ onPullDownRefresh(() => {
 .ai-profile-section {
   margin: 0 var(--space-md) var(--space-md);
   padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
 
   &:active {
     opacity: 0.98;
@@ -917,12 +922,12 @@ onPullDownRefresh(() => {
 .section-title {
   font-size: var(--font-size-md);
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-charcoal);
 }
 
 .section-arrow {
   font-size: var(--font-size-md);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 .profile-tags-preview {
@@ -933,15 +938,16 @@ onPullDownRefresh(() => {
 
 .profile-tag {
   font-size: var(--font-size-xs);
-  color: var(--text-secondary);
-  background-color: var(--bg-tertiary);
+  color: var(--gray-muted);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
   padding: 8rpx 16rpx;
   border-radius: var(--radius-full);
 }
 
 .more-tags {
   font-size: var(--font-size-xs);
-  color: var(--brand-primary);
+  color: var(--text-charcoal);
   padding: 8rpx 16rpx;
 }
 
@@ -951,7 +957,7 @@ onPullDownRefresh(() => {
 
 .empty-text {
   font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  color: var(--gray-muted);
 }
 
 // ==================== 功能入口列表 ====================
@@ -960,8 +966,9 @@ onPullDownRefresh(() => {
   display: flex;
   flex-direction: column;
   margin: 0 var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  background-color: var(--bg-cream);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
   overflow: hidden;
 }
 
@@ -969,14 +976,14 @@ onPullDownRefresh(() => {
   display: flex;
   align-items: center;
   padding: var(--space-md);
-  border-bottom: 1rpx solid var(--border-primary);
+  border-bottom: 1px solid var(--border-light);
 
   &:last-child {
     border-bottom: none;
   }
 
   &:active {
-    background-color: var(--bg-tertiary);
+    background-color: var(--gray-4);
   }
 }
 
@@ -986,7 +993,7 @@ onPullDownRefresh(() => {
   justify-content: center;
   width: 72rpx;
   height: 72rpx;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-std);
   margin-right: var(--space-sm);
 }
 
