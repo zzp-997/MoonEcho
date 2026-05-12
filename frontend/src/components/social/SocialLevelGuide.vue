@@ -198,7 +198,7 @@ function handleNextAction(): void {
   display: flex;
   align-items: center;
   padding: var(--space-md);
-  background: linear-gradient(135deg, rgba(124, 111, 224, 0.2), rgba(124, 111, 224, 0.1));
+  background: linear-gradient(135deg, var(--brand-light), var(--brand-light));
   border-radius: var(--radius-lg);
   margin-bottom: var(--space-lg);
 }
@@ -272,7 +272,7 @@ function handleNextAction(): void {
   }
 
   .is-current & {
-    box-shadow: 0 0 0 8rpx rgba(124, 111, 224, 0.3);
+    box-shadow: 0 0 0 8rpx var(--brand-light);
   }
 }
 
@@ -433,7 +433,7 @@ function handleNextAction(): void {
   }
 
   &.is-current {
-    background-color: rgba(124, 111, 224, 0.1);
+    background-color: var(--brand-light);
     border: 1rpx solid var(--brand-primary);
   }
 }

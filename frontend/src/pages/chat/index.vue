@@ -1,13 +1,18 @@
 <template>
   <view class="chat-page">
-    <!-- 导航栏 -->
-    <view class="nav-bar">
+    <!-- 导航栏 — 图鸟风格渐变 -->
+    <view class="nav-bar" :style="{ paddingTop: statusBarHeight + 'px' }">
       <view class="nav-back" @tap="handleBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <text style="font-size: 36rpx;">←</text>
       </view>
-      <text class="nav-title">{{ currentPersonalityName }}</text>
+      <view class="nav-center">
+        <view class="nav-avatar tn-shadow-blur" :style="{ background: personalityGradient }">
+          <text class="nav-avatar-text">{{ currentPersonalityLabel }}</text>
+        </view>
+        <text class="nav-title">{{ currentPersonalityName }}</text>
+      </view>
       <view class="nav-action" @tap="handleSwitchPersonality">
-        <wd-icon name="refresh" size="20px" color="var(--text-primary)" />
+        <text style="font-size: 36rpx;">🔄</text>
       </view>
     </view>
 
@@ -25,9 +30,9 @@
         <text class="loading-text">加载更多消息...</text>
       </view>
 
-      <!-- 空状态提示 -->
+      <!-- 空状态提示 — 图鸟风格 -->
       <view v-if="messages.length === 0 && !isGenerating" class="empty-state">
-        <view class="empty-avatar">
+        <view class="empty-avatar tn-shadow-blur" :style="{ background: personalityGradient }">
           <text class="avatar-label">{{ currentPersonalityLabel }}</text>
         </view>
         <view class="empty-content">
@@ -51,7 +56,7 @@
 
       <!-- AI 正在生成提示 -->
       <view v-if="isGenerating && !streamingContent" class="generating-indicator">
-        <view class="generating-avatar">
+        <view class="generating-avatar tn-shadow-blur" :style="{ background: personalityGradient }">
           <text class="avatar-label">{{ currentPersonalityLabel }}</text>
         </view>
         <view class="generating-bubble">
@@ -92,12 +97,10 @@
       @confirm="handleCrisisConfirm"
     />
 
-    <!-- 性格切换弹窗 -->
+    <!-- 性格切换弹窗 — 图鸟风格 -->
     <view v-if="showPersonalityPicker" class="personality-picker-overlay" @tap="closePersonalityPicker">
       <view class="personality-picker" @tap.stop>
-        <view class="picker-title">
-          <text class="title-text">选择新的 AI 朋友</text>
-        </view>
+        <text class="picker-title">选择新的 AI 朋友</text>
         <view class="picker-options">
           <view
             v-for="p in personalityOptions"
@@ -106,9 +109,13 @@
             :class="{ 'is-current': currentPersonality === p.type }"
             @tap="selectPersonality(p.type)"
           >
-            <text class="option-label">{{ p.label }}</text>
-            <text class="option-name">{{ p.name }}</text>
-            <view v-if="currentPersonality === p.type" class="current-mark">
+            <view class="option-avatar tn-shadow-blur" :style="{ background: getGradient(p.type) }">
+              <text class="option-avatar-text">{{ p.label }}</text>
+            </view>
+            <view class="option-info">
+              <text class="option-name">{{ p.name }}</text>
+            </view>
+            <view v-if="currentPersonality === p.type" class="current-mark tn-gradient-1">
               <text class="mark-text">当前</text>
             </view>
           </view>
@@ -122,15 +129,7 @@
 </template>
 
 <script setup lang="ts">
-/**
- * 回声 - AI 对话主页面
- * 文件：src/pages/chat/index.vue
- * 说明：AI 对话页面（消息列表 + 输入框），SSE 流式显示，
- *       换人聊聊入口，危机干预弹窗，开场白按时间段展示
- */
-
 import { ref, computed, watch, nextTick, onMounted } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
 import { useChatStore } from '@/stores/chat'
 import { useUserStore } from '@/stores/user'
 import { useSSE, type SSEData } from '@/composables/useSSE'
@@ -138,32 +137,23 @@ import { useCrisis } from '@/composables/useCrisis'
 import { getGreeting } from '@/api/chat'
 import { trackPageEnter, track, EventName } from '@/utils/tracking'
 import { getStorage, setStorage } from '@/utils/storage'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import MessageBubble from '@/components/chat/MessageBubble.vue'
 import MessageInput from '@/components/chat/MessageInput.vue'
 import CrisisDialog from '@/components/chat/CrisisDialog.vue'
 import type { ChatMessage } from '@/stores/chat'
 
-// ==================== 常量 ====================
-
-/** 是否展示性格选择页的存储键 */
 const PERSONALITY_SHOWN_KEY = 'huisheng_personality_shown'
-
-/** APP 打开次数存储键 */
 const APP_OPEN_COUNT_KEY = 'huisheng_app_open_count'
 
-/** 性格选项 */
 const personalityOptions = [
   { type: 'xiaowen', name: '小温', label: '温' },
   { type: 'laohei', name: '老黑', label: '黑' },
   { type: 'ali', name: '阿理', label: '理' },
 ]
 
-// ==================== Store ====================
-
 const chatStore = useChatStore()
 const userStore = useUserStore()
-
-// ==================== SSE 流式通信 ====================
 
 const {
   isStreaming,
@@ -171,8 +161,6 @@ const {
   startStream,
   stopStream,
 } = useSSE()
-
-// ==================== 危机干预 ====================
 
 const {
   showDialog: showCrisisDialog,
@@ -182,53 +170,36 @@ const {
   resetSession,
 } = useCrisis()
 
-// ==================== 响应式状态 ====================
-
-/** 输入消息 */
 const inputMessage = ref('')
-
-/** 滚动位置 */
 const scrollTop = ref(0)
-
-/** 是否正在加载更多 */
 const isLoadingMore = ref(false)
-
-/** 开场白消息 */
 const greetingMessage = ref('')
-
-/** 是否显示性格切换弹窗 */
 const showPersonalityPicker = ref(false)
-
-/** 流式消息 ID */
 const streamingMessageId = ref<string | null>(null)
 
-// ==================== 计算属性 ====================
+const statusBarHeight = ref(0)
+const sysInfo = uni.getSystemInfoSync()
+statusBarHeight.value = sysInfo.statusBarHeight || 0
 
-/** 消息列表 */
 const messages = computed(() => chatStore.messages)
-
-/** 当前 AI 性格类型 */
 const currentPersonality = computed(() => chatStore.currentPersonality)
-
-/** 是否正在生成回复 */
 const isGenerating = computed(() => chatStore.isGenerating || isStreaming.value)
-
-/** 用户头像 */
 const userAvatar = computed(() => userStore.userInfo?.avatarUrl || '/static/images/default-avatar.png')
 
-/** 当前 AI 性格名称 */
 const currentPersonalityName = computed(() => {
   const option = personalityOptions.find((p) => p.type === currentPersonality.value)
   return option?.name || '小温'
 })
 
-/** 当前 AI 性格标识 */
 const currentPersonalityLabel = computed(() => {
   const option = personalityOptions.find((p) => p.type === currentPersonality.value)
   return option?.label || '温'
 })
 
-/** 流式输出的临时消息 */
+const personalityGradient = computed(() => {
+  return getGradient(currentPersonality.value)
+})
+
 const streamingMessage = computed<ChatMessage>(() => ({
   id: streamingMessageId.value || `stream_${Date.now()}`,
   role: 'assistant',
@@ -238,41 +209,27 @@ const streamingMessage = computed<ChatMessage>(() => ({
   isStreaming: isStreaming.value,
 }))
 
-// ==================== 方法 ====================
-
-/**
- * 生成按时间段的开场白
- */
-function generateGreeting(): string {
-  const hour = new Date().getHours()
-
-  if (hour >= 23 || hour < 2) {
-    // 23:00-02:00 深夜
-    return '嗨，这么晚还没睡，是不是心里有事？我在听。'
-  } else if (hour >= 2 && hour < 5) {
-    // 02:00-05:00 极深夜
-    return '…你也睡不着吗？这个时间醒着的人，大多心里装着点事。想说说吗？'
-  } else if (hour >= 5 && hour < 7) {
-    // 05:00-07:00 清晨
-    return '早安。醒这么早，是没睡好还是有什么心事？'
-  } else {
-    // 其他时间
-    return '嗨，随时随地，我都在。'
+function getGradient(type: string): string {
+  const map: Record<string, string> = {
+    xiaowen: 'linear-gradient(135deg, #E72F8C, #F360A7)',
+    laohei: 'linear-gradient(135deg, #78909C, #5F7E8B)',
+    ali: 'linear-gradient(135deg, #3D7EFF, #01BEFF)',
   }
+  return map[type] || map.xiaowen
 }
 
-/**
- * 处理发送消息
- */
+function generateGreeting(): string {
+  const hour = new Date().getHours()
+  if (hour >= 23 || hour < 2) return '嗨，这么晚还没睡，是不是心里有事？我在听。'
+  if (hour >= 2 && hour < 5) return '…你也睡不着吗？这个时间醒着的人，大多心里装着点事。想说说吗？'
+  if (hour >= 5 && hour < 7) return '早安。醒这么早，是没睡好还是有什么心事？'
+  return '嗨，随时随地，我都在。'
+}
+
 async function handleSend(content: string): Promise<void> {
   if (!content.trim() || isGenerating.value) return
+  if (messages.value.length === 0) resetSession()
 
-  // 重置危机干预状态（新会话）
-  if (messages.value.length === 0) {
-    resetSession()
-  }
-
-  // 添加用户消息
   const userMessage: ChatMessage = {
     id: `msg_${Date.now()}_user`,
     role: 'user',
@@ -280,26 +237,13 @@ async function handleSend(content: string): Promise<void> {
     createdAt: new Date().toISOString(),
   }
   chatStore.addMessage(userMessage)
-
-  // 清空输入
   inputMessage.value = ''
-
-  // 滚动到底部
   scrollToBottom()
 
-  // 追踪发送事件
-  track(EventName.CHAT_SEND, {
-    messageLength: content.length,
-    personalityType: currentPersonality.value,
-  })
-
-  // 设置生成状态
+  track(EventName.CHAT_SEND, { messageLength: content.length, personalityType: currentPersonality.value })
   chatStore.setGenerating(true)
-
-  // 生成 AI 消息占位 ID
   streamingMessageId.value = `msg_${Date.now()}_assistant`
 
-  // 启动 SSE 流式请求
   try {
     const streamUrl = '/ai/chat/stream'
     await startStream({
@@ -310,12 +254,8 @@ async function handleSend(content: string): Promise<void> {
         conversationId: chatStore.currentSessionId,
       },
       callbacks: {
-        onChunk: (chunk: string) => {
-          // 每次收到内容片段，滚动到底部
-          scrollToBottom()
-        },
+        onChunk: () => { scrollToBottom() },
         onComplete: (data: SSEData) => {
-          // 流式完成，添加完整消息（检查避免重复添加）
           const existingMsg = chatStore.messages.find(m => m.id === streamingMessageId.value)
           if (!existingMsg) {
             const assistantMessage: ChatMessage = {
@@ -329,234 +269,97 @@ async function handleSend(content: string): Promise<void> {
             chatStore.addMessage(assistantMessage)
           }
           chatStore.finishStreaming(streamingMessageId.value!)
-
-          // 处理危机检测
-          if (data.crisis_level && data.crisis_level !== 'low') {
-            handleCrisis(data.crisis_level, data.crisis_keywords)
-          }
-
-          // 追踪完成事件
-          track(EventName.CHAT_RECEIVE, {
-            responseLength: assistantMessage.content.length,
-            personalityType: currentPersonality.value,
-          })
+          if (data.crisis_level && data.crisis_level !== 'low') handleCrisis(data.crisis_level, data.crisis_keywords)
+          track(EventName.CHAT_RECEIVE, { responseLength: (data.content || '').length, personalityType: currentPersonality.value })
         },
         onError: (error: Error) => {
-          // 显示错误提示
-          uni.showToast({
-            title: 'AI 服务暂时不可用',
-            icon: 'none',
-          })
+          uni.showToast({ title: 'AI 服务暂时不可用', icon: 'none' })
           chatStore.setGenerating(false)
-
-          // 追踪错误事件
           track(EventName.CHAT_ERROR, { error: error.message })
         },
-        onCrisis: (level, keywords) => {
-          // 处理危机干预
-          handleCrisis(level, keywords)
-        },
+        onCrisis: (level, keywords) => { handleCrisis(level, keywords) },
       },
     })
-  } catch (error: any) {
-    console.error('发送消息失败', error)
-    uni.showToast({
-      title: '发送失败，请重试',
-      icon: 'none',
-    })
+  } catch {
+    uni.showToast({ title: '发送失败，请重试', icon: 'none' })
     chatStore.setGenerating(false)
   }
 }
 
-/**
- * 处理切换 AI 性格
- */
-function handleSwitchPersonality(): void {
-  showPersonalityPicker.value = true
-}
+function handleSwitchPersonality(): void { showPersonalityPicker.value = true }
+function handleBack(): void { uni.navigateBack() }
+function closePersonalityPicker(): void { showPersonalityPicker.value = false }
 
-/**
- * 返回上一页
- */
-function handleBack(): void {
-  uni.navigateBack()
-}
-
-/**
- * 关闭性格切换弹窗
- */
-function closePersonalityPicker(): void {
-  showPersonalityPicker.value = false
-}
-
-/**
- * 选择新的 AI 性格
- */
 function selectPersonality(type: string): void {
-  if (type === currentPersonality.value) {
-    closePersonalityPicker()
-    return
-  }
-
-  // 切换性格
+  if (type === currentPersonality.value) { closePersonalityPicker(); return }
   chatStore.setPersonality(type)
   closePersonalityPicker()
-
-  // 追踪切换事件
   track(EventName.CHAT_PERSONALITY_SWITCH, { personalityType: type })
-
-  // 显示提示
-  uni.showToast({
-    title: `已切换为${personalityOptions.find((p) => p.type === type)?.name}`,
-    icon: 'none',
-  })
-
-  // 更新开场白
+  uni.showToast({ title: `已切换为${personalityOptions.find((p) => p.type === type)?.name}`, icon: 'none' })
   greetingMessage.value = generateGreeting()
 }
 
-/**
- * 处理危机干预弹窗关闭
- */
-function handleCrisisClose(): void {
-  closeDialog()
-}
+function handleCrisisClose(): void { closeDialog() }
+function handleCrisisConfirm(): void { closeDialog(); track(EventName.CRISIS_CONFIRM, {}) }
 
-/**
- * 处理危机干预确认
- */
-function handleCrisisConfirm(): void {
-  closeDialog()
-  // 追踪确认事件
-  track(EventName.CRISIS_CONFIRM, {})
-}
-
-/**
- * 滚动到底部
- */
 function scrollToBottom(): void {
-  nextTick(() => {
-    scrollTop.value = 999999
-  })
+  nextTick(() => { scrollTop.value = 999999 })
 }
 
-/**
- * 判断是否显示时间
- */
 function shouldShowTime(index: number): boolean {
   if (index === 0) return true
-
   const currentMsg = messages.value[index]
   const prevMsg = messages.value[index - 1]
-
-  // 如果两条消息间隔超过 5 分钟，显示时间
-  const currentTime = new Date(currentMsg.createdAt).getTime()
-  const prevTime = new Date(prevMsg.createdAt).getTime()
-  const diffMinutes = (currentTime - prevTime) / (1000 * 60)
-
+  const diffMinutes = (new Date(currentMsg.createdAt).getTime() - new Date(prevMsg.createdAt).getTime()) / (1000 * 60)
   return diffMinutes >= 5
 }
 
-/**
- * 加载更多历史消息
- */
 async function handleLoadMore(): Promise<void> {
   if (isLoadingMore.value || !chatStore.currentSessionId) return
-
   isLoadingMore.value = true
-
-  try {
-    // 这里可以调用 API 加载历史消息
-    // await loadHistoryMessages()
-  } catch (error) {
-    console.error('加载历史消息失败', error)
-  } finally {
-    isLoadingMore.value = false
-  }
+  try { /* loadHistoryMessages() */ } finally { isLoadingMore.value = false }
 }
 
-/**
- * 检查是否需要展示性格选择页
- * 注册后第2次打开 APP 时展示
- */
 async function checkPersonalitySelect(): void {
   const hasShown = getStorage<boolean>(PERSONALITY_SHOWN_KEY, false)
-
   if (!hasShown) {
     const openCount = getStorage<number>(APP_OPEN_COUNT_KEY, 0)
-
-    // 如果是第2次打开（openCount === 1），跳转到性格选择页
-    if (openCount === 1) {
-      uni.redirectTo({
-        url: '/pages/chat/personality',
-      })
-    }
+    if (openCount === 1) uni.redirectTo({ url: '/pages/chat/personality' })
   }
 }
 
-/**
- * 初始化开场白
- */
 async function initGreeting(): void {
-  // 如果没有消息，显示开场白
   if (messages.value.length === 0) {
     greetingMessage.value = generateGreeting()
-
-    // 尝试从后端获取开场白（可选）
     try {
       const response = await getGreeting(currentPersonality.value as any)
-      if (response.content) {
-        greetingMessage.value = response.content
-      }
-    } catch {
-      // 使用本地生成的时间段开场白
-    }
+      if (response.content) greetingMessage.value = response.content
+    } catch {}
   }
 }
 
-// ==================== 监听 ====================
+watch(isGenerating, (val) => { if (val) scrollToBottom() })
+watch(messages, () => { scrollToBottom() }, { deep: true })
 
-watch(isGenerating, (val) => {
-  if (val) {
+onMounted(() => { initGreeting() })
+
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('chat')
+    const openCount = getStorage<number>(APP_OPEN_COUNT_KEY, 0)
+    setStorage(APP_OPEN_COUNT_KEY, openCount + 1)
+    checkPersonalitySelect()
     scrollToBottom()
   }
-})
-
-watch(messages, () => {
-  scrollToBottom()
-}, { deep: true })
-
-// ==================== 生命周期 ====================
-
-onMounted(() => {
-  // 初始化开场白
-  initGreeting()
-})
-
-onShow(() => {
-  // 追踪页面进入
-  trackPageEnter('chat')
-
-  // 更新 APP 打开次数
-  const openCount = getStorage<number>(APP_OPEN_COUNT_KEY, 0)
-  setStorage(APP_OPEN_COUNT_KEY, openCount + 1)
-
-  // 检查是否需要展示性格选择页
-  checkPersonalitySelect()
-
-  // 滚动到底部
-  scrollToBottom()
 })
 </script>
 
 <style lang="scss" scoped>
-// ==================== Lovable Design 聊天页样式 ====================
-
 .chat-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #FFFFFF;
 }
 
 // ==================== 导航栏 ====================
@@ -566,10 +369,8 @@ onShow(() => {
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 var(--space-md);
-  padding-top: env(safe-area-inset-top);
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-light);
+  padding: 0 30rpx;
+  background: linear-gradient(135deg, #01BEFF, #3D7EFF);
 }
 
 .nav-back,
@@ -579,42 +380,58 @@ onShow(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-full);
-  background-color: var(--bg-secondary);
+  color: #FFFFFF;
 
-  &:active {
-    opacity: 0.8;
-  }
+  &:active { opacity: 0.8; }
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.nav-avatar {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-avatar-text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #FFFFFF;
 }
 
 .nav-title {
-  font-size: var(--font-size-md);
+  font-size: 32rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 // ==================== 消息列表 ====================
 
 .message-list {
   flex: 1;
-  padding-top: var(--space-sm);
+  padding-top: 16rpx;
 }
 
 .list-bottom-space {
-  height: var(--space-md);
+  height: 20rpx;
 }
-
-// ==================== 加载指示器 ====================
 
 .loading-indicator {
   display: flex;
   justify-content: center;
-  padding: var(--space-md);
+  padding: 20rpx;
 }
 
 .loading-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 24rpx;
+  color: #838383;
 }
 
 // ==================== 空状态 ====================
@@ -624,52 +441,51 @@ onShow(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl);
-  padding-top: 160rpx;
+  padding: 80rpx 30rpx;
+  padding-top: 200rpx;
 }
 
 .empty-avatar {
   width: 160rpx;
   height: 160rpx;
-  border-radius: var(--radius-full);
-  background-color: var(--ai-xiaowen-bg);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-lg);
+  margin-bottom: 30rpx;
 }
 
 .avatar-label {
-  font-size: 48rpx;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 56rpx;
+  font-weight: 700;
+  color: #FFFFFF;
 }
 
 .empty-content {
   text-align: center;
-  margin-bottom: var(--space-xl);
+  margin-bottom: 30rpx;
 }
 
 .empty-title {
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #080808;
+  margin-bottom: 12rpx;
 }
 
 .empty-message {
-  font-size: var(--font-size-md);
-  color: var(--text-muted);
+  font-size: 28rpx;
+  color: #838383;
   line-height: 1.8;
 }
 
 .empty-guide {
-  margin-top: var(--space-md);
+  margin-top: 20rpx;
 }
 
 .guide-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 24rpx;
+  color: #AAAAAA;
 }
 
 // ==================== 生成中指示器 ====================
@@ -677,69 +493,55 @@ onShow(() => {
 .generating-indicator {
   display: flex;
   align-items: flex-start;
-  padding: var(--space-sm) var(--space-md);
+  padding: 16rpx 30rpx;
 }
 
 .generating-avatar {
   width: 80rpx;
   height: 80rpx;
-  border-radius: var(--radius-full);
-  background-color: var(--ai-xiaowen-bg);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--space-sm);
+  margin-right: 20rpx;
+  flex-shrink: 0;
 }
 
 .generating-bubble {
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-light);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
-  border-bottom-left-radius: var(--radius-micro);
+  background-color: #FFFFFF;
+  padding: 20rpx 28rpx;
+  border-radius: 20rpx;
+  border-bottom-left-radius: 6rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.06);
 }
 
 .typing-indicator {
   display: flex;
   align-items: center;
-  gap: 6rpx;
+  gap: 8rpx;
 }
 
 .typing-dot {
   width: 12rpx;
   height: 12rpx;
   border-radius: 50%;
-  background-color: var(--text-muted);
+  background-color: #01BEFF;
   animation: typingBounce 1.4s ease-in-out infinite;
 
-  &:nth-child(1) {
-    animation-delay: 0s;
-  }
-
-  &:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-
-  &:nth-child(3) {
-    animation-delay: 0.4s;
-  }
+  &:nth-child(1) { animation-delay: 0s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.4s; }
 }
 
 @keyframes typingBounce {
-  0%, 60%, 100% {
-    transform: translateY(0);
-    opacity: 0.4;
-  }
-  30% {
-    transform: translateY(-8rpx);
-    opacity: 1;
-  }
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-8rpx); opacity: 1; }
 }
 
 // ==================== 消息包装 ====================
 
 .message-wrapper {
-  padding: var(--space-xs) var(--space-md);
+  padding: 8rpx 30rpx;
 }
 
 // ==================== 性格切换弹窗 ====================
@@ -750,7 +552,7 @@ onShow(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: var(--z-modal);
+  z-index: 9999;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: flex-end;
@@ -759,71 +561,82 @@ onShow(() => {
 
 .personality-picker {
   width: 100%;
-  background-color: var(--bg-primary);
-  border-radius: var(--radius-container) var(--radius-container) 0 0;
-  padding: var(--space-lg);
-  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
+  background-color: #FFFFFF;
+  border-radius: 30rpx 30rpx 0 0;
+  padding: 40rpx 30rpx;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
 }
 
 .picker-title {
+  display: block;
   text-align: center;
-  margin-bottom: var(--space-lg);
-}
-
-.title-text {
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #080808;
+  margin-bottom: 30rpx;
 }
 
 .picker-options {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
-  margin-bottom: var(--space-lg);
+  gap: 20rpx;
+  margin-bottom: 30rpx;
 }
 
 .picker-option {
   display: flex;
   align-items: center;
-  padding: var(--space-md);
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border: 2rpx solid #F4F4F5;
+  border-radius: 20rpx;
 
-  &:active {
-    border-color: var(--border-interactive);
-  }
+  &:active { border-color: #01BEFF; }
 
   &.is-current {
-    border-color: var(--brand-primary);
-    border-width: 2px;
+    border-color: #01BEFF;
+    background: linear-gradient(135deg, rgba(1, 190, 255, 0.05), rgba(61, 126, 255, 0.05));
   }
 }
 
-.option-label {
+.option-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+}
+
+.option-avatar-text {
   font-size: 28rpx;
   font-weight: 600;
-  color: var(--text-primary);
-  margin-right: var(--space-sm);
+  color: #FFFFFF;
+}
+
+.option-info {
+  flex: 1;
 }
 
 .option-name {
-  font-size: var(--font-size-md);
-  font-weight: 500;
-  color: var(--text-primary);
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #080808;
 }
 
 .current-mark {
-  margin-left: auto;
-  padding: 4rpx 12rpx;
-  border-radius: var(--radius-micro);
-  background-color: var(--brand-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rpx 16rpx;
+  border-radius: 5000rpx;
 }
 
 .mark-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-inverse);
+  font-size: 22rpx;
+  color: #FFFFFF;
+  font-weight: 600;
 }
 
 .picker-close {
@@ -831,16 +644,15 @@ onShow(() => {
   align-items: center;
   justify-content: center;
   height: 88rpx;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  background-color: #F4F4F5;
+  border-radius: 5000rpx;
 
-  &:active {
-    opacity: 0.8;
-  }
+  &:active { opacity: 0.8; }
 }
 
 .close-text {
-  font-size: var(--font-size-md);
-  color: var(--text-muted);
+  font-size: 30rpx;
+  color: #838383;
+  font-weight: 500;
 }
 </style>

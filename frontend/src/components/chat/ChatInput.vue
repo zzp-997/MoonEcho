@@ -295,7 +295,7 @@ function clearInput(): void {
   display: flex;
   align-items: center;
   padding: var(--space-sm) var(--space-md);
-  background-color: rgba(124, 111, 224, 0.1);
+  background-color: var(--brand-light);
   border-top: 1rpx solid var(--border-primary);
 }
 
@@ -323,7 +323,7 @@ function clearInput(): void {
 .hint-icon-text {
   font-size: 18rpx;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--text-inverse);
 }
 
 .hint-text {

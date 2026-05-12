@@ -48,7 +48,7 @@
 
       <!-- 空状态 -->
       <view v-else-if="!isLoading" class="empty-state">
-        <wd-icon name="chat" size="48px" color="var(--text-muted)" custom-style="margin-bottom: var(--space-md)" />
+        <wd-icon name="chat" size="48px" color="#838383" custom-style="margin-bottom: 24rpx" />
         <text class="empty-text">树洞里空空的</text>
         <text class="empty-hint">做第一个说话的人吧</text>
       </view>
@@ -83,7 +83,6 @@
  */
 
 import { ref, onMounted } from 'vue'
-import { onShow, onHide } from '@dcloudio/uni-app'
 import {
   getTreeholePosts,
   createTreeholePost,
@@ -92,6 +91,7 @@ import {
   type CreatePostResponse,
 } from '@/api/treehole'
 import { track, EventName, trackPageEnter, trackPageLeave } from '@/utils/tracking'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import TopicFilter from '@/components/treehole/TopicFilter.vue'
 import PostCard from '@/components/treehole/PostCard.vue'
 import PublishCard from '@/components/treehole/PublishCard.vue'
@@ -345,14 +345,14 @@ onMounted(() => {
   loadPosts(true)
 })
 
-onShow(() => {
-  trackPageEnter('treehole')
-  // 每次显示页面时刷新数据
-  loadPosts(true)
-})
-
-onHide(() => {
-  trackPageLeave('treehole')
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('treehole')
+    loadPosts(true)
+  },
+  onHidden() {
+    trackPageLeave('treehole')
+  }
 })
 </script>
 
@@ -361,8 +361,7 @@ onHide(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  // 强制使用暗色主题
-  background-color: var(--dark-bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 顶部导航栏 ====================
@@ -372,9 +371,8 @@ onHide(() => {
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 var(--space-md);
-  background-color: var(--dark-bg-primary);
-  border-bottom: 1px solid var(--dark-border-primary);
+  padding: 0 24rpx;
+  background: linear-gradient(135deg, #78909C, #5F7E8B);
 }
 
 .header-title {
@@ -383,14 +381,14 @@ onHide(() => {
 }
 
 .title-text {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 600;
-  color: var(--dark-text-primary);
+  color: #FFFFFF;
 }
 
 .title-hint {
-  font-size: var(--font-size-xs);
-  color: var(--dark-text-tertiary);
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .header-actions {
@@ -404,8 +402,8 @@ onHide(() => {
   justify-content: center;
   width: 64rpx;
   height: 64rpx;
-  background-color: var(--brand-primary);
-  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 5000rpx;
 
   &:active {
     opacity: 0.9;
@@ -413,15 +411,15 @@ onHide(() => {
 }
 
 .action-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-on-brand);
+  font-size: 34rpx;
+  color: #FFFFFF;
 }
 
 // ==================== 内容区域 ====================
 
 .page-content {
   flex: 1;
-  padding: 0 var(--space-md);
+  padding: 0 24rpx;
 }
 
 // ==================== 帖子列表 ====================
@@ -438,24 +436,24 @@ onHide(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl) 0;
+  padding: 60rpx 0;
 }
 
 .empty-icon {
   font-size: 64rpx;
-  margin-bottom: var(--space-md);
-  color: var(--dark-text-tertiary);
+  margin-bottom: 24rpx;
+  color: #838383;
 }
 
 .empty-text {
-  font-size: var(--font-size-md);
-  color: var(--dark-text-secondary);
-  margin-bottom: var(--space-xs);
+  font-size: 30rpx;
+  color: #333333;
+  margin-bottom: 8rpx;
 }
 
 .empty-hint {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-tertiary);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 // ==================== 加载状态 ====================
@@ -464,12 +462,12 @@ onHide(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-lg) 0;
+  padding: 30rpx 0;
 }
 
 .loading-text {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-tertiary);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 // ==================== 加载更多 ====================
@@ -478,12 +476,12 @@ onHide(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md) 0;
+  padding: 24rpx 0;
 }
 
 .load-text {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-tertiary);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 // ==================== 没有更多 ====================
@@ -492,12 +490,12 @@ onHide(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md) 0;
+  padding: 24rpx 0;
 }
 
 .no-more-text {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-tertiary);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 // ==================== 安全区 ====================

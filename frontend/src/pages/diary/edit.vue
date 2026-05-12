@@ -109,7 +109,6 @@
  */
 
 import { ref, computed, onMounted } from 'vue'
-import { onShow, onHide } from '@dcloudio/uni-app'
 import {
   useDiary,
   useVoiceInput,
@@ -117,6 +116,7 @@ import {
   type SyncMode,
 } from '@/composables/useDiary'
 import { trackPageEnter, trackPageLeave, EventName } from '@/utils/tracking'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import EmotionToneSelector from '@/components/diary/EmotionToneSelector.vue'
 import EmotionLabelPicker from '@/components/diary/EmotionLabelPicker.vue'
 import PrivacyConsentDialog from '@/components/diary/PrivacyConsentDialog.vue'
@@ -278,12 +278,13 @@ onMounted(() => {
   initDiaryEditor()
 })
 
-onShow(() => {
-  trackPageEnter('diary_edit')
-})
-
-onHide(() => {
-  trackPageLeave('diary_edit')
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('diary_edit')
+  },
+  onHidden() {
+    trackPageLeave('diary_edit')
+  }
 })
 </script>
 
@@ -292,19 +293,18 @@ onHide(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #FFFFFF;
 }
 
-// ==================== 顶部导航栏 ====================
+// ==================== 导航栏 ====================
 
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 var(--space-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-standard);
+  padding: 0 30rpx;
+  background: linear-gradient(135deg, #01BEFF, #3D7EFF);
 }
 
 .header-back {
@@ -313,15 +313,14 @@ onHide(() => {
   justify-content: center;
   width: 64rpx;
   height: 64rpx;
+  color: #FFFFFF;
 
-  &:active {
-    opacity: 0.6;
-  }
+  &:active { opacity: 0.6; }
 }
 
 .back-icon {
   font-size: 40rpx;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-title {
@@ -330,91 +329,86 @@ onHide(() => {
 }
 
 .title-text {
-  font-size: var(--font-size-lg);
+  font-size: 32rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-action {
   width: 64rpx;
-  height: 64rpx;
 }
 
-// ==================== 内容区域 ====================
+// ==================== 内容区 ====================
 
 .page-content {
   flex: 1;
-  padding-top: var(--space-sm);
+  padding-top: 20rpx;
 }
 
 .page-bottom-space {
-  height: var(--space-xl);
+  height: 40rpx;
 }
 
 // ==================== 文字输入区 ====================
 
 .content-input-area {
-  padding: var(--space-md);
+  padding: 30rpx;
 }
 
 .input-hint {
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .hint-text {
-  font-size: var(--font-size-md);
-  font-weight: 500;
+  font-size: 34rpx;
+  font-weight: 600;
 }
 
 .input-wrapper {
   position: relative;
-  min-height: 200rpx;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
+  min-height: 240rpx;
+  background-color: #F8F8FA;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  box-shadow: inset 0rpx 2rpx 8rpx 0rpx rgba(0, 0, 0, 0.04);
 }
 
 .content-textarea {
   width: 100%;
-  min-height: 200rpx;
-  max-height: 600rpx;
-  font-size: var(--font-size-md);
-  color: var(--text-primary);
+  min-height: 240rpx;
+  max-height: 720rpx;
+  font-size: 30rpx;
+  color: #080808;
   line-height: 1.8;
   background-color: transparent;
 }
 
 .textarea-placeholder {
-  color: var(--text-muted);
+  color: #AAAAAA;
 }
 
 .char-counter {
   position: absolute;
-  right: var(--space-sm);
-  bottom: var(--space-sm);
+  right: 20rpx;
+  bottom: 20rpx;
 }
 
 .counter-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 
-  &.is-warning {
-    color: var(--color-warning);
-  }
-
-  &.is-max {
-    color: var(--color-error);
-  }
+  &.is-warning { color: #FFBE28; }
+  &.is-max { color: #E83A30; }
 }
 
-// ==================== 语音输入按钮 ====================
+// ==================== 语音输入 ====================
 
 .voice-input-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-xs);
-  padding: var(--space-md) 0;
+  gap: 12rpx;
+  padding: 24rpx 0;
 }
 
 .voice-icon {
@@ -423,12 +417,11 @@ onHide(() => {
   justify-content: center;
   width: 56rpx;
   height: 56rpx;
-  border-radius: var(--radius-md);
-  background-color: var(--bg-tertiary);
-  transition: all var(--transition-fast);
+  border-radius: 50%;
+  background-color: #F4F4F5;
 
   &.is-recording {
-    background-color: var(--brand-primary);
+    background: linear-gradient(45deg, #01BEFF, #3D7EFF);
     animation: recordingPulse 1s ease-in-out infinite;
   }
 }
@@ -438,17 +431,13 @@ onHide(() => {
 }
 
 .voice-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 @keyframes recordingPulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
 // ==================== 内容提示 ====================
@@ -457,18 +446,16 @@ onHide(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-sm) 0;
+  padding: 16rpx 0;
 }
 
 .tip-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .content-tip.is-overlong {
-  .tip-text {
-    color: var(--color-warning);
-  }
+  .tip-text { color: #FFBE28; }
 }
 
 // ==================== 提交按钮 ====================
@@ -476,9 +463,9 @@ onHide(() => {
 .submit-area {
   display: flex;
   align-items: center;
-  padding: var(--space-md);
-  background-color: var(--bg-primary);
-  border-top: 1px solid var(--border-standard);
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  background-color: #FFFFFF;
 }
 
 .submit-btn {
@@ -487,19 +474,18 @@ onHide(() => {
   align-items: center;
   justify-content: center;
   height: 88rpx;
-  border-radius: var(--radius-lg);
-  background-color: var(--bg-tertiary);
-  transition: all var(--transition-fast);
-
-  &:active {
-    transform: scale(0.98);
-  }
+  border-radius: 5000rpx;
+  background-color: #F4F4F5;
 
   &.is-active {
-    background-color: var(--brand-primary);
+    background: linear-gradient(135deg, #01BEFF, #3D7EFF);
+    box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(1, 190, 255, 0.35);
 
-    .btn-text {
-      color: var(--text-on-brand);
+    .btn-text { color: #FFFFFF; }
+
+    &:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease-out;
     }
   }
 
@@ -510,8 +496,8 @@ onHide(() => {
 }
 
 .btn-text {
-  font-size: var(--font-size-md);
-  font-weight: 500;
-  color: var(--text-muted);
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #AAAAAA;
 }
 </style>

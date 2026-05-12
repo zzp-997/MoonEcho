@@ -287,8 +287,8 @@ onMounted(() => {
   }
 
   &.is-highlighted {
-    background-color: rgba(124, 111, 224, 0.08);
-    border: 1px solid rgba(124, 111, 224, 0.2);
+    background-color: var(--brand-light);
+    border: 1px solid var(--brand-light);
   }
 }
 
@@ -302,15 +302,15 @@ onMounted(() => {
   margin-right: var(--space-md);
 
   &.treehole {
-    background-color: rgba(74, 85, 104, 0.1);
+    background-color: var(--mood-low-bg);
   }
 
   &.square {
-    background-color: rgba(124, 111, 224, 0.1);
+    background-color: var(--brand-light);
   }
 
   &.diary {
-    background-color: rgba(143, 204, 160, 0.1);
+    background-color: var(--mood-calm-bg);
   }
 }
 

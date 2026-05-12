@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="header">
       <view class="header-left" @click="handleBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <wd-icon name="arrow-left" size="20px" color="#080808" />
       </view>
       <view class="header-title">通知</view>
       <view class="header-right">
@@ -17,7 +17,7 @@
         <wd-icon
           name="setting"
           size="20px"
-          color="var(--text-secondary)"
+          color="#333333"
           custom-class="settings-icon"
           @click="handleGoSettings"
         />
@@ -35,7 +35,7 @@
     >
       <!-- 空状态 -->
       <view v-if="!isLoading && notificationList.length === 0" class="empty-state">
-        <wd-icon name="message" size="64px" color="var(--text-muted)" />
+        <wd-icon name="message" size="64px" color="#838383" />
         <text class="empty-text">暂无通知</text>
       </view>
 
@@ -77,7 +77,7 @@
             :style="{ opacity: (swipeOffset[notification.id] || 0) < -30 ? 1 : 0 }"
             @click.stop="handleDelete(notification.id)"
           >
-            <wd-icon name="delete" size="20px" color="#fff" />
+            <wd-icon name="delete" size="20px" color="#FFFFFF" />
           </view>
         </view>
 
@@ -106,8 +106,8 @@
  * 说明：展示通知列表，支持下拉刷新、上拉加载、左滑删除、点击跳转
  */
 import { ref, reactive, onMounted } from 'vue'
-import { onShow, onHide } from '@dcloudio/uni-app'
 import { useNotification } from '@/composables/useNotification'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import type { NotificationItem } from '@/api/modules/notification'
 import { getNotificationJumpUrl, getNotificationIcon } from '@/api/modules/notification'
 import { track, EventName } from '@/utils/tracking'
@@ -148,14 +148,14 @@ onMounted(() => {
   loadNotifications()
 })
 
-onShow(() => {
-  track(EventName.PAGE_VIEW, { page: 'notification_list' })
-  // 开始轮询未读数量
-  startPolling(30000)
-})
-
-onHide(() => {
-  stopPolling()
+usePageVisibleRefresh({
+  onVisible() {
+    track(EventName.PAGE_VIEW, { page: 'notification_list' })
+    startPolling(30000)
+  },
+  onHidden() {
+    stopPolling()
+  }
 })
 
 // ==================== 数据加载 ====================
@@ -278,7 +278,7 @@ function formatTime(time: string): string {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 头部 ====================
@@ -289,9 +289,8 @@ function formatTime(time: string): string {
   justify-content: space-between;
   height: 88rpx;
   padding: 0 32rpx;
-  padding-top: var(--status-bar-height, 44rpx);
-  background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-standard);
+  padding-top: calc(env(safe-area-inset-top));
+  background: linear-gradient(135deg, #FFBE28, #FF9A5C);
 }
 
 .header-left {
@@ -302,9 +301,9 @@ function formatTime(time: string): string {
 }
 
 .header-title {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-right {
@@ -314,8 +313,8 @@ function formatTime(time: string): string {
 }
 
 .mark-all-btn {
-  font-size: var(--font-size-sm);
-  color: var(--brand-primary);
+  font-size: 26rpx;
+  color: #FFFFFF;
 }
 
 .settings-icon {
@@ -341,8 +340,8 @@ function formatTime(time: string): string {
 
 .empty-text {
   margin-top: 24rpx;
-  font-size: var(--font-size-base);
-  color: var(--text-muted);
+  font-size: 28rpx;
+  color: #838383;
 }
 
 // ==================== 通知列表 ====================
@@ -356,13 +355,14 @@ function formatTime(time: string): string {
   display: flex;
   align-items: center;
   margin-bottom: 24rpx;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
   overflow: hidden;
 
   &.unread {
-    background-color: var(--bg-secondary);
-    border-left: 4rpx solid var(--brand-primary);
+    background-color: #FFFFFF;
+    border-left: 4rpx solid #01BEFF;
   }
 }
 
@@ -372,7 +372,7 @@ function formatTime(time: string): string {
   left: 24rpx;
   width: 12rpx;
   height: 12rpx;
-  background-color: var(--brand-primary);
+  background-color: #01BEFF;
   border-radius: 50%;
 }
 
@@ -390,40 +390,40 @@ function formatTime(time: string): string {
   width: 80rpx;
   height: 80rpx;
   margin-right: 24rpx;
-  background-color: var(--bg-tertiary);
+  background-color: #F4F4F5;
   border-radius: 50%;
 
   &.type-crisis_alert,
   &.type-crisis_follow {
-    background-color: var(--color-error-bg);
-    color: var(--color-error);
+    background-color: rgba(232,58,48,0.1);
+    color: #E83A30;
   }
 
   &.type-ai_care {
-    background-color: var(--ai-xiaowen-bg);
-    color: var(--ai-xiaowen);
+    background-color: rgba(231,47,140,0.1);
+    color: #E72F8C;
   }
 
   &.type-friend_request,
   &.type-friend_accept {
-    background-color: var(--brand-light);
-    color: var(--brand-primary);
+    background-color: rgba(1,190,255,0.1);
+    color: #01BEFF;
   }
 
   &.type-treehole_reply {
-    background-color: var(--mood-calm-bg);
-    color: var(--mood-calm);
+    background-color: rgba(1,190,255,0.1);
+    color: #01BEFF;
   }
 
   &.type-square_comment,
   &.type-square_like {
-    background-color: var(--color-warning-bg);
-    color: var(--color-warning);
+    background-color: rgba(255,190,40,0.1);
+    color: #FFBE28;
   }
 
   &.type-weekly_report {
-    background-color: var(--mood-warm-bg);
-    color: var(--mood-warm);
+    background-color: rgba(255,154,92,0.1);
+    color: #FF9A5C;
   }
 }
 
@@ -440,9 +440,9 @@ function formatTime(time: string): string {
 }
 
 .item-title {
-  font-size: var(--font-size-base);
+  font-size: 28rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -451,13 +451,13 @@ function formatTime(time: string): string {
 .item-time {
   flex-shrink: 0;
   margin-left: 16rpx;
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .item-desc {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  font-size: 26rpx;
+  color: #333333;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -474,7 +474,7 @@ function formatTime(time: string): string {
   justify-content: center;
   width: 80rpx;
   height: 100%;
-  background-color: var(--color-error);
+  background-color: #E83A30;
   opacity: 0;
   transition: opacity 0.15s ease;
 }
@@ -490,15 +490,15 @@ function formatTime(time: string): string {
 }
 
 .loading-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .no-more {
   text-align: center;
   padding: 32rpx 0;
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .page-loading {

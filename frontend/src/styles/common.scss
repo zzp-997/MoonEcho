@@ -62,7 +62,7 @@ view, text {
 .divider { height: 1px; background-color: var(--border-light); margin: var(--space-md) 0; }
 .divider-vertical { width: 1px; background-color: var(--border-light); margin: 0 var(--space-md); }
 
-// 情绪装饰条卡片
+// 情绪装饰条卡片 — 图鸟风格（底部色条装饰）
 .emotion-card {
   background-color: var(--bg-elevated);
   border-radius: var(--radius-md);
@@ -71,20 +71,22 @@ view, text {
   position: relative;
   overflow: hidden;
 
-  &::before {
+  // 底部彩色装饰纹理（对齐 DESIGN.md 卡片规范）
+  &::after {
     content: '';
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
-    width: 4px;
-    height: 100%;
+    right: 0;
+    height: 6rpx;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
   }
 
-  &--warm::before { background-color: var(--mood-warm); }
-  &--calm::before { background-color: var(--mood-calm); }
-  &--low::before { background-color: var(--mood-low); }
-  &--sad::before { background-color: var(--mood-sad); }
-  &--chaos::before { background-color: var(--mood-chaos); }
+  &--warm::after { background-image: linear-gradient(90deg, var(--color-orange), var(--color-orangered)); }
+  &--calm::after { background-image: linear-gradient(90deg, var(--color-cyan), var(--color-teal)); }
+  &--low::after { background-image: linear-gradient(90deg, var(--color-blue), var(--color-indigo)); }
+  &--sad::after { background-image: linear-gradient(90deg, var(--color-purple), var(--color-bluepurple)); }
+  &--chaos::after { background-image: linear-gradient(90deg, var(--color-purplered), var(--color-red)); }
 }
 
 // 网络断开提示

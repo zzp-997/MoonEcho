@@ -45,6 +45,16 @@ onShow(() => {
   console.log('回声 App Show')
   trackAppShow()
 
+  // #ifdef H5
+  // H5 模式下 onShow 在标签页切换时也会触发，
+  // 需要判断是否真正从后台恢复（隐藏超过30秒），避免不必要的接口刷新
+  if (appHiddenTime > 0 && Date.now() - appHiddenTime < 30000) {
+    // 短时间切换标签页，仅重新应用主题
+    settingsStore.applyTheme()
+    return
+  }
+  // #endif
+
   // 全局路由守卫检查
   globalAuthGuard()
 
@@ -55,10 +65,18 @@ onShow(() => {
   settingsStore.applyTheme()
 })
 
+// #ifdef H5
+/** 记录应用隐藏时间，用于判断是否真正从后台恢复 */
+let appHiddenTime = 0
+// #endif
+
 // 应用隐藏（进入后台）
 onHide(() => {
   console.log('回声 App Hide')
   trackAppHide()
+  // #ifdef H5
+  appHiddenTime = Date.now()
+  // #endif
 })
 </script>
 
@@ -73,6 +91,7 @@ onHide(() => {
 <style lang="scss">
 /* 引入全局样式 - 使用 @import 确保 Uni-app 兼容 */
 @import '@/styles/variables.scss';
+@import '@/styles/tnbird.scss';
 @import '@/styles/theme.scss';
 @import '@/styles/emotions.scss';
 @import '@/styles/dark.scss';

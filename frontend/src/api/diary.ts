@@ -216,30 +216,30 @@ export function getDiaryList(params?: {
   page?: number
   /** 每页数量 */
   page_size?: number
-}): Promise<{
+}, config?: any): Promise<{
   data: DiaryResponse[]
   pagination: {
     page: number
-    page_size: number
+    pageSize: number
     total: number
-    total_pages: number
+    hasMore: boolean
   }
 }> {
-  return api.get('/diaries', params)
+  return api.get('/diaries', params, config)
 }
 
 /**
  * 获取日记统计
  * @returns 统计数据
  */
-export function getDiaryStats(): Promise<{
+export function getDiaryStats(config?: any): Promise<{
   total_records: number
   total_days: number
   zero_record_count: number
   valid_sample_count: number
   emotion_distribution: Record<string, number>
 }> {
-  return api.get('/diaries/stats')
+  return api.get('/diaries/stats', {}, config)
 }
 
 /**
@@ -336,9 +336,9 @@ export interface WeeklyReportHistoryResponse {
   /** 分页信息 */
   pagination: {
     page: number
-    page_size: number
+    pageSize: number
     total: number
-    total_pages: number
+    hasMore: boolean
   }
 }
 

@@ -7,7 +7,7 @@
       </view>
       <view class="header-right">
         <view class="action-btn" @tap="handleGoRequests">
-          <wd-icon name="add-user" size="22px" color="var(--text-primary)" />
+          <text style="font-size: 40rpx; color: #FFFFFF;">➕</text>
           <view v-if="unreadRequestCount > 0" class="unread-dot" />
         </view>
       </view>
@@ -69,10 +69,12 @@
 
       <!-- 空状态 -->
       <view v-if="!isLoading && friends.length === 0" class="empty-state">
-        <wd-icon name="user" size="48px" color="var(--text-muted)" custom-style="margin-bottom: var(--space-md)" />
-        <text class="empty-text">还没有好友</text>
-        <text class="empty-hint">去广场看看，认识新朋友吧</text>
-        <view class="empty-action" @tap="handleGoSquare">
+        <view class="empty-icon tn-icon-container tn-gradient-5 tn-shadow-blur">
+          <text style="font-size: 60rpx;">👫</text>
+        </view>
+        <text class="tn-text-bold tn-text-lg tn-margin-top">还没有好友</text>
+        <text class="tn-color-gray tn-margin-top-xs tn-text-sm">去广场看看，认识新朋友吧</text>
+        <view class="empty-action tn-gradient-5 tn-shadow-blur" @tap="handleGoSquare">
           <text class="action-text">去广场</text>
         </view>
       </view>
@@ -88,10 +90,10 @@
     </scroll-view>
 
     <!-- 好友申请入口 -->
-    <view class="requests-entry" @tap="handleGoRequests" v-if="receiveRequests.length > 0">
-      <wd-icon name="add-user" size="18px" color="var(--brand-primary)" custom-style="margin-right: var(--space-sm)" />
+    <view class="requests-entry tn-shadow-card" @tap="handleGoRequests" v-if="receiveRequests.length > 0">
+      <text style="font-size: 36rpx;">📨</text>
       <text class="requests-text">{{ receiveRequests.length }}个新的好友申请</text>
-      <wd-icon name="arrow-right" size="14px" color="var(--brand-primary)" />
+      <text class="requests-arrow">></text>
     </view>
   </view>
 </template>
@@ -104,11 +106,11 @@
  */
 
 import { ref, computed, onMounted } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
 import { useUserStore } from '@/stores/user'
 import { getFriends, type Friend } from '@/api/modules/friend'
 import { getConversations } from '@/api/modules/chat'
 import { track, EventName, trackPageEnter, trackPageLeave } from '@/utils/tracking'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import FriendItem from '@/components/friends/FriendItem.vue'
 import SocialEnergyBar from '@/components/friends/SocialEnergyBar.vue'
 
@@ -274,10 +276,11 @@ onMounted(() => {
   loadFriends()
 })
 
-onShow(() => {
-  trackPageEnter('friends')
-  // 刷新数据
-  loadFriends()
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('friends')
+    loadFriends()
+  }
 })
 
 </script>
@@ -287,7 +290,7 @@ onShow(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 顶部导航栏 ====================
@@ -296,9 +299,9 @@ onShow(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-standard);
+  padding: 24rpx;
+  padding-top: calc(env(safe-area-inset-top) + 24rpx);
+  background: linear-gradient(135deg, #E72F8C, #F360A7);
 }
 
 .header-left {
@@ -307,9 +310,9 @@ onShow(() => {
 }
 
 .title {
-  font-size: var(--font-size-xl);
+  font-size: 40rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-right {
@@ -327,7 +330,7 @@ onShow(() => {
 }
 
 .action-icon {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
 }
 
 .unread-dot {
@@ -336,62 +339,62 @@ onShow(() => {
   right: 8rpx;
   width: 16rpx;
   height: 16rpx;
-  background-color: var(--color-error);
+  background-color: #E83A30;
   border-radius: 50%;
 }
 
 // ==================== 社交能量 ====================
 
 .energy-section {
-  padding: var(--space-sm) var(--space-md);
+  padding: 16rpx 24rpx;
 }
 
 // ==================== 搜索栏 ====================
 
 .search-bar {
-  padding: var(--space-sm) var(--space-md);
+  padding: 16rpx 24rpx;
 }
 
 .search-input {
   width: 100%;
   height: 72rpx;
-  padding: 0 var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
-  color: var(--text-primary);
+  padding: 0 24rpx;
+  background-color: #F8F8FA;
+  border-radius: 5000rpx;
+  font-size: 26rpx;
+  color: #080808;
 }
 
 .search-placeholder {
-  color: var(--text-muted);
+  color: #838383;
 }
 
 // ==================== 好友列表 ====================
 
 .friend-list-container {
   flex: 1;
-  padding: 0 var(--space-md);
+  padding: 0 24rpx;
 }
 
 .friend-group {
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .group-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-sm) 0;
+  padding: 16rpx 0;
 }
 
 .group-title {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .group-count {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 空状态 ====================
@@ -401,38 +404,38 @@ onShow(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl) 0;
+  padding: 60rpx 0;
 }
 
 .empty-icon {
   font-size: 64rpx;
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .empty-text {
-  font-size: var(--font-size-md);
-  color: var(--text-secondary);
-  margin-bottom: var(--space-xs);
+  font-size: 30rpx;
+  color: #333333;
+  margin-bottom: 8rpx;
 }
 
 .empty-hint {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-  margin-bottom: var(--space-md);
+  font-size: 26rpx;
+  color: #838383;
+  margin-bottom: 24rpx;
 }
 
 .empty-action {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-sm) var(--space-lg);
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-full);
+  padding: 16rpx 30rpx;
+  background-color: #01BEFF;
+  border-radius: 5000rpx;
 }
 
 .action-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-on-brand);
+  font-size: 26rpx;
+  color: #FFFFFF;
 }
 
 // ==================== 加载状态 ====================
@@ -442,13 +445,13 @@ onShow(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-lg) 0;
+  padding: 30rpx 0;
 }
 
 .loading-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-  margin-top: var(--space-sm);
+  font-size: 26rpx;
+  color: #838383;
+  margin-top: 16rpx;
 }
 
 // ==================== 好友申请入口 ====================
@@ -456,10 +459,10 @@ onShow(() => {
 .requests-entry {
   display: flex;
   align-items: center;
-  padding: var(--space-md);
-  margin: var(--space-sm) var(--space-md);
-  background-color: var(--brand-light);
-  border-radius: var(--radius-md);
+  padding: 24rpx;
+  margin: 16rpx 24rpx;
+  background-color: rgba(1,190,255,0.1);
+  border-radius: 20rpx;
 
   &:active {
     opacity: 0.9;
@@ -467,17 +470,19 @@ onShow(() => {
 }
 
 .requests-icon {
-  font-size: var(--font-size-md);
-  margin-right: var(--space-sm);
+  font-size: 30rpx;
+  margin-right: 16rpx;
 }
 
 .requests-text {
   flex: 1;
-  font-size: var(--font-size-sm);
-  color: var(--brand-primary);
+  font-size: 26rpx;
+  color: #01BEFF;
 }
 
 .requests-arrow {
+  color: #838383;
+}
 
 // ==================== 安全区 ====================
 

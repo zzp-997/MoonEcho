@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <wd-icon name="arrow-left" size="20px" color="#080808" />
       </view>
       <view class="header-info" @tap="handleViewProfile">
         <image
@@ -17,7 +17,7 @@
         </view>
       </view>
       <view class="more-btn" @tap="handleShowMore">
-        <wd-icon name="more" size="20px" color="var(--text-primary)" />
+        <wd-icon name="more" size="20px" color="#080808" />
       </view>
     </view>
 
@@ -119,7 +119,6 @@
  */
 
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { onShow, onHide } from '@dcloudio/uni-app'
 import { useUserStore } from '@/stores/user'
 import {
   getConversationDetail,
@@ -132,6 +131,7 @@ import {
   formatMessageTime,
 } from '@/api/modules/chat'
 import { useWebSocket } from '@/composables/useWebSocket'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import { useChatAssist } from '@/composables/useChatAssist'
 import { useSocialEnergy } from '@/composables/useSocialEnergy'
 import { track, EventName, trackPageEnter } from '@/utils/tracking'
@@ -679,27 +679,25 @@ onUnmounted(() => {
 
 // ==================== 生命周期 ====================
 
-onShow(() => {
-  trackPageEnter('private-chat')
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('private-chat')
 
-  // 获取页面参数
-  const pages = getCurrentPages()
-  const currentPage = pages[pages.length - 1]
-  const options = (currentPage as any).options || {}
+    const pages = getCurrentPages()
+    const currentPage = pages[pages.length - 1]
+    const options = (currentPage as any).options || {}
 
-  friendId.value = options.friendId || ''
-  conversationId.value = options.conversationId || ''
-  friendNickname.value = decodeURIComponent(options.nickname || '聊天')
+    friendId.value = options.friendId || ''
+    conversationId.value = options.conversationId || ''
+    friendNickname.value = decodeURIComponent(options.nickname || '聊天')
 
-  // 加载数据
-  loadConversation()
-  loadMessages()
-  loadEnergy()
-})
-
-onHide(() => {
-  // 页面隐藏时，取消活跃会话
-  setActiveConversation(null)
+    loadConversation()
+    loadMessages()
+    loadEnergy()
+  },
+  onHidden() {
+    setActiveConversation(null)
+  }
 })
 
 onUnmounted(() => {
@@ -720,7 +718,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 顶部导航栏 ====================
@@ -729,9 +727,8 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-primary);
+  padding: 16rpx 24rpx;
+  background: linear-gradient(135deg, #01BEFF, #3D7EFF);
 }
 
 .back-btn,
@@ -745,8 +742,8 @@ onUnmounted(() => {
 
 .back-icon,
 .more-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
+  font-size: 34rpx;
+  color: #FFFFFF;
 }
 
 .header-info {
@@ -763,9 +760,9 @@ onUnmounted(() => {
 .header-avatar {
   width: 64rpx;
   height: 64rpx;
-  border-radius: var(--radius-full);
-  background-color: var(--bg-tertiary);
-  margin-right: var(--space-sm);
+  border-radius: 5000rpx;
+  background-color: rgba(255, 255, 255, 0.3);
+  margin-right: 16rpx;
 }
 
 .header-text {
@@ -775,27 +772,27 @@ onUnmounted(() => {
 }
 
 .header-nickname {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-status {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.7);
 
   &.connected {
-    color: var(--color-success);
+    color: #36B349;
   }
 
   &.reconnecting,
   &.connecting {
-    color: var(--color-warning);
+    color: #FFBE28;
   }
 
   &.error,
   &.disconnected {
-    color: var(--color-error);
+    color: #E83A30;
   }
 }
 
@@ -805,17 +802,17 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-sm);
-  font-size: var(--font-size-xs);
+  padding: 16rpx;
+  font-size: 22rpx;
 
   &.reconnecting {
-    background-color: var(--color-warning-bg);
-    color: var(--color-warning);
+    background-color: rgba(255, 190, 40, 0.1);
+    color: #FFBE28;
   }
 
   &.error {
-    background-color: var(--color-error-bg);
-    color: var(--color-error);
+    background-color: rgba(232, 58, 48, 0.1);
+    color: #E83A30;
 
     &:active {
       opacity: 0.9;
@@ -834,17 +831,17 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-sm);
-  gap: var(--space-xs);
+  padding: 16rpx;
+  gap: 8rpx;
 }
 
 .loading-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .message-list {
-  padding: var(--space-sm) 0;
+  padding: 16rpx 0;
 }
 
 .scroll-bottom {

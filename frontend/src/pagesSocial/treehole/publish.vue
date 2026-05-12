@@ -28,7 +28,7 @@
               class="avatar-placeholder"
               :style="{ backgroundColor: previewAvatarColor }"
             >
-              <wd-icon name="user" size="24px" color="var(--text-inverse)" />
+              <wd-icon name="user" size="24px" color="#FFFFFF" />
             </view>
           </view>
           <view class="identity-info">
@@ -78,7 +78,7 @@
       <!-- AI润色区域 -->
       <view class="ai-section">
         <view class="ai-header" @tap="handleAiRewrite">
-          <wd-icon name="magic" size="20px" color="var(--brand-primary)" />
+          <wd-icon name="magic" size="20px" color="#01BEFF" />
           <text class="ai-title">AI润色</text>
           <text class="ai-hint">让表达更温暖</text>
         </view>
@@ -120,7 +120,6 @@
  */
 
 import { ref, computed, onMounted } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
 import {
   createTreeholePost,
   TOPIC_TAG_LABELS,
@@ -128,6 +127,7 @@ import {
   type CreatePostResponse,
 } from '@/api/treehole'
 import { track, EventName, trackPageEnter } from '@/utils/tracking'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 
 // ==================== 响应式状态 ====================
 
@@ -159,7 +159,7 @@ const previewNickname = ref('')
 const previewPersona = ref('')
 
 /** 预览头像颜色 */
-const previewAvatarColor = ref('#A89CF5')
+const previewAvatarColor = ref('#E72F8C')
 
 /** 安全区域底部高度 */
 const safeAreaBottom = ref('0px')
@@ -224,7 +224,7 @@ function generatePreviewIdentity(): void {
   previewPersona.value = personas[(seed * 3) % personas.length]
 
   // 头像颜色
-  const colors = ['#FFB5BA', '#8B9DC3', '#7CB9A0', '#A89CF5', '#FFB88A', '#A5C0D6', '#D4A5D9', '#8B6C9A']
+  const colors = ['#FF9A5C', '#838383', '#01BEFF', '#E72F8C', '#01BEFF', '#3D7EFF', '#892FE8', '#5F7E8B']
   previewAvatarColor.value = colors[seed % colors.length]
 }
 
@@ -352,7 +352,7 @@ function handleBack(): void {
       title: '提示',
       content: '内容尚未发布，确定要退出吗？',
       confirmText: '退出',
-      confirmColor: '#F87171',
+      confirmColor: '#E83A30',
       cancelText: '继续编辑',
       success: (res) => {
         if (res.confirm) {
@@ -400,8 +400,10 @@ onMounted(() => {
   parsePageParams()
 })
 
-onShow(() => {
-  trackPageEnter('treehole_publish')
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('treehole_publish')
+  }
 })
 </script>
 
@@ -410,7 +412,7 @@ onShow(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--dark-bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 顶部导航栏 ====================
@@ -420,9 +422,8 @@ onShow(() => {
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 var(--space-md);
-  background-color: var(--dark-bg-primary);
-  border-bottom: 1px solid var(--dark-border-primary);
+  padding: 0 24rpx;
+  background: linear-gradient(135deg, #78909C, #5F7E8B);
 }
 
 .back-btn {
@@ -438,14 +439,14 @@ onShow(() => {
 }
 
 .back-icon {
-  font-size: var(--font-size-xl);
-  color: var(--dark-text-primary);
+  font-size: 40rpx;
+  color: #FFFFFF;
 }
 
 .header-title {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--dark-text-primary);
+  color: #FFFFFF;
 }
 
 .header-actions {
@@ -457,26 +458,28 @@ onShow(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xs) var(--space-md);
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-md);
+  padding: 8rpx 24rpx;
+  background: linear-gradient(135deg, #78909C, #5F7E8B);
+  border-radius: 5000rpx;
+  box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(120, 144, 156, 0.35);
 
   &:active {
     opacity: 0.8;
   }
 
   &.is-disabled {
-    background-color: var(--dark-bg-tertiary);
+    background: #F4F4F5;
+    box-shadow: none;
 
     .publish-text {
-      color: var(--dark-text-tertiary);
+      color: #838383;
     }
   }
 }
 
 .publish-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-on-brand);
+  font-size: 26rpx;
+  color: #FFFFFF;
   font-weight: 500;
 }
 
@@ -484,47 +487,48 @@ onShow(() => {
 
 .page-content {
   flex: 1;
-  padding: var(--space-md);
+  padding: 24rpx;
 }
 
 // ==================== 匿名身份预览 ====================
 
 .identity-preview {
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .preview-label {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-tertiary);
-  margin-bottom: var(--space-sm);
+  font-size: 26rpx;
+  color: #838383;
+  margin-bottom: 16rpx;
 }
 
 .identity-card {
   display: flex;
   align-items: center;
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--dark-bg-secondary);
-  border-radius: var(--radius-md);
+  padding: 16rpx 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.05);
 }
 
 .avatar-wrapper {
   width: 64rpx;
   height: 64rpx;
-  margin-right: var(--space-sm);
+  margin-right: 16rpx;
 }
 
 .avatar-placeholder {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: 5000rpx;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .avatar-icon {
-  font-size: var(--font-size-base);
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 28rpx;
+  color: #FFFFFF;
 }
 
 .identity-info {
@@ -534,115 +538,119 @@ onShow(() => {
 }
 
 .nickname {
-  font-size: var(--font-size-sm);
+  font-size: 26rpx;
   font-weight: 500;
-  color: var(--dark-text-primary);
+  color: #080808;
 }
 
 .persona-text {
-  font-size: var(--font-size-xs);
-  color: var(--dark-text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .hint-text {
-  font-size: var(--font-size-xs);
-  color: var(--dark-text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 内容输入 ====================
 
 .content-section {
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .content-input {
   width: 100%;
   min-height: 300rpx;
-  padding: var(--space-md);
-  font-size: var(--font-size-base);
-  color: var(--dark-text-primary);
-  background-color: var(--dark-bg-secondary);
-  border-radius: var(--radius-md);
+  padding: 24rpx;
+  font-size: 28rpx;
+  color: #080808;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.05);
   line-height: 1.6;
 }
 
 .input-placeholder {
-  color: var(--dark-text-tertiary);
+  color: #838383;
 }
 
 .input-footer {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--space-xs);
+  margin-top: 8rpx;
 }
 
 .char-count {
-  font-size: var(--font-size-xs);
-  color: var(--dark-text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 话题选择 ====================
 
 .topic-section {
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .section-label {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-tertiary);
-  margin-bottom: var(--space-sm);
+  font-size: 26rpx;
+  color: #838383;
+  margin-bottom: 16rpx;
 }
 
 .topic-scroll {
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 }
 
 .topic-list {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
+  gap: 8rpx;
 }
 
 .topic-item {
   display: inline-flex;
   align-items: center;
   height: 64rpx;
-  padding: 0 var(--space-md);
-  background-color: var(--dark-bg-secondary);
-  border-radius: var(--radius-full);
+  padding: 0 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 5000rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.05);
 
   &:active {
     opacity: 0.8;
   }
 
   &.is-active {
-    background-color: var(--brand-primary);
+    background: linear-gradient(135deg, #78909C, #5F7E8B);
+    box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(120, 144, 156, 0.35);
 
     .topic-text {
-      color: var(--text-on-brand);
+      color: #FFFFFF;
     }
   }
 }
 
 .topic-text {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-secondary);
+  font-size: 26rpx;
+  color: #333333;
   white-space: nowrap;
 }
 
 // ==================== AI润色区域 ====================
 
 .ai-section {
-  margin-bottom: var(--space-md);
-  padding: var(--space-md);
-  background-color: var(--dark-bg-secondary);
-  border-radius: var(--radius-md);
+  margin-bottom: 24rpx;
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.05);
 }
 
 .ai-header {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 16rpx;
 
   &:active {
     opacity: 0.8;
@@ -650,48 +658,48 @@ onShow(() => {
 }
 
 .ai-icon {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
 }
 
 .ai-title {
-  font-size: var(--font-size-base);
+  font-size: 28rpx;
   font-weight: 500;
-  color: var(--dark-text-primary);
+  color: #080808;
 }
 
 .ai-hint {
-  font-size: var(--font-size-xs);
-  color: var(--dark-text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .ai-preview {
-  margin-top: var(--space-md);
-  padding: var(--space-sm);
-  background-color: var(--dark-bg-tertiary);
-  border-radius: var(--radius-sm);
+  margin-top: 24rpx;
+  padding: 16rpx;
+  background-color: #F4F4F5;
+  border-radius: 10rpx;
 }
 
 .preview-content {
   display: flex;
   flex-direction: column;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 }
 
 .preview-label {
-  font-size: var(--font-size-xs);
-  color: var(--brand-light);
-  margin-bottom: var(--space-xs);
+  font-size: 22rpx;
+  color: #78909C;
+  margin-bottom: 8rpx;
 }
 
 .preview-text {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-primary);
+  font-size: 26rpx;
+  color: #080808;
   line-height: 1.5;
 }
 
 .preview-actions {
   display: flex;
-  gap: var(--space-sm);
+  gap: 16rpx;
 }
 
 .action-btn {
@@ -700,25 +708,25 @@ onShow(() => {
   align-items: center;
   justify-content: center;
   height: 64rpx;
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #78909C, #5F7E8B);
+  border-radius: 10rpx;
 
   &:active {
     opacity: 0.8;
   }
 
   &.secondary {
-    background-color: var(--dark-bg-secondary);
+    background-color: #F8F8FA;
 
     .action-text {
-      color: var(--dark-text-secondary);
+      color: #333333;
     }
   }
 }
 
 .action-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-on-brand);
+  font-size: 26rpx;
+  color: #FFFFFF;
 }
 
 // ==================== 脱敏提醒 ====================
@@ -726,22 +734,22 @@ onShow(() => {
 .warning-section {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-sm);
-  padding: var(--space-md);
-  background-color: rgba(251, 191, 36, 0.1);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-md);
+  gap: 16rpx;
+  padding: 24rpx;
+  background-color: rgba(255, 190, 40, 0.1);
+  border-radius: 20rpx;
+  margin-bottom: 24rpx;
 }
 
 .warning-icon {
-  font-size: var(--font-size-base);
-  color: var(--color-warning);
+  font-size: 28rpx;
+  color: #FFBE28;
 }
 
 .warning-text {
   flex: 1;
-  font-size: var(--font-size-sm);
-  color: var(--color-warning);
+  font-size: 26rpx;
+  color: #FFBE28;
   line-height: 1.5;
 }
 

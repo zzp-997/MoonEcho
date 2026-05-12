@@ -1,126 +1,264 @@
 // ============================================
-// 回声 - 设计系统变量
+// 回声 - 设计系统变量（图鸟风格）
 // 文件：src/styles/variables.scss
-// 说明：纯净白 · 暖橘 — 双主题 CSS 变量
-// 参考：docs/plans/2026-05-06-frontend-refactor-design.md
+// 说明：酷炫多彩 · 渐变活力 — 对齐图鸟UI设计体系
 // ============================================
 
-// ==================== 日间模式（默认） ====================
-
 page {
-  // 背景层次（微暖白体系）
-  --bg-primary: #FFF9F5;
-  --bg-secondary: #FFF3EB;
-  --bg-tertiary: #FFEDE3;
-  --bg-elevated: #ffffff;
-  --bg-input: #ffffff;
-  --bg-cream: #FFF3EB; // 兼容旧引用
+  // ==================== 主色调 ====================
+  --tn-main-color: #01BEFF;
+  --tn-main-orange: #FBBD12;
+  --tn-embellished-green: #00FFC6;
+  --tn-embellished-yellow: #FFF00D;
+  --tn-auxiliary-pink: #FF71D2;
+  --tn-auxiliary-blue: #82B2FF;
 
-  // 文字色
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  --text-disabled: #cccccc;
-  --text-inverse: #ffffff;
-  --text-on-brand: #ffffff;
-  --text-charcoal: #1a1a1a; // 兼容旧引用
-  --text-tertiary: #999999; // 兼容旧引用
-  --text-off-white: #ffffff; // 兼容旧引用
+  // ==================== 背景色 ====================
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F4F4F4;
+  --bg-tertiary: #F8F7F8;
+  --bg-elevated: #FFFFFF;
+  --bg-input: #F8F7F8;
 
-  // 品牌色
-  --brand-primary: #FF9A5C;
-  --brand-hover: #e88a4a;
-  --brand-active: #d47a3e;
-  --brand-light: rgba(255, 154, 92, 0.1);
-  --brand-dark: #d47a3e; // 兼容 wot-design-uni 映射
+  // ==================== 文字色 ====================
+  --text-primary: #080808;
+  --text-secondary: #AAAAAA;
+  --text-content: #838383;
+  --text-muted: #838383;
+  --text-disabled: #E6E6E6;
+  --text-inverse: #FFFFFF;
 
-  // 功能色
-  --color-success: #8FCCA0;
-  --color-warning: #FFB020;
-  --color-warning-bg: rgba(255, 176, 32, 0.1);
-  --color-error: #E53935;
-  --color-info: #8BA7C4;
+  // ==================== 边框色 ====================
+  --border-light: rgba(0, 0, 0, 0.1);
+  --border-standard: #eee;
+  --border-dashed: #ddd;
+  --border-interactive: #eee;
 
-  // 边框色
-  --border-light: #f0f0f0;
-  --border-standard: #e0e0e0;
-  --border-interactive: #d0d0d0;
-  --border-primary: #e0e0e0; // 兼容旧引用
-
-  // 阴影
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
+  // ==================== 阴影 ====================
+  --shadow-card: 0rpx 0rpx 50rpx 0rpx rgba(0, 0, 0, 0.07);
+  --shadow-hover: 0rpx 0rpx 50rpx 0rpx rgba(0, 0, 0, 0.1);
+  --shadow-elevated: 0rpx 0rpx 80rpx 0rpx rgba(0, 0, 0, 0.15);
   --shadow-input: none;
-  --shadow-input-focus: 0 0 0 2px rgba(255, 154, 92, 0.2);
-  --shadow-btn: 0 1px 0 0 rgba(0, 0, 0, 0.04);
-  --shadow-btn-inset: 0 1px 0 0 rgba(0, 0, 0, 0.04); // 兼容旧引用
-  --shadow-focus: 0 0 0 2px rgba(255, 154, 92, 0.2); // 兼容旧引用
+  --shadow-input-focus: 0 0 0 1.5px var(--tn-main-color);
 
-  // 情绪色调
-  --mood-warm: #FF9A5C;
-  --mood-warm-bg: rgba(255, 154, 92, 0.1);
-  --mood-warm-text: #cc7a3a;
-  --mood-calm: #8FCCA0;
-  --mood-calm-bg: rgba(143, 204, 160, 0.1);
-  --mood-calm-text: #5a9968;
-  --mood-low: #8BA7C4;
-  --mood-low-bg: rgba(139, 167, 196, 0.1);
-  --mood-low-text: #5a7a9a;
-  --mood-sad: #4A6FA5;
-  --mood-sad-bg: rgba(74, 111, 165, 0.1);
-  --mood-sad-text: #3a5580;
-  --mood-chaos: #6B4C7A;
-  --mood-chaos-bg: rgba(107, 76, 122, 0.1);
-  --mood-chaos-text: #503a5a;
+  // ==================== 命名色彩体系（19色） ====================
+  --color-red: #E83A30;
+  --color-red-dark: #BA2E26;
+  --color-red-light: #FAD8D6;
+  --color-red-disabled: #F39C97;
 
-  // AI 角色色
-  --ai-xiaowen: #FF9A9A;
-  --ai-xiaowen-bg: rgba(255, 154, 154, 0.1);
-  --ai-laohei: #7A7A8A;
-  --ai-laohei-bg: rgba(122, 122, 138, 0.1);
-  --ai-ali: #5A8ACA;
-  --ai-ali-bg: rgba(90, 138, 202, 0.1);
+  --color-purplered: #E72F8C;
+  --color-purplered-dark: #B9266F;
+  --color-purplered-light: #FAD5E8;
+  --color-purplered-disabled: #F397C5;
 
-  // 字体
-  --font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  --font-size-xs: 11px;
-  --font-size-sm: 13px;
-  --font-size-base: 15px;
-  --font-size-md: 17px;
-  --font-size-lg: 20px;
-  --font-size-xl: 24px;
-  --font-size-2xl: 28px;
+  --color-purple: #892FE8;
+  --color-purple-dark: #6E26BA;
+  --color-purple-light: #E7D5FA;
+  --color-purple-disabled: #C497F3;
+
+  --color-bluepurple: #5F4FD9;
+  --color-bluepurple-dark: #4C3FAE;
+  --color-bluepurple-light: #DFDCF7;
+  --color-bluepurple-disabled: #AFA7EC;
+
+  --color-aquablue: #3646FF;
+  --color-aquablue-dark: #2B38CC;
+  --color-aquablue-light: #D7DAFF;
+  --color-aquablue-disabled: #9AA2FF;
+
+  --color-blue: #3D7EFF;
+  --color-blue-dark: #3165CC;
+  --color-blue-light: #D8E5FF;
+  --color-blue-disabled: #9EBEFF;
+
+  --color-indigo: #31C9E8;
+  --color-indigo-dark: #27A1BA;
+  --color-indigo-light: #D6F4FA;
+  --color-indigo-disabled: #98E4F3;
+
+  --color-cyan: #2DE8BD;
+  --color-cyan-dark: #24BA97;
+  --color-cyan-light: #D5FAF2;
+  --color-cyan-disabled: #96F3DE;
+
+  --color-teal: #24F083;
+  --color-teal-dark: #1DC069;
+  --color-teal-light: #D3FCE6;
+  --color-teal-disabled: #91F7C1;
+
+  --color-green: #31E749;
+  --color-green-dark: #27B93A;
+  --color-green-light: #D6FADB;
+  --color-green-disabled: #98F3A4;
+
+  --color-yellowgreen: #A4E82F;
+  --color-yellowgreen-dark: #82BA26;
+  --color-yellowgreen-light: #EDFAD5;
+  --color-yellowgreen-disabled: #D1F397;
+
+  --color-lime: #D5EB00;
+  --color-lime-dark: #AABC00;
+  --color-lime-light: #F7FBCC;
+  --color-lime-disabled: #E9F57F;
+
+  --color-yellow: #FFF420;
+  --color-yellow-dark: #CCC21A;
+  --color-yellow-light: #FFFDD2;
+  --color-yellow-disabled: #FFF88F;
+
+  --color-orangeyellow: #FFCA28;
+  --color-orangeyellow-dark: #CCA220;
+  --color-orangeyellow-light: #FFF4D4;
+  --color-orangeyellow-disabled: #FFE493;
+
+  --color-orange: #FFA726;
+  --color-orange-dark: #CC851E;
+  --color-orange-light: #FFEDD4;
+  --color-orange-disabled: #FFD392;
+
+  --color-orangered: #FF7043;
+  --color-orangered-dark: #CC5A36;
+  --color-orangered-light: #FFE2D9;
+  --color-orangered-disabled: #FFB7A1;
+
+  --color-brown: #914F2C;
+  --color-brown-dark: #743F23;
+  --color-brown-light: #E9DCD5;
+  --color-brown-disabled: #C8A795;
+
+  --color-grey: #78909C;
+  --color-grey-dark: #5F7E8B;
+  --color-grey-light: #E4E9EC;
+  --color-grey-disabled: #C6D1D8;
+
+  --color-gray: #AAAAAA;
+  --color-gray-dark: #838383;
+  --color-gray-light: #F8F7F8;
+  --color-gray-disabled: #E6E6E6;
+
+  // ==================== 渐变色系（16组） ====================
+  --gradient-1: linear-gradient(45deg, #F5317F, #FF7C6E);
+  --gradient-2: linear-gradient(45deg, #CA26FF, #F360A7);
+  --gradient-3: linear-gradient(45deg, #A26FFC, #9D12FF);
+  --gradient-4: linear-gradient(45deg, #AA77F0, #E871E5);
+  --gradient-5: linear-gradient(45deg, #40A0F7, #4866E6);
+  --gradient-6: linear-gradient(45deg, #209CFF, #68E0CF);
+  --gradient-7: linear-gradient(45deg, #00C3FF, #58FFF5);
+  --gradient-8: linear-gradient(45deg, #00d1FF, #69FF97);
+  --gradient-9: linear-gradient(45deg, #0FD893, #29ECBF);
+  --gradient-10: linear-gradient(45deg, #0FD850, #F9F047);
+  --gradient-11: linear-gradient(45deg, #24FE41, #F7FD47);
+  --gradient-12: linear-gradient(45deg, #D6FF7F, #00F657);
+  --gradient-13: linear-gradient(45deg, #FA709A, #FEE140);
+  --gradient-14: linear-gradient(45deg, #FE5E9C, #F1AA76);
+  --gradient-15: linear-gradient(45deg, #FF3181, #FF8331);
+  --gradient-16: linear-gradient(45deg, #ED1C24, #FECE12);
+
+  // 渐变起始色和结束色（用于动态生成）
+  --gradient-1-start: #F5317F; --gradient-1-end: #FF7C6E;
+  --gradient-2-start: #CA26FF; --gradient-2-end: #F360A7;
+  --gradient-3-start: #A26FFC; --gradient-3-end: #9D12FF;
+  --gradient-4-start: #AA77F0; --gradient-4-end: #E871E5;
+  --gradient-5-start: #40A0F7; --gradient-5-end: #4866E6;
+  --gradient-6-start: #209CFF; --gradient-6-end: #68E0CF;
+  --gradient-7-start: #00C3FF; --gradient-7-end: #58FFF5;
+  --gradient-8-start: #00d1FF; --gradient-8-end: #69FF97;
+  --gradient-9-start: #0FD893; --gradient-9-end: #29ECBF;
+  --gradient-10-start: #0FD850; --gradient-10-end: #F9F047;
+  --gradient-11-start: #24FE41; --gradient-11-end: #F7FD47;
+  --gradient-12-start: #D6FF7F; --gradient-12-end: #00F657;
+  --gradient-13-start: #FA709A; --gradient-13-end: #FEE140;
+  --gradient-14-start: #FE5E9C; --gradient-14-end: #F1AA76;
+  --gradient-15-start: #FF3181; --gradient-15-end: #FF8331;
+  --gradient-16-start: #ED1C24; --gradient-16-end: #FECE12;
+
+  // ==================== 情绪色调（高饱和版） ====================
+  --mood-warm: #FF7043;
+  --mood-warm-bg: rgba(255, 112, 67, 0.1);
+  --mood-warm-text: #CC5A36;
+  --mood-calm: #2DE8BD;
+  --mood-calm-bg: rgba(45, 232, 189, 0.1);
+  --mood-calm-text: #24BA97;
+  --mood-low: #3D7EFF;
+  --mood-low-bg: rgba(61, 126, 255, 0.1);
+  --mood-low-text: #3165CC;
+  --mood-sad: #892FE8;
+  --mood-sad-bg: rgba(137, 47, 232, 0.1);
+  --mood-sad-text: #6E26BA;
+  --mood-chaos: #E72F8C;
+  --mood-chaos-bg: rgba(231, 47, 140, 0.1);
+  --mood-chaos-text: #B9266F;
+
+  // ==================== AI角色色 ====================
+  --ai-xiaowen: #FF71D2;
+  --ai-xiaowen-bg: rgba(255, 113, 210, 0.1);
+  --ai-laohei: #78909C;
+  --ai-laohei-bg: rgba(120, 144, 156, 0.1);
+  --ai-ali: #3D7EFF;
+  --ai-ali-bg: rgba(61, 126, 255, 0.1);
+
+  // ==================== 功能色 ====================
+  --color-success: #2DE8BD;
+  --color-warning: #FBBD12;
+  --color-warning-bg: rgba(251, 189, 18, 0.1);
+  --color-error: #E83A30;
+  --color-info: #82B2FF;
+
+  // ==================== 遮罩 ====================
+  --overlay-bg: rgba(0, 0, 0, 0.4);
+
+  // ==================== 字体 ====================
+  --font-family: Helvetica Neue, Helvetica, "PingFang SC", "Noto Sans SC", sans-serif;
+  --font-size-xs: 22rpx;
+  --font-size-sm: 24rpx;
+  --font-size-base: 28rpx;
+  --font-size-md: 30rpx;
+  --font-size-lg: 32rpx;
+  --font-size-xl: 38rpx;
+  --font-size-2xl: 46rpx;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  // 间距
-  --space-2xs: 4px;
-  --space-xs: 8px;
-  --space-sm: 12px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-  --space-2xl: 48px;
+  // ==================== 间距（rpx） ====================
+  --space-micro: 5rpx;
+  --space-xs: 10rpx;
+  --space-sm: 15rpx;
+  --space-md: 20rpx;
+  --space-lg: 30rpx;
+  --space-xl: 50rpx;
 
-  // 圆角
-  --radius-sm: 6px;
-  --radius-std: 8px; // 兼容旧引用
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-card: 12px; // 兼容旧引用
-  --radius-compact: 8px; // 兼容旧引用
-  --radius-container: 18px; // 兼容旧引用
-  --radius-micro: 4px; // 兼容旧引用
-  --radius-badge: 14px; // 兼容旧引用
+  // 兼容旧px间距
+  --space-2xs: 4px;
+  --space-px-xs: 8px;
+  --space-px-sm: 12px;
+  --space-px-md: 16px;
+  --space-px-lg: 24px;
+  --space-px-xl: 32px;
+  --space-px-2xl: 48px;
+
+  // ==================== 圆角 ====================
+  --radius-micro: 6rpx;
+  --radius-sm: 10rpx;
+  --radius-md: 15rpx;
+  --radius-lg: 20rpx;
+  --radius-pill: 5000rpx;
   --radius-full: 9999px;
 
-  // 过渡
+  // 兼容旧引用
+  --radius-std: 10rpx;
+  --radius-card: 15rpx;
+  --radius-container: 15rpx;
+  --radius-badge: 5000rpx;
+  --radius-compact: 10rpx;
+
+  // ==================== 过渡 ====================
   --transition-fast: 0.15s;
   --transition-base: 0.3s;
 
-  // Z-Index
+  // ==================== Z-Index ====================
   --z-dropdown: 100;
   --z-sticky: 200;
   --z-fixed: 300;
@@ -128,79 +266,19 @@ page {
   --z-toast: 500;
   --z-loading: 600;
 
-  // 旧变量兼容
-  --gray-muted: #999999;
-  --bg-secondary-60: rgba(245, 245, 245, 0.6);
-}
+  // ==================== 品牌色（兼容旧引用） ====================
+  --brand-primary: #01BEFF;
+  --brand-hover: #31C9E8;
+  --brand-active: #209CFF;
+  --brand-light: rgba(1, 190, 255, 0.08);
+  --brand-dark: #209CFF;
 
-// ==================== 夜间模式 ====================
-
-.dark {
-  --bg-primary: #12111a;
-  --bg-secondary: #1c1a22;
-  --bg-tertiary: #26242c;
-  --bg-elevated: #1c1a22;
-  --bg-input: #1c1a22;
-  --bg-cream: #1c1a22;
-
-  --text-primary: #f0f0f2;
-  --text-secondary: #a0a0ac;
-  --text-muted: #6a6a78;
-  --text-disabled: #4a4a56;
-  --text-inverse: #12111a;
-  --text-on-brand: #12111a;
-  --text-charcoal: #f0f0f2;
-  --text-tertiary: #6a6a78;
-  --text-off-white: #f0f0f2;
-
-  --brand-primary: #FFB07A;
-  --brand-hover: #e89560;
-  --brand-active: #d48550;
-  --brand-light: rgba(255, 176, 122, 0.12);
-  --brand-dark: #d48550;
-
-  --color-success: #a8e6b8;
-  --color-warning: #ffc94d;
-  --color-warning-bg: rgba(255, 201, 77, 0.12);
-  --color-error: #ef5350;
-  --color-info: #a3bdd4;
-
-  --border-light: rgba(255, 255, 255, 0.04);
-  --border-standard: rgba(255, 255, 255, 0.08);
-  --border-interactive: rgba(255, 255, 255, 0.12);
-  --border-primary: rgba(255, 255, 255, 0.08);
-
-  --shadow-card: none;
-  --shadow-hover: none;
-  --shadow-input: none;
-  --shadow-input-focus: 0 0 0 2px rgba(255, 176, 122, 0.25);
-  --shadow-btn: none;
-  --shadow-btn-inset: none;
-  --shadow-focus: 0 0 0 2px rgba(255, 176, 122, 0.25);
-
-  --mood-warm: #FFB07A;
-  --mood-warm-bg: rgba(255, 176, 122, 0.12);
-  --mood-warm-text: #ffca9a;
-  --mood-calm: #a8e6b8;
-  --mood-calm-bg: rgba(168, 230, 184, 0.12);
-  --mood-calm-text: #c0f0d0;
-  --mood-low: #a3bdd4;
-  --mood-low-bg: rgba(163, 189, 212, 0.12);
-  --mood-low-text: #b8d4e8;
-  --mood-sad: #6b8fc0;
-  --mood-sad-bg: rgba(107, 143, 192, 0.12);
-  --mood-sad-text: #8aacda;
-  --mood-chaos: #8b6c9a;
-  --mood-chaos-bg: rgba(139, 108, 154, 0.12);
-  --mood-chaos-text: #a88cba;
-
-  --ai-xiaowen: #ffbaba;
-  --ai-xiaowen-bg: rgba(255, 186, 186, 0.12);
-  --ai-laohei: #9a9aaa;
-  --ai-laohei-bg: rgba(154, 154, 170, 0.12);
-  --ai-ali: #7aacda;
-  --ai-ali-bg: rgba(122, 172, 218, 0.12);
-
-  --gray-muted: #6a6a78;
-  --bg-secondary-60: rgba(28, 26, 34, 0.6);
+  // ==================== 旧变量兼容 ====================
+  --gray-muted: #838383;
+  --bg-secondary-60: rgba(244, 244, 244, 0.6);
+  --text-on-brand: #FFFFFF;
+  --text-charcoal: #080808;
+  --text-tertiary: #838383;
+  --text-off-white: #FFFFFF;
+  --bg-cream: #F4F4F4;
 }

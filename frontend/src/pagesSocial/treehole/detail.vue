@@ -119,7 +119,6 @@
  */
 
 import { ref, onMounted } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
 import {
   getTreeholePostDetail,
   createResonance,
@@ -130,6 +129,7 @@ import {
   type TreeholeComment,
 } from '@/api/treehole'
 import { track, EventName, trackPageEnter } from '@/utils/tracking'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import CommentSection from '@/components/treehole/CommentSection.vue'
 
 // ==================== 响应式状态 ====================
@@ -290,7 +290,7 @@ function handleDelete(): void {
     title: '确认删除',
     content: '删除后将无法恢复，确定要删除吗？',
     confirmText: '删除',
-    confirmColor: '#F87171',
+    confirmColor: '#E83A30',
     cancelText: '取消',
     success: async (res) => {
       if (res.confirm) {
@@ -352,8 +352,10 @@ onMounted(() => {
   loadPostDetail()
 })
 
-onShow(() => {
-  trackPageEnter('treehole_detail')
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('treehole_detail')
+  }
 })
 </script>
 
@@ -362,7 +364,7 @@ onShow(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--dark-bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 顶部导航栏 ====================
@@ -372,9 +374,8 @@ onShow(() => {
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 var(--space-md);
-  background-color: var(--dark-bg-primary);
-  border-bottom: 1px solid var(--dark-border-primary);
+  padding: 0 24rpx;
+  background: linear-gradient(135deg, #78909C, #5F7E8B);
 }
 
 .back-btn {
@@ -390,14 +391,14 @@ onShow(() => {
 }
 
 .back-icon {
-  font-size: var(--font-size-xl);
-  color: var(--dark-text-primary);
+  font-size: 40rpx;
+  color: #FFFFFF;
 }
 
 .header-title {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--dark-text-primary);
+  color: #FFFFFF;
 }
 
 .header-actions {
@@ -409,7 +410,7 @@ onShow(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xs) var(--space-sm);
+  padding: 8rpx 16rpx;
 
   &:active {
     opacity: 0.7;
@@ -417,8 +418,8 @@ onShow(() => {
 }
 
 .action-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-error);
+  font-size: 26rpx;
+  color: #E83A30;
 }
 
 // ==================== 加载状态 ====================
@@ -431,8 +432,8 @@ onShow(() => {
 }
 
 .loading-text {
-  font-size: var(--font-size-base);
-  color: var(--dark-text-tertiary);
+  font-size: 28rpx;
+  color: #838383;
 }
 
 // ==================== 帖子详情 ====================
@@ -440,28 +441,29 @@ onShow(() => {
 .post-detail {
   display: flex;
   flex-direction: column;
-  padding: var(--space-md);
-  background-color: var(--dark-bg-secondary);
-  border-radius: var(--radius-lg);
-  margin: var(--space-md);
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.05);
+  margin: 24rpx;
 }
 
 .post-header {
   display: flex;
   align-items: center;
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .avatar-wrapper {
   width: 80rpx;
   height: 80rpx;
-  margin-right: var(--space-sm);
+  margin-right: 16rpx;
 }
 
 .avatar {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: 5000rpx;
 }
 
 .identity-info {
@@ -472,9 +474,9 @@ onShow(() => {
 }
 
 .nickname {
-  font-size: var(--font-size-base);
+  font-size: 28rpx;
   font-weight: 500;
-  color: var(--dark-text-primary);
+  color: #080808;
 }
 
 .persona-tag {
@@ -483,18 +485,18 @@ onShow(() => {
   align-self: flex-start;
   margin-top: 4rpx;
   padding: 2rpx 12rpx;
-  background-color: var(--dark-bg-tertiary);
-  border-radius: var(--radius-full);
+  background-color: #F4F4F5;
+  border-radius: 5000rpx;
 }
 
 .tag-text {
-  font-size: var(--font-size-xs);
-  color: var(--dark-text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .time-text {
-  font-size: var(--font-size-xs);
-  color: var(--dark-text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 内容 ====================
@@ -505,8 +507,8 @@ onShow(() => {
 }
 
 .content-text {
-  font-size: var(--font-size-base);
-  color: var(--dark-text-primary);
+  font-size: 28rpx;
+  color: #080808;
   line-height: 1.6;
   word-break: break-word;
 }
@@ -515,29 +517,29 @@ onShow(() => {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
-  margin-top: var(--space-sm);
+  margin-top: 16rpx;
   padding: 4rpx 16rpx;
-  background-color: var(--brand-light);
-  border-radius: var(--radius-full);
+  background-color: rgba(1, 190, 255, 0.1);
+  border-radius: 5000rpx;
 }
 
 .topic-text {
-  font-size: var(--font-size-sm);
-  color: var(--brand-light);
+  font-size: 26rpx;
+  color: #01BEFF;
 }
 
 .post-images {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-top: var(--space-md);
+  gap: 16rpx;
+  margin-top: 24rpx;
 }
 
 .post-image {
   width: 200rpx;
   height: 200rpx;
-  border-radius: var(--radius-md);
-  background-color: var(--dark-bg-tertiary);
+  border-radius: 20rpx;
+  background-color: #F4F4F5;
 }
 
 // ==================== 互动区域 ====================
@@ -545,16 +547,16 @@ onShow(() => {
 .post-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
-  margin-top: var(--space-md);
-  padding-top: var(--space-sm);
-  border-top: 1px solid var(--dark-border-primary);
+  gap: 30rpx;
+  margin-top: 24rpx;
+  padding-top: 16rpx;
+  border-top: 2rpx solid #F4F4F5;
 }
 
 .action-item {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 8rpx;
 
   &:active {
     opacity: 0.7;
@@ -562,7 +564,7 @@ onShow(() => {
 
   &.is-active {
     .action-text {
-      color: var(--brand-primary);
+      color: #01BEFF;
     }
   }
 }
@@ -570,32 +572,32 @@ onShow(() => {
 .action-icon-wrapper {
   width: 40rpx;
   height: 40rpx;
-  border-radius: var(--radius-sm);
-  background-color: var(--bg-tertiary);
+  border-radius: 20rpx;
+  background-color: #F4F4F5;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 6rpx;
 
   &.is-active {
-    background-color: rgba(248, 113, 113, 0.15);
+    background-color: #E83A30;
   }
 }
 
 .action-icon-text {
   font-size: 24rpx;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: #333333;
 }
 
 .action-text {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-secondary);
+  font-size: 26rpx;
+  color: #333333;
 }
 
 .action-count {
-  font-size: var(--font-size-sm);
-  color: var(--dark-text-tertiary);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 // ==================== 内容区域 ====================
@@ -615,18 +617,19 @@ onShow(() => {
 }
 
 .error-text {
-  font-size: var(--font-size-base);
-  color: var(--dark-text-tertiary);
-  margin-bottom: var(--space-md);
+  font-size: 28rpx;
+  color: #838383;
+  margin-bottom: 24rpx;
 }
 
 .retry-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-sm) var(--space-lg);
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-md);
+  padding: 16rpx 30rpx;
+  background: linear-gradient(135deg, #78909C, #5F7E8B);
+  border-radius: 5000rpx;
+  box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(120, 144, 156, 0.35);
 
   &:active {
     opacity: 0.8;
@@ -634,8 +637,8 @@ onShow(() => {
 }
 
 .retry-text {
-  font-size: var(--font-size-base);
-  color: var(--text-on-brand);
+  font-size: 28rpx;
+  color: #FFFFFF;
 }
 
 // ==================== 安全区 ====================

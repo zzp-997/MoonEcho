@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="header">
       <view class="header-left" @click="handleBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <wd-icon name="arrow-left" size="20px" color="#080808" />
       </view>
       <view class="header-title">通知设置</view>
       <view class="header-right" />
@@ -180,8 +180,8 @@
  * 说明：推送通知开关设置，危机干预类型强制开启
  */
 import { ref, onMounted } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
 import { useNotification, getDefaultTypesEnabled } from '@/composables/useNotification'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import type { NotificationSettings } from '@/api/modules/notification'
 import { track, EventName } from '@/utils/tracking'
 
@@ -212,8 +212,10 @@ onMounted(async () => {
   await initSettings()
 })
 
-onShow(() => {
-  track(EventName.PAGE_VIEW, { page: 'notification_settings' })
+usePageVisibleRefresh({
+  onVisible() {
+    track(EventName.PAGE_VIEW, { page: 'notification_settings' })
+  }
 })
 
 // ==================== 初始化 ====================
@@ -274,7 +276,7 @@ function handleBack() {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 头部 ====================
@@ -285,9 +287,8 @@ function handleBack() {
   justify-content: space-between;
   height: 88rpx;
   padding: 0 32rpx;
-  padding-top: var(--status-bar-height, 44rpx);
-  background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-standard);
+  padding-top: calc(env(safe-area-inset-top));
+  background: linear-gradient(135deg, #FFBE28, #FF9A5C);
 }
 
 .header-left {
@@ -298,9 +299,9 @@ function handleBack() {
 }
 
 .header-title {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-right {
@@ -316,15 +317,16 @@ function handleBack() {
 
 .settings-section {
   margin-bottom: 32rpx;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
   overflow: hidden;
 }
 
 .section-title {
   padding: 24rpx 32rpx 16rpx;
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .setting-item {
@@ -332,7 +334,7 @@ function handleBack() {
   align-items: center;
   justify-content: space-between;
   padding: 32rpx;
-  border-bottom: 1rpx solid var(--border-standard);
+  border-bottom: 1rpx solid #F4F4F5;
 
   &:last-child {
     border-bottom: none;
@@ -359,24 +361,24 @@ function handleBack() {
 }
 
 .setting-title {
-  font-size: var(--font-size-base);
+  font-size: 28rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .setting-desc {
   display: block;
   margin-top: 8rpx;
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .forced-tag {
   padding: 4rpx 12rpx;
-  font-size: var(--font-size-xs);
-  color: var(--color-warning);
-  background-color: var(--color-warning-bg);
-  border-radius: var(--radius-xs);
+  font-size: 22rpx;
+  color: #FFBE28;
+  background-color: rgba(255,190,40,0.1);
+  border-radius: 10rpx;
 }
 
 // ==================== 提示说明 ====================
@@ -384,14 +386,14 @@ function handleBack() {
 .tips-section {
   margin-top: 48rpx;
   padding: 24rpx;
-  background-color: var(--color-info-bg);
-  border-radius: var(--radius-sm);
+  background-color: rgba(1,190,255,0.1);
+  border-radius: 20rpx;
 }
 
 .tips-text {
-  font-size: var(--font-size-sm);
+  font-size: 26rpx;
   line-height: 1.6;
-  color: var(--color-info);
+  color: #01BEFF;
 }
 
 // ==================== 加载状态 ====================

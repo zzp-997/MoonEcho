@@ -156,7 +156,7 @@ function handleConfirm(): void {
   right: 0;
   bottom: 0;
   z-index: var(--z-modal);
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -241,7 +241,7 @@ function handleConfirm(): void {
 
   &.is-selected {
     border-color: var(--brand-primary);
-    background-color: rgba(124, 111, 224, 0.1);
+    background-color: var(--brand-light);
   }
 }
 

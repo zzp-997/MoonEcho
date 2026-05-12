@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <wd-icon name="arrow-left" size="20px" color="#080808" />
       </view>
       <text class="header-title">动态详情</text>
       <view v-if="post?.author?.is_me" class="header-actions">
@@ -13,7 +13,7 @@
       </view>
       <view v-else class="header-actions">
         <view class="action-btn" @tap="handleShowMoreActions">
-          <wd-icon name="more" size="20px" color="var(--text-muted)" />
+          <wd-icon name="more" size="20px" color="#838383" />
         </view>
       </view>
     </view>
@@ -42,7 +42,7 @@
               class="avatar-placeholder"
               :style="{ backgroundColor: anonAvatarColor }"
             >
-              <wd-icon name="user" size="24px" color="var(--text-inverse)" />
+              <wd-icon name="user" size="24px" color="#FFFFFF" />
             </view>
           </view>
           <view class="identity-info">
@@ -126,7 +126,7 @@
                 mode="aspectFill"
               />
               <view v-else class="comment-avatar-placeholder">
-                <wd-icon name="user" size="20px" color="var(--text-inverse)" />
+                <wd-icon name="user" size="20px" color="#FFFFFF" />
               </view>
             </view>
             <view class="comment-content">
@@ -226,7 +226,6 @@
  */
 
 import { ref, computed, onMounted } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
 import {
   getPostDetail,
   createResonance,
@@ -239,6 +238,7 @@ import {
   type PostComment,
 } from '@/api/modules/post'
 import { track, EventName, trackPageEnter } from '@/utils/tracking'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import ReportDialog from '@/components/common/ReportDialog.vue'
 import { ReportContentType, type ReportTarget } from '@/api/modules/report'
 
@@ -333,16 +333,16 @@ const displayPersonaTag = computed(() => {
 
 /** 匿名头像颜色 */
 const anonAvatarColor = computed(() => {
-  if (!post.value) return '#A89CF5'
+  if (!post.value) return '#E72F8C'
   const colors = [
-    '#FFB5BA',
-    '#8B9DC3',
-    '#7CB9A0',
-    '#A89CF5',
-    '#FFB88A',
-    '#A5C0D6',
-    '#D4A5D9',
-    '#8B6C9A',
+    '#FF9A5C',
+    '#838383',
+    '#01BEFF',
+    '#E72F8C',
+    '#01BEFF',
+    '#3D7EFF',
+    '#892FE8',
+    '#5F7E8B',
   ]
   const seed = post.value.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   return colors[seed % colors.length]
@@ -607,7 +607,7 @@ function handleDelete(): void {
     title: '确认删除',
     content: '删除后将无法恢复，确定要删除吗？',
     confirmText: '删除',
-    confirmColor: '#F87171',
+    confirmColor: '#E83A30',
     cancelText: '取消',
     success: async (res) => {
       if (res.confirm) {
@@ -724,8 +724,10 @@ onMounted(() => {
   loadPostDetail()
 })
 
-onShow(() => {
-  trackPageEnter('square_detail')
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('square_detail')
+  }
 })
 </script>
 
@@ -734,7 +736,7 @@ onShow(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 顶部导航栏 ====================
@@ -744,9 +746,8 @@ onShow(() => {
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 var(--space-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-primary);
+  padding: 0 24rpx;
+  background: linear-gradient(135deg, #FBDA61, #F3683A);
 }
 
 .back-btn {
@@ -762,14 +763,14 @@ onShow(() => {
 }
 
 .back-icon {
-  font-size: var(--font-size-xl);
-  color: var(--text-primary);
+  font-size: 40rpx;
+  color: #FFFFFF;
 }
 
 .header-title {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-actions {
@@ -781,7 +782,7 @@ onShow(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xs) var(--space-sm);
+  padding: 8rpx 16rpx;
 
   &:active {
     opacity: 0.7;
@@ -789,14 +790,14 @@ onShow(() => {
 }
 
 .action-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-error);
+  font-size: 26rpx;
+  color: #FFFFFF;
 }
 
 .more-icon {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: bold;
-  color: var(--text-primary);
+  color: #FFFFFF;
   letter-spacing: 2rpx;
 }
 
@@ -811,9 +812,9 @@ onShow(() => {
 }
 
 .loading-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
-  margin-top: var(--space-sm);
+  font-size: 26rpx;
+  color: #838383;
+  margin-top: 16rpx;
 }
 
 // ==================== 动态详情 ====================
@@ -821,22 +822,23 @@ onShow(() => {
 .post-detail {
   display: flex;
   flex-direction: column;
-  padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  margin: var(--space-md);
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
+  margin: 24rpx;
 }
 
 .post-header {
   display: flex;
   align-items: center;
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .avatar-wrapper {
   width: 80rpx;
   height: 80rpx;
-  margin-right: var(--space-sm);
+  margin-right: 16rpx;
 }
 
 .avatar {
@@ -855,8 +857,8 @@ onShow(() => {
 }
 
 .avatar-icon {
-  font-size: var(--font-size-base);
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 30rpx;
+  color: #FFFFFF;
 }
 
 .identity-info {
@@ -867,9 +869,9 @@ onShow(() => {
 }
 
 .nickname {
-  font-size: var(--font-size-base);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .persona-tag {
@@ -878,18 +880,18 @@ onShow(() => {
   align-self: flex-start;
   margin-top: 4rpx;
   padding: 2rpx 12rpx;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-full);
+  background-color: #F4F4F5;
+  border-radius: 5000rpx;
 }
 
 .tag-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .time-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 内容 ====================
@@ -900,8 +902,8 @@ onShow(() => {
 }
 
 .content-text {
-  font-size: var(--font-size-base);
-  color: var(--text-primary);
+  font-size: 30rpx;
+  color: #080808;
   line-height: 1.6;
   word-break: break-word;
 }
@@ -909,15 +911,15 @@ onShow(() => {
 .post-images {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-top: var(--space-md);
+  gap: 16rpx;
+  margin-top: 24rpx;
 }
 
 .post-image {
   width: 200rpx;
   height: 200rpx;
-  border-radius: var(--radius-md);
-  background-color: var(--bg-tertiary);
+  border-radius: 20rpx;
+  background-color: #F4F4F5;
 }
 
 // ==================== 互动区域 ====================
@@ -925,16 +927,16 @@ onShow(() => {
 .post-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
-  margin-top: var(--space-md);
-  padding-top: var(--space-sm);
-  border-top: 1px solid var(--border-primary);
+  gap: 30rpx;
+  margin-top: 24rpx;
+  padding-top: 16rpx;
+  border-top: 2rpx solid #F4F4F5;
 }
 
 .action-item {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 8rpx;
 
   &:active {
     opacity: 0.7;
@@ -942,29 +944,29 @@ onShow(() => {
 
   &.is-active {
     .action-text {
-      color: var(--brand-primary);
+      color: #01BEFF;
     }
   }
 }
 
 .action-icon {
-  font-size: var(--font-size-md);
-  color: var(--text-secondary);
+  font-size: 30rpx;
+  color: #333333;
 }
 
 .action-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  font-size: 26rpx;
+  color: #333333;
 }
 
 .action-count {
-  font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .follow-action {
   .action-icon {
-    color: var(--brand-primary);
+    color: #01BEFF;
   }
 }
 
@@ -973,28 +975,29 @@ onShow(() => {
 .comment-section {
   display: flex;
   flex-direction: column;
-  padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  margin: 0 var(--space-md);
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
+  margin: 0 24rpx;
 }
 
 .section-header {
   display: flex;
   align-items: center;
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .section-title {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .comment-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 24rpx;
 }
 
 .comment-item {
@@ -1005,7 +1008,7 @@ onShow(() => {
 .comment-avatar-wrapper {
   width: 64rpx;
   height: 64rpx;
-  margin-right: var(--space-sm);
+  margin-right: 16rpx;
 }
 
 .comment-avatar {
@@ -1021,7 +1024,7 @@ onShow(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--brand-primary);
+  background-color: #01BEFF;
 }
 
 .comment-content {
@@ -1033,44 +1036,44 @@ onShow(() => {
 .comment-header {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-xs);
+  gap: 16rpx;
+  margin-bottom: 8rpx;
 }
 
 .comment-nickname {
-  font-size: var(--font-size-sm);
+  font-size: 26rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .comment-time {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .reply-hint {
-  margin-bottom: var(--space-xs);
+  margin-bottom: 8rpx;
 }
 
 .reply-text {
-  font-size: var(--font-size-xs);
-  color: var(--brand-primary);
+  font-size: 22rpx;
+  color: #01BEFF;
 }
 
 .comment-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-primary);
+  font-size: 26rpx;
+  color: #080808;
   line-height: 1.5;
   word-break: break-word;
 }
 
 .comment-actions {
   display: flex;
-  margin-top: var(--space-xs);
+  margin-top: 8rpx;
 }
 
 .reply-btn {
-  padding: var(--space-xs) 0;
+  padding: 8rpx 0;
 
   &:active {
     opacity: 0.7;
@@ -1078,8 +1081,8 @@ onShow(() => {
 }
 
 .reply-action-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 空评论 ====================
@@ -1089,18 +1092,18 @@ onShow(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-lg) 0;
+  padding: 30rpx 0;
 }
 
 .empty-text {
-  font-size: var(--font-size-base);
-  color: var(--text-tertiary);
-  margin-bottom: var(--space-xs);
+  font-size: 30rpx;
+  color: #838383;
+  margin-bottom: 8rpx;
 }
 
 .empty-hint {
-  font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 // ==================== 内容区域 ====================
@@ -1120,18 +1123,19 @@ onShow(() => {
 }
 
 .error-text {
-  font-size: var(--font-size-base);
-  color: var(--text-tertiary);
-  margin-bottom: var(--space-md);
+  font-size: 30rpx;
+  color: #838383;
+  margin-bottom: 24rpx;
 }
 
 .retry-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-sm) var(--space-lg);
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-md);
+  padding: 16rpx 30rpx;
+  background: linear-gradient(135deg, #FBDA61, #F3683A);
+  border-radius: 5000rpx;
+  box-shadow: 0rpx 4rpx 12rpx 0rpx rgba(243, 104, 58, 0.3);
 
   &:active {
     opacity: 0.8;
@@ -1139,8 +1143,8 @@ onShow(() => {
 }
 
 .retry-text {
-  font-size: var(--font-size-base);
-  color: var(--text-on-brand);
+  font-size: 30rpx;
+  color: #FFFFFF;
 }
 
 // ==================== 评论输入栏 ====================
@@ -1148,10 +1152,11 @@ onShow(() => {
 .comment-input-bar {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--bg-secondary);
-  border-top: 1px solid var(--border-primary);
+  gap: 16rpx;
+  padding: 16rpx 24rpx;
+  background-color: #FFFFFF;
+  border-top: 2rpx solid #F4F4F5;
+  box-shadow: 0rpx -4rpx 20rpx 0rpx rgba(0,0,0,0.05);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -1165,15 +1170,15 @@ onShow(() => {
 .comment-input {
   width: 100%;
   height: 72rpx;
-  padding: 0 var(--space-md);
-  font-size: var(--font-size-base);
-  color: var(--text-primary);
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-full);
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  color: #080808;
+  background-color: #F4F4F5;
+  border-radius: 5000rpx;
 }
 
 .input-placeholder {
-  color: var(--text-tertiary);
+  color: #838383;
 }
 
 .submit-btn {
@@ -1182,25 +1187,27 @@ onShow(() => {
   justify-content: center;
   width: 120rpx;
   height: 72rpx;
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #FBDA61, #F3683A);
+  border-radius: 5000rpx;
+  box-shadow: 0rpx 4rpx 12rpx 0rpx rgba(243, 104, 58, 0.3);
 
   &:active {
     opacity: 0.8;
   }
 
   &.is-disabled {
-    background-color: var(--bg-tertiary);
+    background: #F4F4F5;
+    box-shadow: none;
 
     .submit-text {
-      color: var(--text-tertiary);
+      color: #838383;
     }
   }
 }
 
 .submit-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-on-brand);
+  font-size: 26rpx;
+  color: #FFFFFF;
 }
 
 // ==================== 安全区 ====================

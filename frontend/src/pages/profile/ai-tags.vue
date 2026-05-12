@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <wd-icon name="arrow-left" size="20px" color="#080808" />
       </view>
       <text class="header-title">AI画像</text>
       <view class="placeholder" />
@@ -24,7 +24,7 @@
       <!-- 情绪模式 -->
       <view v-if="emotionTags.length > 0" class="tag-group">
         <view class="group-header">
-          <wd-icon name="heart" size="18px" color="var(--mood-warm)" />
+          <wd-icon name="heart" size="18px" color="#FF9A5C" />
           <text class="group-title">情绪模式</text>
         </view>
         <view class="tags-list">
@@ -49,7 +49,7 @@
       <!-- 社交偏好 -->
       <view v-if="socialTags.length > 0" class="tag-group">
         <view class="group-header">
-          <wd-icon name="user" size="18px" color="var(--mood-calm)" />
+          <wd-icon name="user" size="18px" color="#01BEFF" />
           <text class="group-title">社交偏好</text>
         </view>
         <view class="tags-list">
@@ -74,7 +74,7 @@
       <!-- 兴趣领域 -->
       <view v-if="interestTags.length > 0" class="tag-group">
         <view class="group-header">
-          <wd-icon name="star" size="18px" color="var(--brand-primary)" />
+          <wd-icon name="star" size="18px" color="#01BEFF" />
           <text class="group-title">兴趣领域</text>
         </view>
         <view class="tags-list">
@@ -98,7 +98,7 @@
 
       <!-- 无标签 -->
       <view v-if="allTags.length === 0" class="empty-area">
-        <wd-icon name="robot" size="48px" color="var(--brand-primary)" custom-style="margin-bottom: var(--space-md)" />
+        <wd-icon name="robot" size="48px" color="#01BEFF" custom-style="margin-bottom: 24rpx" />
         <text class="empty-title">暂无画像数据</text>
         <text class="empty-desc">继续使用应用后，AI会为你生成个性化画像。建议：</text>
         <view class="suggestions">
@@ -182,6 +182,14 @@ const interestTags = computed(() => {
 async function loadTags(): Promise<void> {
   isLoading.value = true
 
+  // 超时保护：10秒后自动结束 loading
+  const timeoutId = setTimeout(() => {
+    if (isLoading.value) {
+      isLoading.value = false
+      message.value = '加载超时，请下拉刷新重试'
+    }
+  }, 10000)
+
   try {
     const response: AIProfileTagResponse = await getMyProfileTags()
     allTags.value = response.tags || []
@@ -191,7 +199,9 @@ async function loadTags(): Promise<void> {
     track(EventName.PAGE_VIEW, { page: 'ai_tags' })
   } catch (error) {
     console.error('加载画像标签失败', error)
+    message.value = '加载失败，请下拉刷新重试'
   } finally {
+    clearTimeout(timeoutId)
     isLoading.value = false
   }
 }
@@ -288,7 +298,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #FFFFFF;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -298,10 +308,10 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  padding-top: calc(env(safe-area-inset-top) + var(--space-md));
-  background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-standard);
+  padding: 24rpx;
+  padding-top: calc(env(safe-area-inset-top) + 24rpx);
+  background-color: #FFFFFF;
+  border-bottom: 1rpx solid #E0E0E0;
 }
 
 .back-btn {
@@ -313,14 +323,14 @@ onMounted(() => {
 }
 
 .back-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
+  font-size: 34rpx;
+  color: #080808;
 }
 
 .header-title {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .placeholder {
@@ -330,16 +340,16 @@ onMounted(() => {
 // ==================== 说明区域 ====================
 
 .intro-section {
-  padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  margin: var(--space-md);
-  border-radius: var(--radius-md);
-  border-left: 4px solid var(--brand-primary);
+  padding: 24rpx;
+  background-color: #F8F8FA;
+  margin: 24rpx;
+  border-radius: 20rpx;
+  border-left: 4px solid #01BEFF;
 }
 
 .intro-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  font-size: 26rpx;
+  color: #333333;
   line-height: 1.6;
 }
 
@@ -349,57 +359,57 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl);
+  padding: 60rpx;
 }
 
 // ==================== 标签分组 ====================
 
 .tags-container {
   flex: 1;
-  padding: 0 var(--space-md);
+  padding: 0 24rpx;
 }
 
 .tag-group {
-  margin-bottom: var(--space-lg);
+  margin-bottom: 30rpx;
 }
 
 .group-header {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-sm);
+  gap: 16rpx;
+  margin-bottom: 16rpx;
 }
 
 .group-icon {
-  font-size: var(--font-size-md);
-  color: var(--brand-primary);
+  font-size: 30rpx;
+  color: #01BEFF;
 }
 
 .group-title {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .tags-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: 16rpx;
 }
 
 .tag-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  background-color: var(--bg-elevated);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
   transition: all 0.3s ease;
 
   &.is-hidden {
     opacity: 0.6;
-    background-color: var(--bg-tertiary);
+    background-color: #F4F4F5;
   }
 }
 
@@ -409,26 +419,26 @@ onMounted(() => {
 }
 
 .tag-value {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
   margin-bottom: 4rpx;
 }
 
 .tag-name {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .tag-control {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 8rpx;
 }
 
 .control-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 空状态 ====================
@@ -437,40 +447,40 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-2xl) var(--space-md);
+  padding: 60rpx 24rpx;
 }
 
 .empty-icon {
-  color: var(--brand-primary);
+  color: #01BEFF;
 }
 
 .empty-title {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  color: #080808;
+  margin-bottom: 16rpx;
 }
 
 .empty-desc {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-  margin-bottom: var(--space-md);
+  font-size: 26rpx;
+  color: #333333;
+  margin-bottom: 24rpx;
 }
 
 .suggestions {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 8rpx;
 }
 
 .suggestion-item {
-  font-size: var(--font-size-sm);
-  color: var(--brand-primary);
+  font-size: 26rpx;
+  color: #01BEFF;
 
   &::before {
     content: '·';
-    margin-right: var(--space-xs);
+    margin-right: 8rpx;
   }
 }
 
@@ -479,33 +489,33 @@ onMounted(() => {
 .generated-info {
   display: flex;
   justify-content: center;
-  padding: var(--space-sm) var(--space-md);
+  padding: 16rpx 24rpx;
 }
 
 .generated-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 提示信息 ====================
 
 .message-section {
-  margin: var(--space-sm) var(--space-md);
-  padding: var(--space-md);
-  background-color: var(--mood-low-bg);
-  border-radius: var(--radius-md);
+  margin: 16rpx 24rpx;
+  padding: 24rpx;
+  background-color: rgba(131,131,131,0.1);
+  border-radius: 20rpx;
 }
 
 .message-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-info);
+  font-size: 26rpx;
+  color: #3D7EFF;
   line-height: 1.5;
 }
 
 // ==================== 操作按钮 ====================
 
 .action-section {
-  padding: var(--space-lg) var(--space-md);
+  padding: 30rpx 24rpx;
 }
 
 .action-btn {
@@ -513,8 +523,8 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 96rpx;
-  background-color: var(--brand-light);
-  border-radius: var(--radius-md);
+  background-color: rgba(1,190,255,0.1);
+  border-radius: 20rpx;
 
   &:active {
     opacity: 0.9;
@@ -522,7 +532,7 @@ onMounted(() => {
 }
 
 .btn-text {
-  font-size: var(--font-size-md);
-  color: var(--brand-primary);
+  font-size: 30rpx;
+  color: #01BEFF;
 }
 </style>

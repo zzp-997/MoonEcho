@@ -227,7 +227,7 @@ async function handleRest(): Promise<void> {
 .ai-suggestion {
   margin-bottom: var(--space-md);
   padding: var(--space-sm);
-  background-color: rgba(124, 111, 224, 0.1);
+  background-color: var(--brand-light);
   border-radius: var(--radius-sm);
 }
 

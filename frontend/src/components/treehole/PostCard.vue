@@ -225,8 +225,7 @@ function handleImageTap(index: number): void {
   align-self: flex-start;
   margin-top: var(--space-sm);
   padding: 4rpx 16rpx;
-  background-color: var(--brand-primary);
-  background-color: rgba(124, 111, 224, 0.15);
+  background-color: var(--brand-light);
   border-radius: var(--radius-full);
 }
 
@@ -287,7 +286,7 @@ function handleImageTap(index: number): void {
   margin-right: 6rpx;
 
   &.is-active {
-    background-color: rgba(248, 113, 113, 0.15);
+    background-color: var(--color-error);
   }
 }
 

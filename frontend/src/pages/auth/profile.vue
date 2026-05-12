@@ -3,109 +3,83 @@
     <!-- 顶部导航 -->
     <view class="nav-bar">
       <view class="nav-back" @tap="goBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <wd-icon name="arrow-left" size="20px" color="#080808" />
       </view>
       <text class="nav-title">完善资料</text>
-      <view class="nav-placeholder"></view>
+      <view class="nav-spacer" />
     </view>
 
-    <!-- 主要内容 -->
+    <!-- 内容 -->
     <view class="content">
-      <!-- 欢迎语 -->
-      <view class="welcome-section">
-        <text class="welcome-title">让我认识一下你 ~</text>
-        <text class="welcome-subtitle">完善资料，让我更懂你</text>
+      <!-- 欢迎 -->
+      <view class="intro">
+        <text class="intro-title">让我认识一下你</text>
+        <text class="intro-sub">这些信息帮我更好地陪伴你</text>
       </view>
 
-      <!-- 昵称输入 -->
-      <view class="form-section">
-        <text class="section-label">你的昵称</text>
-        <view class="input-wrapper">
-          <wd-input
+      <!-- 昵称 -->
+      <view class="field-group">
+        <text class="field-label">昵称</text>
+        <view class="nickname-field" :class="{ focused: nicknameFocused }">
+          <input
             v-model="nickname"
-            placeholder="你希望我怎么称呼你？"
+            placeholder="你想让我怎么称呼你"
             :maxlength="12"
-            no-border
-            clearable
+            class="nickname-input"
+            placeholder-class="field-placeholder"
             @input="onNicknameInput"
             @blur="validateNickname"
+            @focus="nicknameFocused = true"
           />
+          <text class="char-count" :class="{ error: !!nicknameError }">{{ nicknameTrimmed.length }}/12</text>
         </view>
-        <view class="nickname-hint-row">
-          <text v-if="nicknameError" class="error-text">{{ nicknameError }}</text>
-          <text v-else class="char-count">{{ nicknameTrimmed.length }}/12</text>
-        </view>
+        <text v-if="nicknameError" class="field-error">{{ nicknameError }}</text>
       </view>
 
-      <!-- 年龄段选择 -->
-      <view class="form-section">
-        <text class="section-label">你的年龄段</text>
-        <view class="age-options">
+      <!-- 年龄段 -->
+      <view class="field-group">
+        <text class="field-label">年龄段</text>
+        <view class="age-chips">
           <view
             v-for="option in ageOptions"
             :key="option.value"
-            class="age-option"
+            class="age-chip"
             :class="{ selected: selectedAge === option.value }"
             @tap="selectAge(option.value)"
           >
-            <text class="option-text">{{ option.label }}</text>
+            <text class="chip-text">{{ option.label }}</text>
           </view>
         </view>
       </view>
 
       <!-- 青少年模式提示 -->
-      <view v-if="selectedAge === 'under_18'" class="minor-notice">
-        <view class="notice-icon-wrap">
-          <text class="notice-icon">!</text>
-        </view>
-        <text class="notice-text">18岁以下用户将自动开启青少年模式，部分功能受限</text>
-      </view>
-
-      <!-- 底部渐入提示 -->
-      <view v-if="showBottomHint" class="bottom-hint">
-        <text class="hint-text">完善资料，让我更懂你</text>
+      <view v-if="selectedAge === '18岁以下'" class="minor-notice">
+        <text class="minor-text">18岁以下用户将自动开启青少年模式，部分功能受限</text>
       </view>
     </view>
 
-    <!-- 底部按钮区域 -->
-    <view class="bottom-section">
-      <wd-button
-        type="primary"
-        block
-        :disabled="!canSubmit"
-        :loading="isLoading"
+    <!-- 底部操作 -->
+    <view class="bottom-area">
+      <view
+        class="complete-btn"
+        :class="{ active: canSubmit }"
         @tap="handleComplete"
       >
-        完成并开始使用
-      </wd-button>
-      <view class="skip-btn" @tap="handleSkip">
-        <text class="skip-text">跳过，稍后填写</text>
+        <wd-loading v-if="isLoading" size="16px" color="#FFFFFF" />
+        <text v-else class="complete-btn-text">开始使用</text>
+      </view>
+      <view class="skip-action" @tap="handleSkip">
+        <text class="skip-text">跳过，稍后再说</text>
       </view>
     </view>
 
-    <!-- Toast 提示 -->
     <wd-toast />
   </view>
 </template>
 
 <script setup lang="ts">
-/**
- * 回声 - 注册引导页（完善资料）
- * 文件：src/pages/auth/profile.vue
- * 说明：新用户注册后完善昵称和年龄段
- * 功能：
- *   - 昵称输入（2-12字符实时校验）
- *   - 年龄段选择（5个选项点击即选）
- *   - 18岁以下显示青少年模式提示
- *   - "跳过，稍后填写"选项（默认昵称"小友"）
- *   - 底部渐入提示："完善资料，让我更懂你"
- *   - 注册完成后跳转AI开场白过渡页
- */
-
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useAuth } from '@/composables/useAuth'
-
-// ==================== 年龄段选项 ====================
 
 interface AgeOption {
   label: string
@@ -120,52 +94,24 @@ const ageOptions: AgeOption[] = [
   { label: '45以上', value: '45以上' },
 ]
 
-// ==================== 响应式状态 ====================
-
-/** 昵称 */
 const nickname = ref('')
-
-/** 昵称错误 */
 const nicknameError = ref('')
-
-/** 选择的年龄段 */
+const nicknameFocused = ref(false)
 const selectedAge = ref('')
-
-/** 底部渐入提示是否显示 */
-const showBottomHint = ref(false)
-
-// ==================== 组合式函数 ====================
 
 const { isLoading, completeProfile } = useAuth()
 
-// ==================== 计算属性 ====================
+const nicknameTrimmed = computed(() => nickname.value.trim())
 
-/** 昵称去除首尾空格后的长度 */
-const nicknameTrimmed = computed(() => {
-  return nickname.value.trim()
-})
-
-/** 昵称是否有效（2-12字符） */
 const isNicknameValid = computed(() => {
   const len = nicknameTrimmed.value.length
   return len >= 2 && len <= 12
 })
 
-/** 年龄段是否已选择 */
-const isAgeSelected = computed(() => {
-  return selectedAge.value !== ''
-})
-
-/** 是否可以提交 */
 const canSubmit = computed(() => {
-  return isNicknameValid.value && isAgeSelected.value && !isLoading.value
+  return isNicknameValid.value && selectedAge.value !== '' && !isLoading.value
 })
 
-// ==================== 方法 ====================
-
-/**
- * 昵称实时输入校验
- */
 function onNicknameInput() {
   const trimmed = nicknameTrimmed.value
   if (trimmed.length > 0 && trimmed.length < 2) {
@@ -179,10 +125,8 @@ function onNicknameInput() {
   }
 }
 
-/**
- * 昵称失焦校验
- */
 function validateNickname() {
+  nicknameFocused.value = false
   const trimmed = nicknameTrimmed.value
   if (trimmed.length === 0) {
     nicknameError.value = '请输入昵称'
@@ -190,10 +134,6 @@ function validateNickname() {
   }
   if (trimmed.length < 2) {
     nicknameError.value = '昵称至少2个字符'
-    return false
-  }
-  if (trimmed.length > 12) {
-    nicknameError.value = '昵称不能超过12个字符'
     return false
   }
   if (/[<>&"']/.test(trimmed)) {
@@ -204,27 +144,17 @@ function validateNickname() {
   return true
 }
 
-/**
- * 选择年龄段
- */
 function selectAge(value: string) {
   selectedAge.value = value
 }
 
-/**
- * 完成资料 - 跳转到AI开场白过渡页
- */
 async function handleComplete() {
   if (!canSubmit.value) return
-
-  // 校验昵称
   if (!validateNickname()) return
 
   try {
     const success = await completeProfile(nicknameTrimmed.value, selectedAge.value)
-
     if (success) {
-      // 跳转到AI开场白过渡页
       navigateToGreeting()
     }
   } catch (error: any) {
@@ -232,60 +162,34 @@ async function handleComplete() {
   }
 }
 
-/**
- * 跳过，稍后填写 - 使用默认昵称"小友"
- */
 async function handleSkip() {
   try {
-    // 使用默认昵称和未选择的年龄段标记
     const defaultNickname = '小友'
     const defaultAge = selectedAge.value || '18岁以下'
-
     const success = await completeProfile(defaultNickname, defaultAge)
-
     if (success) {
-      // 跳转到AI开场白过渡页
       navigateToGreeting()
     }
   } catch (error: any) {
-    uni.showToast({
-      title: '保存失败，请重试',
-      icon: 'none',
-    })
+    uni.showToast({ title: '保存失败，请重试', icon: 'none' })
   }
 }
 
-/**
- * 跳转到AI开场白过渡页
- */
 function navigateToGreeting() {
-  // 需要传递年龄段信息，以便开场白过渡页判断是否展示青少年模式启动页
   uni.redirectTo({
     url: `/pages/auth/ai-greeting?ageRange=${selectedAge.value || 'under_18'}`,
   })
 }
 
-/**
- * 返回上一页
- */
 function goBack() {
   uni.navigateBack()
 }
-
-// ==================== 生命周期 ====================
-
-onMounted(() => {
-  // 延迟显示底部渐入提示（1.5秒后渐入）
-  setTimeout(() => {
-    showBottomHint.value = true
-  }, 1500)
-})
 </script>
 
 <style lang="scss" scoped>
 .profile-page {
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #FFFFFF;
   display: flex;
   flex-direction: column;
 }
@@ -296,216 +200,207 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 88rpx;
-  padding: 0 var(--space-md);
+  height: 44px;
+  padding: 0 24rpx;
   padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid #F4F4F5;
 }
 
 .nav-back {
-  width: 64rpx;
-  height: 64rpx;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .nav-title {
-  font-size: 34rpx;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #080808;
 }
 
-.nav-placeholder {
-  width: 64rpx;
+.nav-spacer {
+  width: 32px;
 }
 
-// ==================== 内容区域 ====================
+// ==================== 内容 ====================
 
 .content {
   flex: 1;
-  padding: 0 var(--space-lg);
+  padding: 30rpx;
 }
 
-.welcome-section {
-  margin-top: 60rpx;
-  margin-bottom: 80rpx;
+.intro {
+  margin-bottom: 40rpx;
 }
 
-.welcome-title {
+.intro-title {
   display: block;
-  font-size: 44rpx;
+  font-size: 20px;
   font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-xs);
+  color: #080808;
+  margin-bottom: 6rpx;
 }
 
-.welcome-subtitle {
-  font-size: 28rpx;
-  color: var(--text-secondary);
+.intro-sub {
+  font-size: 26rpx;
+  color: #838383;
 }
 
-// ==================== 表单区域 ====================
+// ==================== 表单字段 ====================
 
-.form-section {
-  margin-bottom: var(--space-xl);
+.field-group {
+  margin-bottom: 40rpx;
 }
 
-.section-label {
+.field-label {
   display: block;
-  font-size: 28rpx;
-  color: var(--text-secondary);
-  margin-bottom: var(--space-sm);
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 16rpx;
 }
 
-.input-wrapper {
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: 0 var(--space-md);
+.field-placeholder {
+  color: #838383;
 }
 
-.nickname-hint-row {
-  display: flex;
-  justify-content: space-between;
-  margin-top: var(--space-xs);
-  min-height: 36rpx;
-}
+// ==================== 昵称输入 ====================
 
-.error-text {
-  display: block;
-  font-size: 24rpx;
-  color: var(--color-error);
-}
-
-.char-count {
-  font-size: 24rpx;
-  color: var(--text-muted);
-  margin-left: auto;
-}
-
-// ==================== 年龄段选择 ====================
-
-.age-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-.age-option {
-  flex: 0 0 calc(50% - var(--space-xs));
-  height: 88rpx;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  border: 2rpx solid transparent;
+.nickname-field {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
+  border-bottom: 1px solid #E0E0E0;
+  padding: 16rpx 0;
+  transition: border-color 0.15s ease-out;
 
-  &.selected {
-    background-color: var(--brand-light);
-    border-color: var(--brand-primary);
+  &.focused {
+    border-color: #080808;
   }
 }
 
-.option-text {
+.nickname-input {
+  flex: 1;
   font-size: 28rpx;
-  color: var(--text-secondary);
+  color: #080808;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.char-count {
+  font-size: 22rpx;
+  color: #838383;
+  flex-shrink: 0;
+  margin-left: 8rpx;
+
+  &.error {
+    color: #E83A30;
+  }
+}
+
+.field-error {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #E83A30;
+}
+
+// ==================== 年龄段 Chips ====================
+
+.age-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.age-chip {
+  padding: 8rpx 24rpx;
+  border-radius: 10rpx;
+  border: 1px solid #E0E0E0;
+  background-color: transparent;
+  transition: all 0.15s ease-out;
+
+  &.selected {
+    border-color: #080808;
+    background-color: rgba(1,190,255,0.1);
+  }
+}
+
+.chip-text {
+  font-size: 26rpx;
+  color: #333333;
 
   .selected & {
-    color: var(--brand-primary);
+    color: #080808;
     font-weight: 500;
   }
 }
 
-// ==================== 青少年模式提示 ====================
+// ==================== 青少年提示 ====================
 
 .minor-notice {
-  display: flex;
-  align-items: flex-start;
-  background-color: var(--color-warning-bg);
-  padding: var(--space-md);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-xl);
+  padding: 16rpx 24rpx;
+  border-radius: 10rpx;
+  border: 1px solid #F4F4F5;
+  background-color: #F8F8FA;
 }
 
-.notice-icon-wrap {
-  width: 36rpx;
-  height: 36rpx;
-  background-color: var(--color-warning);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: var(--space-sm);
-  flex-shrink: 0;
-}
-
-.notice-icon {
-  color: var(--text-on-brand);
-  font-size: 24rpx;
-  font-weight: bold;
-}
-
-.notice-text {
-  font-size: 24rpx;
-  color: var(--color-warning);
+.minor-text {
+  font-size: 22rpx;
+  color: #333333;
   line-height: 1.5;
-  flex: 1;
 }
 
-// ==================== 底部渐入提示 ====================
+// ==================== 底部 ====================
 
-.bottom-hint {
-  margin-top: var(--space-lg);
-  text-align: center;
-  opacity: 0;
-  animation: fadeInUp 0.8s ease forwards;
+.bottom-area {
+  padding: 30rpx;
+  padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
 }
 
-.hint-text {
+.complete-btn {
+  width: 100%;
+  height: 48px;
+  border-radius: 10rpx;
+  background-color: #F4F4F5;
+  color: #AAAAAA;
   font-size: 28rpx;
-  color: var(--brand-light);
-  font-style: italic;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20rpx);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// ==================== 底部按钮区域 ====================
-
-.bottom-section {
-  padding: var(--space-lg);
-  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
-}
-
-.skip-btn {
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: var(--space-md);
-  padding: var(--space-sm) 0;
+  transition: background-color 0.15s ease-out, color 0.15s ease-out;
+
+  &.active {
+    background-color: #01BEFF;
+    color: #FFFFFF;
+
+    &:active {
+      background-color: #01B0E8;
+      transform: scale(0.98);
+      transition: transform 0.1s ease-out;
+    }
+  }
+}
+
+.complete-btn-text {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: inherit;
+  letter-spacing: 1px;
+}
+
+.skip-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 24rpx;
+  padding: 16rpx 0;
 }
 
 .skip-text {
-  font-size: 28rpx;
-  color: var(--text-muted);
-}
-</style>
-
-<style lang="scss">
-// 全局样式覆盖，用于 wot-design-uni 组件样式
-.profile-page {
-  --wd-button-primary-bg-color: var(--brand-primary);
-  --wd-button-primary-border-color: var(--brand-primary);
-  --wd-input-placeholder-color: var(--text-muted);
-  --wd-input-color: var(--text-primary);
+  font-size: 26rpx;
+  color: #838383;
 }
 </style>

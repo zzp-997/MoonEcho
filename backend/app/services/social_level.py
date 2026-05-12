@@ -23,12 +23,8 @@ import logging
 from dataclasses import dataclass
 from typing import Any
 
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.models.chat import Conversation, Friendship
-from app.models.post import Post, PostComment, PostFollow, PostLike
-from app.models.user import User
 
 logger = logging.getLogger(__name__)
 
@@ -152,39 +148,66 @@ class SocialLevelService:
             - next_action: 建议下一步行动
             - behavior_stats: 行为统计数据
         """
-        # 1. 收集用户行为统计数据
-        stats = await self._collect_behavior_stats(user_id, db)
+        try:
+            # 1. 收集用户行为统计数据
+            stats = await self._collect_behavior_stats(user_id, db)
 
-        # 2. 根据统计数据计算当前级别
-        progress = self._calculate_level_progress(stats)
+            # 2. 根据统计数据计算当前级别
+            progress = self._calculate_level_progress(stats)
 
-        # 3. 计算各级别解锁状态
-        unlock_status = self._calculate_unlock_status(stats)
+            # 3. 计算各级别解锁状态
+            unlock_status = self._calculate_unlock_status(stats)
 
-        # 4. 构建响应
-        return {
-            "current_level": progress.current_level,
-            "level_name": progress.level_name,
-            "description": progress.description,
-            "progress_description": progress.progress_description,
-            "unlock_status": {
-                "level_1": unlock_status.level_1,
-                "level_2": unlock_status.level_2,
-                "level_3": unlock_status.level_3,
-                "level_4": unlock_status.level_4,
-                "level_5": unlock_status.level_5,
-                "level_6": unlock_status.level_6,
-            },
-            "next_action": progress.next_action,
-            "behavior_stats": {
-                "browse_count": stats.browse_count,
-                "like_count": stats.like_count,
-                "comment_count": stats.comment_count,
-                "follow_count": stats.follow_count,
-                "friend_request_count": stats.friend_request_count,
-                "chat_count": stats.chat_count,
-            },
-        }
+            # 4. 构建响应
+            return {
+                "current_level": progress.current_level,
+                "level_name": progress.level_name,
+                "description": progress.description,
+                "progress_description": progress.progress_description,
+                "unlock_status": {
+                    "level_1": unlock_status.level_1,
+                    "level_2": unlock_status.level_2,
+                    "level_3": unlock_status.level_3,
+                    "level_4": unlock_status.level_4,
+                    "level_5": unlock_status.level_5,
+                    "level_6": unlock_status.level_6,
+                },
+                "next_action": progress.next_action,
+                "behavior_stats": {
+                    "browse_count": stats.browse_count,
+                    "like_count": stats.like_count,
+                    "comment_count": stats.comment_count,
+                    "follow_count": stats.follow_count,
+                    "friend_request_count": stats.friend_request_count,
+                    "chat_count": stats.chat_count,
+                },
+            }
+        except Exception as e:
+            logger.error("[SocialLevelService] 获取社交暴露级别异常: %s", str(e), exc_info=True)
+            # 返回默认值
+            return {
+                "current_level": 1,
+                "level_name": "观察者",
+                "description": "浏览动态广场，零社交压力",
+                "progress_description": "Level 1，还需浏览3次可升级到Level 2",
+                "unlock_status": {
+                    "level_1": True,
+                    "level_2": False,
+                    "level_3": False,
+                    "level_4": False,
+                    "level_5": False,
+                    "level_6": False,
+                },
+                "next_action": "去动态广场看看吧，发现有趣的内容",
+                "behavior_stats": {
+                    "browse_count": 0,
+                    "like_count": 0,
+                    "comment_count": 0,
+                    "follow_count": 0,
+                    "friend_request_count": 0,
+                    "chat_count": 0,
+                },
+            }
 
     # =========================================================================
     # 行为数据收集
@@ -244,6 +267,8 @@ class SocialLevelService:
         db: AsyncSession,
     ) -> int:
         """统计用户的共鸣/点赞次数。"""
+        from app.models.post import PostLike
+
         stmt = select(func.count(PostLike.id)).where(
             PostLike.user_id == user_id,
         )
@@ -256,6 +281,8 @@ class SocialLevelService:
         db: AsyncSession,
     ) -> int:
         """统计用户的评论次数。"""
+        from app.models.post import PostComment
+
         stmt = select(func.count(PostComment.id)).where(
             PostComment.user_id == user_id,
             PostComment.is_active == True,  # noqa: E712
@@ -269,6 +296,8 @@ class SocialLevelService:
         db: AsyncSession,
     ) -> int:
         """统计用户的悄悄关注人数。"""
+        from app.models.post import PostFollow
+
         stmt = select(func.count(PostFollow.id)).where(
             PostFollow.follower_id == user_id,
         )
@@ -295,7 +324,7 @@ class SocialLevelService:
         db: AsyncSession,
     ) -> int:
         """统计用户的好友数量。"""
-        from sqlalchemy import or_
+        from app.models.chat import Friendship
 
         stmt = select(func.count(Friendship.id)).where(
             or_(
@@ -312,7 +341,7 @@ class SocialLevelService:
         db: AsyncSession,
     ) -> int:
         """统计用户参与私聊的会话数（有消息记录的）。"""
-        from sqlalchemy import or_
+        from app.models.chat import Conversation
 
         # 查询有消息记录的会话数
         stmt = select(func.count(Conversation.id)).where(

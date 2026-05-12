@@ -134,7 +134,30 @@
       "Bash(node -e ' *)",
       "Bash(set DATABASE_URL=mysql+aiomysql://root:HowtoaiRoot2024Secure@118.25.182.15:3306/moonecho)",
       "Bash(set DATABASE_URL=mysql+pymysql://root:HowtoaiRoot2024Secure@118.25.182.15:3306/moonecho)",
-      "Bash(sort -t: -k2)"
+      "Bash(sort -t: -k2)",
+      "Bash(taskkill //F //PID 27804)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(findstr \":8000\")",
+      "Bash(findstr \":5173\")",
+      "Bash(findstr \":8080\")",
+      "Bash(npx create-expo-app@latest ai-meet-app --template blank-typescript)",
+      "Bash(npx expo *)",
+      "Bash(npm search *)",
+      "Bash(kill %1)",
+      "Bash(wait)",
+      "Bash(node -e \"const pkg = require\\('./node_modules/react-native-web/package.json'\\); console.log\\('react-native-web version:', pkg.version\\); console.log\\('peerDependencies:', JSON.stringify\\(pkg.peerDependencies || {}, null, 2\\)\\)\")",
+      "Bash(node -e \"const pkg = require\\('./node_modules/nativewind/package.json'\\); console.log\\('nativewind version:', pkg.version\\); console.log\\('peerDependencies:', JSON.stringify\\(pkg.peerDependencies || {}, null, 2\\)\\)\")",
+      "Bash(node -e \"const pkg = require\\('./node_modules/expo-router/package.json'\\); console.log\\('expo-router version:', pkg.version\\)\")",
+      "Bash(node -e \"const metro = require\\('metro-config'\\); console.log\\(Object.keys\\(metro\\)\\)\")",
+      "Bash(taskkill //PID 3740 //F)",
+      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\(0,'utf8'\\); const p=JSON.parse\\(d\\); console.log\\('version:', p.version\\); console.log\\('main:', p.main\\); console.log\\('module:', p.module\\); console.log\\('exports:', JSON.stringify\\(p.exports,null,2\\)\\); console.log\\('type:', p.type\\)\")",
+      "Bash(node -e \"const p=require\\('./node_modules/@tamagui/native/package.json'\\); console.log\\('native version:', p.version\\); console.log\\('main:', p.main\\); console.log\\('type:', p.type\\)\")",
+      "Bash(npm uninstall *)",
+      "Bash(cat .env.development)",
+      "Bash(cat .env.production)",
+      "Bash(node *)",
+      "Bash(cat)",
+      "Bash(bash /tmp/tn_style_replace.sh)"
     ]
   }
 }

@@ -17,6 +17,15 @@ const TRACKING_URL = import.meta.env.VITE_TRACKING_URL || '/api/v1/analytics/eve
 /** 是否开启调试模式 */
 const DEBUG = import.meta.env.VITE_DEBUG === 'true'
 
+/** 是否启用埋点上报（可以通过环境变量禁用） */
+const ENABLED = import.meta.env.VITE_ENABLE_TRACKING !== 'false'
+
+/** 最大重试次数 */
+const MAX_RETRIES = 3
+
+/** 当前重试次数 */
+let retryCount = 0
+
 /** 本地缓存键 */
 const EVENT_QUEUE_KEY = 'huisheng_event_queue'
 
@@ -402,7 +411,7 @@ function enqueueEvent(event: TrackingEvent) {
  * 发送事件队列
  */
 async function flushQueue(): Promise<void> {
-  if (eventQueue.length === 0) return
+  if (!ENABLED || eventQueue.length === 0) return
 
   const eventsToSend = [...eventQueue]
   eventQueue = []
@@ -417,14 +426,26 @@ async function flushQueue(): Promise<void> {
       success: () => {
         // 发送成功，清除本地缓存
         uni.removeStorageSync(EVENT_QUEUE_KEY)
+        retryCount = 0
         if (DEBUG) {
           console.log('[Tracking] Flushed', eventsToSend.length, 'events')
         }
       },
       fail: (err) => {
-        // 发送失败，重新加入队列
-        eventQueue = [...eventsToSend, ...eventQueue]
-        console.error('[Tracking] Flush failed:', err)
+        // 发送失败，检查重试次数
+        retryCount++
+        if (retryCount < MAX_RETRIES) {
+          // 重新加入队列
+          eventQueue = [...eventsToSend, ...eventQueue]
+          if (DEBUG) {
+            console.log('[Tracking] Flush failed, will retry:', err)
+          }
+        } else {
+          // 超过重试次数，清空队列避免一直报错
+          console.warn('[Tracking] Max retries reached, clearing queue')
+          uni.removeStorageSync(EVENT_QUEUE_KEY)
+          retryCount = 0
+        }
       },
     })
   } catch (e) {
@@ -437,11 +458,20 @@ async function flushQueue(): Promise<void> {
  * 初始化埋点系统
  */
 export function initTracking() {
-  // 从本地恢复事件队列
+  if (!ENABLED) {
+    if (DEBUG) {
+      console.log('[Tracking] Tracking disabled')
+    }
+    return
+  }
+
+  // 从本地恢复事件队列（限制队列大小避免内存问题）
   try {
     const savedQueue = uni.getStorageSync(EVENT_QUEUE_KEY)
     if (savedQueue) {
-      eventQueue = JSON.parse(savedQueue)
+      const parsed = JSON.parse(savedQueue)
+      // 只保留最近100个事件
+      eventQueue = parsed.slice(-100)
     }
   } catch (e) {
     console.error('恢复事件队列失败', e)
@@ -455,10 +485,10 @@ export function initTracking() {
   })
   // #endif
 
-  // 定时刷新队列（每30秒）
+  // 定时刷新队列（每60秒，降低频率）
   setInterval(() => {
     flushQueue()
-  }, 30000)
+  }, 60000)
 
   // 页面切换时刷新
   // uni.onAppHide 和 uni.onAppShow 需要在 App.vue 中处理

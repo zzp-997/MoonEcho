@@ -104,8 +104,8 @@ function handleConfirm() {
 <style lang="scss" scoped>
 .minor-notice-page {
   min-height: 100vh;
-  background-color: var(--bg-primary);
-  padding: 0 var(--space-lg);
+  background-color: #FFFFFF;
+  padding: 0 30rpx;
   padding-top: 160rpx;
   box-sizing: border-box;
   display: flex;
@@ -118,66 +118,66 @@ function handleConfirm() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: var(--space-2xl);
+  margin-bottom: 60rpx;
 }
 
 .shield-icon-wrap {
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
-  background-color: var(--color-warning-bg);
+  background-color: rgba(255,190,40,0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .shield-icon {
   font-size: 56rpx;
-  color: var(--color-warning);
+  color: #FFBE28;
   font-weight: bold;
 }
 
 .header-title {
   font-size: 40rpx;
   font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-xs);
+  color: #080808;
+  margin-bottom: 8rpx;
 }
 
 .header-subtitle {
   font-size: 26rpx;
-  color: var(--text-secondary);
+  color: #333333;
 }
 
 // ==================== 说明区域 ====================
 
 .section {
-  margin-bottom: var(--space-xl);
+  margin-bottom: 40rpx;
 }
 
 .section-title {
   display: block;
   font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: var(--space-md);
+  color: #080808;
+  margin-bottom: 24rpx;
 }
 
 .info-list {
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
+  background-color: #F8F8FA;
+  border-radius: 30rpx;
+  padding: 24rpx;
 }
 
 .info-item {
   display: flex;
   align-items: flex-start;
-  padding: var(--space-sm) 0;
+  padding: 16rpx 0;
 
   &:not(:last-child) {
-    border-bottom: 1px solid var(--border-standard);
-    padding-bottom: var(--space-md);
+    border-bottom: 1px solid #E0E0E0;
+    padding-bottom: 24rpx;
     margin-bottom: 0;
   }
 }
@@ -186,19 +186,19 @@ function handleConfirm() {
   width: 16rpx;
   height: 16rpx;
   border-radius: 50%;
-  background-color: var(--brand-primary);
+  background-color: #01BEFF;
   margin-top: 8rpx;
-  margin-right: var(--space-sm);
+  margin-right: 16rpx;
   flex-shrink: 0;
 
   &.dot-warning {
-    background-color: var(--color-warning);
+    background-color: #FFBE28;
   }
 }
 
 .info-text {
   font-size: 28rpx;
-  color: var(--text-secondary);
+  color: #333333;
   line-height: 1.6;
   flex: 1;
 }
@@ -206,15 +206,15 @@ function handleConfirm() {
 // ==================== 温馨提示 ====================
 
 .warm-tip {
-  background-color: var(--brand-light);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
-  margin-bottom: var(--space-2xl);
+  background-color: rgba(1,190,255,0.1);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 60rpx;
 }
 
 .warm-tip-text {
   font-size: 26rpx;
-  color: var(--brand-primary);
+  color: #01BEFF;
   line-height: 1.6;
   text-align: center;
 }
@@ -223,14 +223,14 @@ function handleConfirm() {
 
 .bottom-section {
   margin-top: auto;
-  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
+  padding-bottom: calc(30rpx + env(safe-area-inset-bottom));
 }
 </style>
 
 <style lang="scss">
 // 全局样式覆盖，用于 wot-design-uni 组件样式
 .minor-notice-page {
-  --wd-button-primary-bg-color: var(--brand-primary);
-  --wd-button-primary-border-color: var(--brand-primary);
+  --wd-button-primary-bg-color: #01BEFF;
+  --wd-button-primary-border-color: #01BEFF;
 }
 </style>

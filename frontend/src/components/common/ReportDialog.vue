@@ -411,7 +411,7 @@ onMounted(() => {
 
   &.is-selected {
     border-color: var(--brand-primary);
-    background-color: rgba(124, 111, 224, 0.06);
+    background-color: var(--brand-light);
   }
 }
 
@@ -513,7 +513,7 @@ onMounted(() => {
   justify-content: center;
   width: 120rpx;
   height: 120rpx;
-  background-color: rgba(52, 211, 153, 0.12);
+  background-color: var(--color-success);
   border-radius: 50%;
   margin-bottom: var(--space-lg);
 }

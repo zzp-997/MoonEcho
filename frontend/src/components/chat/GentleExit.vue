@@ -138,7 +138,7 @@ function handleOverlayTap(): void {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -195,7 +195,7 @@ function handleOverlayTap(): void {
   }
 
   &.selected {
-    background-color: rgba(124, 111, 224, 0.2);
+    background-color: var(--brand-light);
   }
 }
 

@@ -5,6 +5,7 @@
  */
 
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useUserStore } from '@/stores/user'
 import {
   getNotifications,
   getUnreadCount,
@@ -415,7 +416,12 @@ function stopPolling(): void {
    */
   async function refreshUnreadCount(): Promise<void> {
     try {
-      const result = await getUnreadCount()
+      const userStore = useUserStore()
+      if (!userStore.isLoggedIn) {
+        pagination.value.unreadCount = 0
+        return
+      }
+      const result = await getUnreadCount({ silent: true })
       pagination.value.unreadCount = result.count
     } catch (error) {
       console.error('刷新未读数量失败:', error)

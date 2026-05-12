@@ -1,0 +1,358 @@
+// ============================================
+// 回声 - 图鸟风格全局样式
+// 文件：src/styles/tnbird.scss
+// 说明：渐变色类、彩色阴影类、图标容器、3D效果等图鸟特色样式
+// 对齐：tuniao-ui/libs/css/color.scss + main.scss
+// ============================================
+
+// ==================== 渐变背景类 ====================
+
+.tn-gradient-1 { background-image: var(--gradient-1); color: #FFFFFF; }
+.tn-gradient-2 { background-image: var(--gradient-2); color: #FFFFFF; }
+.tn-gradient-3 { background-image: var(--gradient-3); color: #FFFFFF; }
+.tn-gradient-4 { background-image: var(--gradient-4); color: #FFFFFF; }
+.tn-gradient-5 { background-image: var(--gradient-5); color: #FFFFFF; }
+.tn-gradient-6 { background-image: var(--gradient-6); color: #FFFFFF; }
+.tn-gradient-7 { background-image: var(--gradient-7); color: #FFFFFF; }
+.tn-gradient-8 { background-image: var(--gradient-8); color: #FFFFFF; }
+.tn-gradient-9 { background-image: var(--gradient-9); color: #FFFFFF; }
+.tn-gradient-10 { background-image: var(--gradient-10); color: #FFFFFF; }
+.tn-gradient-11 { background-image: var(--gradient-11); color: #FFFFFF; }
+.tn-gradient-12 { background-image: var(--gradient-12); color: #FFFFFF; }
+.tn-gradient-13 { background-image: var(--gradient-13); color: #FFFFFF; }
+.tn-gradient-14 { background-image: var(--gradient-14); color: #FFFFFF; }
+.tn-gradient-15 { background-image: var(--gradient-15); color: #FFFFFF; }
+.tn-gradient-16 { background-image: var(--gradient-16); color: #FFFFFF; }
+
+// 渐变反转
+.tn-gradient-reverse-1 { background-image: linear-gradient(-45deg, #F5317F, #FF7C6E); color: #FFFFFF; }
+.tn-gradient-reverse-5 { background-image: linear-gradient(-45deg, #40A0F7, #4866E6); color: #FFFFFF; }
+.tn-gradient-reverse-6 { background-image: linear-gradient(-45deg, #209CFF, #68E0CF); color: #FFFFFF; }
+.tn-gradient-reverse-13 { background-image: linear-gradient(-45deg, #FA709A, #FEE140); color: #FFFFFF; }
+
+// ==================== 命名色背景类 ====================
+
+.tn-bg-red { background-color: var(--color-red); color: #080808; }
+.tn-bg-red--light { background-color: var(--color-red-light); color: var(--color-red-dark); }
+.tn-bg-purplered { background-color: var(--color-purplered); color: #FFFFFF; }
+.tn-bg-purplered--light { background-color: var(--color-purplered-light); color: var(--color-purplered-dark); }
+.tn-bg-purple { background-color: var(--color-purple); color: #FFFFFF; }
+.tn-bg-purple--light { background-color: var(--color-purple-light); color: var(--color-purple-dark); }
+.tn-bg-bluepurple { background-color: var(--color-bluepurple); color: #FFFFFF; }
+.tn-bg-bluepurple--light { background-color: var(--color-bluepurple-light); color: var(--color-bluepurple-dark); }
+.tn-bg-aquablue { background-color: var(--color-aquablue); color: #FFFFFF; }
+.tn-bg-aquablue--light { background-color: var(--color-aquablue-light); color: var(--color-aquablue-dark); }
+.tn-bg-blue { background-color: var(--color-blue); color: #FFFFFF; }
+.tn-bg-blue--light { background-color: var(--color-blue-light); color: var(--color-blue-dark); }
+.tn-bg-indigo { background-color: var(--color-indigo); color: #080808; }
+.tn-bg-indigo--light { background-color: var(--color-indigo-light); color: var(--color-indigo-dark); }
+.tn-bg-cyan { background-color: var(--color-cyan); color: #080808; }
+.tn-bg-cyan--light { background-color: var(--color-cyan-light); color: var(--color-cyan-dark); }
+.tn-bg-teal { background-color: var(--color-teal); color: #080808; }
+.tn-bg-teal--light { background-color: var(--color-teal-light); color: var(--color-teal-dark); }
+.tn-bg-green { background-color: var(--color-green); color: #080808; }
+.tn-bg-green--light { background-color: var(--color-green-light); color: var(--color-green-dark); }
+.tn-bg-yellowgreen { background-color: var(--color-yellowgreen); color: #080808; }
+.tn-bg-yellowgreen--light { background-color: var(--color-yellowgreen-light); color: var(--color-yellowgreen-dark); }
+.tn-bg-lime { background-color: var(--color-lime); color: #080808; }
+.tn-bg-lime--light { background-color: var(--color-lime-light); color: var(--color-lime-dark); }
+.tn-bg-yellow { background-color: var(--color-yellow); color: #080808; }
+.tn-bg-yellow--light { background-color: var(--color-yellow-light); color: var(--color-yellow-dark); }
+.tn-bg-orangeyellow { background-color: var(--color-orangeyellow); color: #080808; }
+.tn-bg-orangeyellow--light { background-color: var(--color-orangeyellow-light); color: var(--color-orangeyellow-dark); }
+.tn-bg-orange { background-color: var(--color-orange); color: #080808; }
+.tn-bg-orange--light { background-color: var(--color-orange-light); color: var(--color-orange-dark); }
+.tn-bg-orangered { background-color: var(--color-orangered); color: #FFFFFF; }
+.tn-bg-orangered--light { background-color: var(--color-orangered-light); color: var(--color-orangered-dark); }
+.tn-bg-brown { background-color: var(--color-brown); color: #FFFFFF; }
+.tn-bg-brown--light { background-color: var(--color-brown-light); color: var(--color-brown-dark); }
+.tn-bg-grey { background-color: var(--color-grey); color: #FFFFFF; }
+.tn-bg-grey--light { background-color: var(--color-grey-light); color: var(--color-grey-dark); }
+.tn-bg-gray { background-color: var(--color-gray); color: #080808; }
+.tn-bg-gray--light { background-color: var(--color-gray-light); color: var(--color-gray-dark); }
+.tn-bg-white { background-color: #FFFFFF; color: #080808; }
+.tn-bg-black { background-color: #080808; color: #FFFFFF; }
+
+// ==================== 命名色文字类 ====================
+
+.tn-color-red { color: var(--color-red); }
+.tn-color-purplered { color: var(--color-purplered); }
+.tn-color-purple { color: var(--color-purple); }
+.tn-color-bluepurple { color: var(--color-bluepurple); }
+.tn-color-aquablue { color: var(--color-aquablue); }
+.tn-color-blue { color: var(--color-blue); }
+.tn-color-indigo { color: var(--color-indigo); }
+.tn-color-cyan { color: var(--color-cyan); }
+.tn-color-teal { color: var(--color-teal); }
+.tn-color-green { color: var(--color-green); }
+.tn-color-yellowgreen { color: var(--color-yellowgreen); }
+.tn-color-lime { color: var(--color-lime); }
+.tn-color-yellow { color: var(--color-yellow); }
+.tn-color-orangeyellow { color: var(--color-orangeyellow); }
+.tn-color-orange { color: var(--color-orange); }
+.tn-color-orangered { color: var(--color-orangered); }
+.tn-color-brown { color: var(--color-brown); }
+.tn-color-grey { color: var(--color-grey); }
+.tn-color-gray { color: var(--color-gray); }
+.tn-color-white { color: #FFFFFF; }
+.tn-color-black { color: #080808; }
+
+// ==================== 彩色盒阴影 ====================
+
+.tn-shadow-red { box-shadow: 12rpx 12rpx 16rpx var(--color-red-light); }
+.tn-shadow-purplered { box-shadow: 12rpx 12rpx 16rpx var(--color-purplered-light); }
+.tn-shadow-purple { box-shadow: 12rpx 12rpx 16rpx var(--color-purple-light); }
+.tn-shadow-bluepurple { box-shadow: 12rpx 12rpx 16rpx var(--color-bluepurple-light); }
+.tn-shadow-aquablue { box-shadow: 12rpx 12rpx 16rpx var(--color-aquablue-light); }
+.tn-shadow-blue { box-shadow: 12rpx 12rpx 16rpx var(--color-blue-light); }
+.tn-shadow-indigo { box-shadow: 12rpx 12rpx 16rpx var(--color-indigo-light); }
+.tn-shadow-cyan { box-shadow: 12rpx 12rpx 16rpx var(--color-cyan-light); }
+.tn-shadow-teal { box-shadow: 12rpx 12rpx 16rpx var(--color-teal-light); }
+.tn-shadow-green { box-shadow: 12rpx 12rpx 16rpx var(--color-green-light); }
+.tn-shadow-yellowgreen { box-shadow: 12rpx 12rpx 16rpx var(--color-yellowgreen-light); }
+.tn-shadow-lime { box-shadow: 12rpx 12rpx 16rpx var(--color-lime-light); }
+.tn-shadow-yellow { box-shadow: 12rpx 12rpx 16rpx var(--color-yellow-light); }
+.tn-shadow-orangeyellow { box-shadow: 12rpx 12rpx 16rpx var(--color-orangeyellow-light); }
+.tn-shadow-orange { box-shadow: 12rpx 12rpx 16rpx var(--color-orange-light); }
+.tn-shadow-orangered { box-shadow: 12rpx 12rpx 16rpx var(--color-orangered-light); }
+.tn-shadow-brown { box-shadow: 12rpx 12rpx 16rpx var(--color-brown-light); }
+.tn-shadow-grey { box-shadow: 12rpx 12rpx 16rpx var(--color-grey-light); }
+.tn-shadow-gray { box-shadow: 12rpx 12rpx 16rpx var(--color-gray-light); }
+
+// 模糊阴影（用于头像等强调元素）
+.tn-shadow-blur {
+  box-shadow: 0rpx 0rpx 80rpx 0rpx rgba(0, 0, 0, 0.15);
+}
+
+// 标准卡片阴影
+.tn-shadow-card {
+  box-shadow: 0rpx 0rpx 50rpx 0rpx rgba(0, 0, 0, 0.07);
+  border-radius: 15rpx;
+}
+
+// ==================== 彩色文字阴影 ====================
+
+.tn-text-shadow-red { text-shadow: 6rpx 6rpx 8rpx var(--color-red-light); }
+.tn-text-shadow-purplered { text-shadow: 6rpx 6rpx 8rpx var(--color-purplered-light); }
+.tn-text-shadow-purple { text-shadow: 6rpx 6rpx 8rpx var(--color-purple-light); }
+.tn-text-shadow-blue { text-shadow: 6rpx 6rpx 8rpx var(--color-blue-light); }
+.tn-text-shadow-indigo { text-shadow: 6rpx 6rpx 8rpx var(--color-indigo-light); }
+.tn-text-shadow-cyan { text-shadow: 6rpx 6rpx 8rpx var(--color-cyan-light); }
+.tn-text-shadow-orange { text-shadow: 6rpx 6rpx 8rpx var(--color-orange-light); }
+.tn-text-shadow-orangered { text-shadow: 6rpx 6rpx 8rpx var(--color-orangered-light); }
+
+// ==================== 渐变图标容器 ====================
+
+.tn-icon-container {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50rpx;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s linear;
+  transform-origin: center center;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// 渐变图标容器 + 彩色阴影的组合
+.tn-icon-gradient-1 {
+  @extend .tn-icon-container;
+  background-image: var(--gradient-1);
+  color: #FFFFFF;
+  box-shadow: 12rpx 12rpx 16rpx var(--color-purplered-light);
+}
+.tn-icon-gradient-5 {
+  @extend .tn-icon-container;
+  background-image: var(--gradient-5);
+  color: #FFFFFF;
+  box-shadow: 12rpx 12rpx 16rpx var(--color-blue-light);
+}
+.tn-icon-gradient-6 {
+  @extend .tn-icon-container;
+  background-image: var(--gradient-6);
+  color: #FFFFFF;
+  box-shadow: 12rpx 12rpx 16rpx var(--color-indigo-light);
+}
+.tn-icon-gradient-7 {
+  @extend .tn-icon-container;
+  background-image: var(--gradient-7);
+  color: #FFFFFF;
+  box-shadow: 12rpx 12rpx 16rpx var(--color-cyan-light);
+}
+.tn-icon-gradient-9 {
+  @extend .tn-icon-container;
+  background-image: var(--gradient-9);
+  color: #FFFFFF;
+  box-shadow: 12rpx 12rpx 16rpx var(--color-cyan-light);
+}
+.tn-icon-gradient-13 {
+  @extend .tn-icon-container;
+  background-image: var(--gradient-13);
+  color: #FFFFFF;
+  box-shadow: 12rpx 12rpx 16rpx var(--color-purplered-light);
+}
+.tn-icon-gradient-15 {
+  @extend .tn-icon-container;
+  background-image: var(--gradient-15);
+  color: #FFFFFF;
+  box-shadow: 12rpx 12rpx 16rpx var(--color-orangered-light);
+}
+
+// ==================== 3D 悬浮效果 ====================
+
+.tn-three {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  bottom: 50%;
+  left: 50%;
+  transform: translate(-38rpx, -20rpx) rotateX(20deg) rotateY(10deg) rotateZ(-20deg);
+  text-shadow: -1rpx 2rpx 0 #f0f0f0, -2rpx 4rpx 0 #f0f0f0,
+    -10rpx 20rpx 30rpx rgba(0, 0, 0, 0.2);
+}
+
+// ==================== 悬浮动画 ====================
+
+.tn-suspension {
+  animation: tnSuspension 3s ease-in-out infinite;
+}
+
+@keyframes tnSuspension {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.6rem);
+  }
+}
+
+// ==================== 渐变主按钮 ====================
+
+.tn-btn-gradient {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx 40rpx;
+  border-radius: 5000rpx;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 28rpx;
+  border: none;
+  position: relative;
+  overflow: hidden;
+
+  &:active {
+    opacity: 0.85;
+    transform: scale(0.97);
+  }
+}
+
+// ==================== 图鸟风格卡片 ====================
+
+.tn-card {
+  background-color: #FFFFFF;
+  border-radius: 15rpx;
+  box-shadow: 0rpx 0rpx 50rpx 0rpx rgba(0, 0, 0, 0.07);
+  padding: 30rpx;
+  position: relative;
+  z-index: 1;
+
+  &::after {
+    content: " ";
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    border-radius: inherit;
+    opacity: 1;
+    transform: scale(1, 1);
+    background-size: 100% 100%;
+  }
+}
+
+// ==================== 圆角工具 ====================
+
+.tn-round { border-radius: 5000rpx !important; }
+.tn-radius { border-radius: 6rpx !important; }
+.tn-radius-sm { border-radius: 10rpx !important; }
+.tn-radius-md { border-radius: 15rpx !important; }
+.tn-radius-lg { border-radius: 20rpx !important; }
+
+// ==================== 字号工具（对齐图鸟） ====================
+
+.tn-text-xs { font-size: 22rpx; }
+.tn-text-sm { font-size: 24rpx; }
+.tn-text-df { font-size: 28rpx; }
+.tn-text-lg { font-size: 32rpx; }
+.tn-text-xl { font-size: 36rpx; }
+.tn-text-xxl { font-size: 46rpx; }
+.tn-text-bold { font-weight: bold; }
+
+// ==================== 间距工具（对齐图鸟） ====================
+
+.tn-margin-xs { margin: 10rpx; }
+.tn-margin-sm { margin: 15rpx; }
+.tn-margin { margin: 20rpx; }
+.tn-margin-lg { margin: 30rpx; }
+.tn-margin-xl { margin: 50rpx; }
+.tn-margin-left { margin-left: 20rpx; }
+.tn-margin-left-sm { margin-left: 15rpx; }
+.tn-margin-right { margin-right: 20rpx; }
+.tn-margin-right-sm { margin-right: 15rpx; }
+.tn-margin-top { margin-top: 20rpx; }
+.tn-margin-top-sm { margin-top: 10rpx; }
+.tn-margin-top-xs { margin-top: 5rpx; }
+.tn-margin-top-lg { margin-top: 30rpx; }
+.tn-margin-top-xl { margin-top: 50rpx; }
+.tn-margin-bottom { margin-bottom: 20rpx; }
+.tn-margin-bottom-sm { margin-bottom: 10rpx; }
+.tn-margin-bottom-lg { margin-bottom: 30rpx; }
+.tn-margin-bottom-xl { margin-bottom: 50rpx; }
+.tn-padding-xs { padding: 10rpx; }
+.tn-padding-sm { padding: 15rpx; }
+.tn-padding { padding: 20rpx; }
+.tn-padding-lg { padding: 30rpx; }
+.tn-padding-top { padding-top: 20rpx; }
+.tn-padding-top-sm { padding-top: 10rpx; }
+.tn-padding-top-xs { padding-top: 5rpx; }
+.tn-padding-top-xl { padding-top: 30rpx; }
+.tn-padding-left { padding-left: 20rpx; }
+.tn-padding-left-sm { padding-left: 10rpx; }
+.tn-padding-left-xs { padding-left: 5rpx; }
+.tn-padding-right { padding-right: 20rpx; }
+.tn-padding-right-sm { padding-right: 10rpx; }
+.tn-padding-right-xs { padding-right: 5rpx; }
+
+// ==================== 内容间隔条 ====================
+
+.tn-strip-bottom {
+  width: 100%;
+  border-bottom: 20rpx solid rgba(241, 241, 241, 0.8);
+}
+
+// ==================== Flex 工具（对齐图鸟） ====================
+
+.tn-flex { display: flex; }
+.tn-flex-1 { flex: 1; }
+.tn-flex-2 { flex: 2; }
+.tn-flex-col-center { align-items: center; }
+.tn-flex-row-center { justify-content: center; }
+.tn-flex-row-left { justify-content: flex-start; }
+.tn-flex-row-right { justify-content: flex-end; }
+.tn-flex-row-between { justify-content: space-between; }
+.tn-flex-row-around { justify-content: space-around; }
+.tn-flex-col-center { align-items: center; }
+.tn-flex-col-top { align-items: flex-start; }
+.tn-flex-col-bottom { align-items: flex-end; }
+.tn-flex-direction-column { flex-direction: column; }
+.tn-flex-wrap { flex-wrap: wrap; }
+.tn-flex-col-between { align-content: space-between; }

@@ -18,10 +18,12 @@
     "@dcloudio/uni-components": "3.0.0-alpha-5000820260420001",
     "@dcloudio/uni-h5": "3.0.0-alpha-5000820260420001",
     "@dcloudio/uni-mp-weixin": "3.0.0-alpha-5000820260420001",
-    "vue": "^3.4.38",
+    "@dcloudio/uni-ui": "^1.5.6",
+    "@tuniao/tn-icon": "^1.11.0",
+    "@tuniao/tnui-vue3-uniapp": "^1.0.23",
     "pinia": "^2.2.4",
-    "wot-design-uni": "^1.9.2",
-    "@dcloudio/uni-ui": "^1.5.6"
+    "vue": "^3.4.38",
+    "wot-design-uni": "^1.9.2"
   },
   "devDependencies": {
     "@dcloudio/types": "^3.4.12",
@@ -29,10 +31,10 @@
     "@dcloudio/uni-cli-shared": "3.0.0-alpha-5000820260420001",
     "@dcloudio/uni-stacktracey": "3.0.0-alpha-5000820260420001",
     "@dcloudio/vite-plugin-uni": "3.0.0-alpha-5000820260420001",
+    "@types/node": "^22.7.5",
+    "sass": "^1.80.4",
     "typescript": "^5.6.3",
     "vite": "5.2.8",
-    "sass": "^1.80.4",
-    "vue-tsc": "^2.1.6",
-    "@types/node": "^22.7.5"
+    "vue-tsc": "^2.1.6"
   }
 }

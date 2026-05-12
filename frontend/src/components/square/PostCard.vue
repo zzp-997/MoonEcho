@@ -149,14 +149,14 @@ const displayPersonaTag = computed(() => {
 const anonAvatarColor = computed(() => {
   // 基于动态ID生成稳定的颜色
   const colors = [
-    '#FFB5BA',
-    '#8B9DC3',
-    '#7CB9A0',
-    '#A89CF5',
-    '#FFB88A',
-    '#A5C0D6',
-    '#D4A5D9',
-    '#8B6C9A',
+    'var(--mood-warm)',
+    'var(--mood-low)',
+    'var(--mood-calm)',
+    'var(--ai-xiaowen)',
+    'var(--brand-primary)',
+    'var(--color-info)',
+    'var(--mood-chaos)',
+    'var(--mood-sad)',
   ]
   const seed = props.post.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   return colors[seed % colors.length]
@@ -259,7 +259,7 @@ function handleImageTap(index: number): void {
 
 .avatar-icon {
   font-size: var(--font-size-base);
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-on-brand);
 }
 
 .identity-info {

@@ -25,9 +25,15 @@ export function useTheme() {
         ? { backgroundColor: '#12111a' }
         : { backgroundColor: '#FFF9F5' }
 
+      // #ifdef APP-PLUS || MP-WEIXIN
       uni.setPageStyle({
         style: pageStyle,
       })
+      // #endif
+      // #ifdef H5
+      // H5 平台直接操作 DOM
+      document.body.style.backgroundColor = dark ? '#12111a' : '#FFF9F5'
+      // #endif
     } catch (e) {
       console.error('设置页面样式失败', e)
     }

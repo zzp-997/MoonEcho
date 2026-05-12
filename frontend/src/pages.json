@@ -241,6 +241,7 @@
     }
   },
   "tabBar": {
+    "custom": true,
     "color": "#999999",
     "selectedColor": "#FF9A5C",
     "borderStyle": "black",
@@ -248,27 +249,19 @@
     "list": [
       {
         "pagePath": "pages/home/index",
-        "text": "首页",
-        "iconPath": "static/images/icons/tab-home.png",
-        "selectedIconPath": "static/images/icons/tab-home-active.png"
+        "text": "首页"
       },
       {
         "pagePath": "pages/diary/index",
-        "text": "日记",
-        "iconPath": "static/images/icons/tab-diary.png",
-        "selectedIconPath": "static/images/icons/tab-diary-active.png"
+        "text": "日记"
       },
       {
         "pagePath": "pagesSocial/square/index",
-        "text": "广场",
-        "iconPath": "static/images/icons/tab-square.png",
-        "selectedIconPath": "static/images/icons/tab-square-active.png"
+        "text": "广场"
       },
       {
         "pagePath": "pages/mine/index",
-        "text": "我的",
-        "iconPath": "static/images/icons/tab-mine.png",
-        "selectedIconPath": "static/images/icons/tab-mine-active.png"
+        "text": "我的"
       }
     ]
   },

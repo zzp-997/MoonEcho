@@ -134,7 +134,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #0A0A0A;
+  background-color: #FFFFFF;
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -145,7 +145,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 var(--space-lg);
+  padding: 0 30rpx;
 }
 
 // ==================== 月亮图标 ====================
@@ -154,16 +154,16 @@ onUnmounted(() => {
   width: 160rpx;
   height: 160rpx;
   border-radius: 50%;
-  background-color: rgba(251, 191, 36, 0.1);
+  background-color: rgba(255,190,40,0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-2xl);
+  margin-bottom: 60rpx;
 }
 
 .moon-icon {
   font-size: 80rpx;
-  color: var(--color-warning);
+  color: #FFBE28;
   font-weight: bold;
 }
 
@@ -172,26 +172,26 @@ onUnmounted(() => {
 .lock-title {
   font-size: 52rpx;
   font-weight: 600;
-  color: #F5F5F5;
-  margin-bottom: var(--space-sm);
+  color: #080808;
+  margin-bottom: 16rpx;
 }
 
 .lock-subtitle {
   font-size: 32rpx;
-  color: #B3B3B3;
-  margin-bottom: var(--space-2xl);
+  color: #333333;
+  margin-bottom: 60rpx;
 }
 
 // ==================== 安慰语 ====================
 
 .comfort-area {
-  margin-bottom: var(--space-2xl);
-  padding: 0 var(--space-md);
+  margin-bottom: 60rpx;
+  padding: 0 24rpx;
 }
 
 .comfort-text {
   font-size: 28rpx;
-  color: #808080;
+  color: #838383;
   line-height: 1.8;
   text-align: center;
   font-style: italic;
@@ -208,13 +208,13 @@ onUnmounted(() => {
 .current-time {
   font-size: 80rpx;
   font-weight: 300;
-  color: #B3B3B3;
+  color: #333333;
   letter-spacing: 4px;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 }
 
 .time-hint {
   font-size: 24rpx;
-  color: #808080;
+  color: #838383;
 }
 </style>

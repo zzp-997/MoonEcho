@@ -89,7 +89,7 @@ const personalities = [
     label: '温',
     description: '温柔倾听者，像姐姐一样温暖',
     tags: ['温柔', '倾听', '治愈'],
-    color: '#FFB5BA',
+    color: '#E72F8C',
   },
   {
     type: 'laohei',
@@ -97,7 +97,7 @@ const personalities = [
     label: '黑',
     description: '毒舌吐槽者，像损友一样直率',
     tags: ['直率', '吐槽', '清醒'],
-    color: '#8B9DC3',
+    color: '#78909C',
   },
   {
     type: 'ali',
@@ -105,7 +105,7 @@ const personalities = [
     label: '理',
     description: '理性开导者，像大哥一样可靠',
     tags: ['理性', '分析', '建议'],
-    color: '#7CB9A0',
+    color: '#3D7EFF',
   },
 ]
 
@@ -239,9 +239,9 @@ onMounted(() => {
 <style lang="scss" scoped>
 .personality-page {
   min-height: 100vh;
-  background-color: var(--bg-primary);
-  padding: var(--space-xl) var(--space-lg);
-  padding-bottom: calc(var(--space-2xl) + env(safe-area-inset-bottom));
+  background-color: #FFFFFF;
+  padding: 40rpx 30rpx;
+  padding-bottom: calc(60rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
 
@@ -249,19 +249,19 @@ onMounted(() => {
 
 .header {
   text-align: center;
-  margin-bottom: var(--space-xl);
+  margin-bottom: 40rpx;
 }
 
 .title {
-  font-size: var(--font-size-2xl);
+  font-size: 48rpx;
   font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  color: #080808;
+  margin-bottom: 16rpx;
 }
 
 .subtitle {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 28rpx;
+  color: #333333;
 }
 
 // ==================== 性格卡片 ====================
@@ -269,25 +269,25 @@ onMounted(() => {
 .card-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
-  margin-bottom: var(--space-2xl);
+  gap: 24rpx;
+  margin-bottom: 60rpx;
 }
 
 .personality-card {
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-xl);
-  padding: var(--space-lg);
+  background-color: #F8F8FA;
+  border-radius: 30rpx;
+  padding: 30rpx;
   position: relative;
   border: 2px solid transparent;
-  transition: all var(--transition-base);
+  transition: all 0.3s ease;
 
   &:active {
     transform: scale(0.98);
   }
 
   &.is-selected {
-    border-color: var(--brand-primary);
-    box-shadow: var(--shadow-md);
+    border-color: #01BEFF;
+    box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(0,0,0,0.08);
   }
 }
 
@@ -296,88 +296,88 @@ onMounted(() => {
 .card-avatar {
   width: 100rpx;
   height: 100rpx;
-  border-radius: var(--radius-full);
+  border-radius: 5000rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 
   &.avatar-xiaowen {
-    background-color: var(--ai-xiaowen-bg);
+    background-color: rgba(231,47,140,0.1);
   }
 
   &.avatar-laohei {
-    background-color: var(--ai-laohei-bg);
+    background-color: rgba(120,144,156,0.1);
   }
 
   &.avatar-ali {
-    background-color: var(--ai-ali-bg);
+    background-color: rgba(61,126,255,0.1);
   }
 }
 
 .avatar-label {
   font-size: 36rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 // ==================== 卡片内容 ====================
 
 .card-name {
-  margin-bottom: var(--space-xs);
+  margin-bottom: 8rpx;
 }
 
 .name-text {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .card-desc {
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 }
 
 .desc-text {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 28rpx;
+  color: #333333;
 }
 
 // ==================== 特点标签 ====================
 
 .card-tags {
   display: flex;
-  gap: var(--space-xs);
+  gap: 8rpx;
 }
 
 .tag {
   padding: 4rpx 12rpx;
-  border-radius: var(--radius-sm);
-  background-color: var(--bg-tertiary);
+  border-radius: 20rpx;
+  background-color: #F4F4F5;
 }
 
 .tag-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 选中指示 ====================
 
 .selected-mark {
   position: absolute;
-  top: var(--space-md);
-  right: var(--space-md);
+  top: 24rpx;
+  right: 24rpx;
   width: 48rpx;
   height: 48rpx;
-  border-radius: var(--radius-full);
-  background-color: var(--brand-primary);
+  border-radius: 5000rpx;
+  background-color: #01BEFF;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .mark-icon {
-  color: var(--text-on-brand);
-  font-size: var(--font-size-md);
+  color: #FFFFFF;
+  font-size: 30rpx;
   font-weight: 600;
 }
 
@@ -388,14 +388,14 @@ onMounted(() => {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: var(--space-md) var(--space-lg);
-  padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
-  background-color: var(--bg-primary);
+  padding: 24rpx 30rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background-color: #FFFFFF;
 }
 
 .skip-btn {
   text-align: center;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 
   &:active {
     opacity: 0.7;
@@ -403,8 +403,8 @@ onMounted(() => {
 }
 
 .skip-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .confirm-btn {
@@ -412,25 +412,25 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 96rpx;
-  border-radius: var(--radius-lg);
-  background-color: var(--bg-tertiary);
+  border-radius: 30rpx;
+  background-color: #F4F4F5;
 
   &:active {
     opacity: 0.9;
   }
 
   &.is-active {
-    background-color: var(--brand-primary);
+    background-color: #01BEFF;
 
     .confirm-text {
-      color: var(--text-on-brand);
+      color: #FFFFFF;
     }
   }
 }
 
 .confirm-text {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-muted);
+  color: #838383;
 }
 </style>

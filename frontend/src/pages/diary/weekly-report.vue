@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="header-back" @tap="handleBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <wd-icon name="arrow-left" size="20px" color="#080808" />
       </view>
       <view class="header-title">
         <text class="title-text">本周情绪报告</text>
@@ -14,7 +14,7 @@
           class="action-btn"
           @tap="handleRefresh"
         >
-          <wd-icon name="refresh" size="18px" color="var(--text-muted)" />
+          <wd-icon name="refresh" size="18px" color="#838383" />
         </view>
       </view>
     </view>
@@ -36,7 +36,7 @@
       <!-- 空周报状态 -->
       <view v-else-if="isEmptyReport" class="empty-report">
         <view class="empty-icon-wrapper">
-          <wd-icon name="calendar" size="48px" color="var(--text-muted)" />
+          <wd-icon name="calendar" size="48px" color="#838383" />
         </view>
         <text class="empty-title">本周暂无周报</text>
         <text class="empty-message">{{ emptyReport?.message || '本周还没有记录足够的日记，无法生成周报。' }}</text>
@@ -143,7 +143,6 @@
  */
 
 import { ref, computed, onMounted } from 'vue'
-import { onShow, onHide } from '@dcloudio/uni-app'
 import {
   getWeeklyReport,
   getDiaryList,
@@ -154,6 +153,7 @@ import {
   type DiaryResponse,
 } from '@/api/diary'
 import { track, EventName, trackPageEnter, trackPageLeave } from '@/utils/tracking'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import EmotionChart from '@/components/diary/EmotionChart.vue'
 import KeywordCloud from '@/components/diary/KeywordCloud.vue'
 
@@ -377,12 +377,13 @@ onMounted(() => {
   loadReport(false)
 })
 
-onShow(() => {
-  trackPageEnter('weekly_report')
-})
-
-onHide(() => {
-  trackPageLeave('weekly_report')
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('weekly_report')
+  },
+  onHidden() {
+    trackPageLeave('weekly_report')
+  }
 })
 </script>
 
@@ -391,39 +392,29 @@ onHide(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
-// ==================== 顶部导航栏 ====================
+// ==================== 导航栏 ====================
 
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 var(--space-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-standard);
+  padding: 0 30rpx;
+  background: linear-gradient(135deg, #892FE8, #5F25E8);
 }
 
 .header-back {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  justify-content: center;
+  width: 64rpx;
+  height: 64rpx;
+  color: #FFFFFF;
 
-  &:active {
-    opacity: 0.7;
-  }
-}
-
-.back-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
-}
-
-.back-text {
-  font-size: var(--font-size-base);
-  color: var(--text-primary);
+  &:active { opacity: 0.6; }
 }
 
 .header-title {
@@ -432,9 +423,9 @@ onHide(() => {
 }
 
 .title-text {
-  font-size: var(--font-size-lg);
+  font-size: 32rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-actions {
@@ -446,25 +437,19 @@ onHide(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-md);
-  background-color: var(--bg-tertiary);
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
 
-  &:active {
-    opacity: 0.7;
-  }
+  &:active { opacity: 0.6; }
 }
 
-.action-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-}
-
-// ==================== 内容区域 ====================
+// ==================== 内容区 ====================
 
 .page-content {
   flex: 1;
-  padding: var(--space-md);
+  padding: 30rpx;
 }
 
 // ==================== 加载状态 ====================
@@ -473,98 +458,92 @@ onHide(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: var(--space-2xl) 0;
+  padding: 120rpx 0;
 }
 
 .loading-spinner {
   width: 48rpx;
   height: 48rpx;
-  border: 4rpx solid var(--border-standard);
-  border-top-color: var(--brand-primary);
+  border: 4rpx solid rgba(137, 47, 232, 0.2);
+  border-top-color: #892FE8;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .loading-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-  margin-top: var(--space-md);
+  font-size: 26rpx;
+  color: #838383;
+  margin-top: 20rpx;
 }
 
-// ==================== 空周报状态 ====================
+// ==================== 空周报 ====================
 
 .empty-report {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: var(--space-2xl) var(--space-md);
+  padding: 120rpx 0;
 }
 
 .empty-icon-wrapper {
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
-  background-color: var(--bg-tertiary);
+  background: linear-gradient(135deg, rgba(137, 47, 232, 0.1), rgba(95, 37, 232, 0.1));
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-lg);
-}
-
-.empty-icon {
-  font-size: var(--font-size-3xl);
-  color: var(--text-muted);
+  margin-bottom: 30rpx;
 }
 
 .empty-title {
-  font-size: var(--font-size-lg);
-  font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #080808;
+  margin-bottom: 16rpx;
 }
 
 .empty-message {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 28rpx;
+  color: #838383;
   text-align: center;
   line-height: 1.6;
-  margin-bottom: var(--space-lg);
+  margin-bottom: 30rpx;
 }
 
 .empty-hint {
-  padding: var(--space-sm) 0;
+  padding: 12rpx 0;
 }
 
 .hint-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 24rpx;
+  color: #AAAAAA;
 }
 
 .empty-action {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md) var(--space-xl);
-  border-radius: var(--radius-lg);
-  background-color: var(--brand-primary);
-  margin-top: var(--space-lg);
+  padding: 20rpx 60rpx;
+  border-radius: 5000rpx;
+  background: linear-gradient(135deg, #892FE8, #5F25E8);
+  box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(137, 47, 232, 0.3);
+  margin-top: 20rpx;
 
   &:active {
-    opacity: 0.9;
+    transform: scale(0.98);
+    transition: transform 0.1s ease-out;
   }
 }
 
 .action-btn-text {
-  font-size: var(--font-size-md);
-  color: var(--text-on-brand);
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #FFFFFF;
 }
 
 // ==================== 周报内容 ====================
@@ -572,7 +551,7 @@ onHide(() => {
 .report-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 24rpx;
 }
 
 // ==================== 动态标题 ====================
@@ -581,54 +560,56 @@ onHide(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: var(--space-lg) var(--space-md);
+  padding: 40rpx 0;
 }
 
 .report-title {
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #080808;
   text-align: center;
+  line-height: 1.3;
 }
 
 .week-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: var(--space-sm);
+  margin-top: 16rpx;
 }
 
 .week-date {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .diary-count {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  margin-top: var(--space-xs);
+  font-size: 22rpx;
+  color: #AAAAAA;
+  margin-top: 4rpx;
 }
 
-// ==================== 周报卡片通用样式 ====================
+// ==================== 周报卡片通用 ====================
 
 .report-card {
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.05);
 }
 
 .card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-md);
+  margin-bottom: 20rpx;
 }
 
 .card-title {
-  font-size: var(--font-size-md);
+  font-size: 26rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #838383;
+  letter-spacing: 2rpx;
 }
 
 .card-content {
@@ -636,113 +617,96 @@ onHide(() => {
   flex-direction: column;
 }
 
-// ==================== 情绪走势卡片 ====================
-
-.story-card {
-  // 情绪走势卡片特定样式
-}
+// ==================== 情绪走势 ====================
 
 .emotion-chart-wrapper {
-  margin-bottom: var(--space-md);
+  margin-bottom: 20rpx;
 }
 
 .story-line {
-  padding: var(--space-sm) 0;
+  padding: 12rpx 0;
 }
 
 .story-text {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 28rpx;
+  color: #838383;
   line-height: 1.6;
 }
 
-// ==================== 关键词云卡片 ====================
+// ==================== 关键词云 ====================
 
 .keywords-card {
   padding: 0;
   background-color: transparent;
-
-  .keyword-cloud {
-    background-color: var(--bg-secondary);
-  }
+  box-shadow: none;
 }
 
-// ==================== 一句看见卡片 ====================
+// ==================== 一句看见 ====================
 
 .insight-card {
-  background-color: var(--bg-secondary);
+  background-color: #FFFFFF;
 }
 
 .insight-wrapper {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-xs);
-  padding: var(--space-md);
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-md);
+  gap: 12rpx;
+  padding: 30rpx;
+  background: linear-gradient(135deg, rgba(1, 190, 255, 0.05), rgba(61, 126, 255, 0.05));
+  border-radius: 16rpx;
 }
 
 .insight-quote {
-  font-size: var(--font-size-xl);
-  color: var(--brand-primary);
+  font-size: 48rpx;
+  color: #01BEFF;
   font-weight: 300;
   line-height: 1;
 }
 
 .insight-text {
-  font-size: var(--font-size-base);
-  color: var(--text-primary);
+  font-size: 30rpx;
+  color: #080808;
   line-height: 1.6;
   flex: 1;
 }
 
-// ==================== 温和建议卡片 ====================
+// ==================== 温和建议 ====================
 
 .suggestion-card {
   .card-header {
-    cursor: pointer;
-
-    &:active {
-      opacity: 0.8;
-    }
+    &:active { opacity: 0.8; }
   }
 }
 
 .expand-toggle {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 8rpx;
 }
 
 .toggle-icon {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .toggle-arrow {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #AAAAAA;
 }
 
 .suggestion-content {
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.15s ease-out;
 }
 
 .suggestion-text {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 28rpx;
+  color: #838383;
   line-height: 1.6;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10rpx);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 // ==================== 下周展望 ====================
@@ -751,28 +715,28 @@ onHide(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-lg) var(--space-md);
+  padding: 40rpx 0;
 }
 
 .outlook-text {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 28rpx;
+  color: #838383;
   text-align: center;
   line-height: 1.5;
 }
 
-// ==================== 周报元数据 ====================
+// ==================== 元数据 ====================
 
 .report-meta {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-sm) 0;
+  padding: 16rpx 0;
 }
 
 .meta-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #AAAAAA;
 }
 
 // ==================== 安全区 ====================

@@ -118,7 +118,7 @@ const DELETE_WIDTH = 80
 
 /** 情绪色调颜色 */
 const emotionColor = computed(() => {
-  if (!props.diary.emotion_tone) return '#808080'
+  if (!props.diary.emotion_tone) return 'var(--text-muted)'
   return EMOTION_TONE_META[props.diary.emotion_tone].color
 })
 
@@ -209,7 +209,7 @@ function handleDelete(): void {
     title: '确认删除',
     content: '删除后无法恢复，确定要删除这条日记吗？',
     confirmText: '删除',
-    confirmColor: '#F87171',
+    confirmColor: 'var(--color-error)',
     cancelText: '取消',
     success: (res) => {
       if (res.confirm) {
@@ -434,6 +434,6 @@ defineExpose({
 
 .delete-icon {
   font-size: var(--font-size-md);
-  color: #FFFFFF;
+  color: var(--text-on-brand);
 }
 </style>

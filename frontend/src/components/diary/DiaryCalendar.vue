@@ -332,6 +332,7 @@ onMounted(() => {
   background-color: var(--bg-secondary);
   border-radius: var(--radius-lg);
   padding: var(--space-md);
+  overflow: hidden;
 }
 
 // ==================== 月份导航 ====================
@@ -405,15 +406,19 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   user-select: none;
+  width: 100%;
+  overflow: hidden;
 }
 
 .day-item {
-  width: calc(100% / 7);
+  width: 14.2857%; // 精确的 1/7，避免calc精度问题
+  max-width: 14.2857%;
   aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-2xs);
+  box-sizing: border-box;
 
   &.is-empty {
     pointer-events: none;

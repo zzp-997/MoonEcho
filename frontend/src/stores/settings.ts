@@ -137,11 +137,17 @@ export const useSettingsStore = defineStore('settings', () => {
 
     // 设置页面背景色（uni-app API）
     // 纯净白 · 暖橘设计系统：日间 #FFF9F5（微暖白），夜间 #12111a（暖调深色）
+    // #ifdef APP-PLUS || MP-WEIXIN
     uni.setPageStyle({
       style: {
         backgroundColor: dark ? '#12111a' : '#FFF9F5',
       },
     })
+    // #endif
+    // #ifdef H5
+    // H5 平台直接操作 DOM
+    document.body.style.backgroundColor = dark ? '#12111a' : '#FFF9F5'
+    // #endif
   }
 
   /**

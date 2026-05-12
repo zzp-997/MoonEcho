@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <wd-icon name="arrow-left" size="20px" color="#080808" />
       </view>
       <text class="header-title">发布动态</text>
       <view class="header-actions">
@@ -30,7 +30,7 @@
               mode="aspectFill"
             />
             <view v-else class="avatar-placeholder">
-              <wd-icon name="user" size="24px" color="var(--text-muted)" />
+              <wd-icon name="user" size="24px" color="#838383" />
             </view>
           </view>
           <view class="identity-info">
@@ -44,7 +44,7 @@
               class="avatar-placeholder"
               :style="{ backgroundColor: anonAvatarColor }"
             >
-              <wd-icon name="user" size="24px" color="var(--text-inverse)" />
+              <wd-icon name="user" size="24px" color="#FFFFFF" />
             </view>
           </view>
           <view class="identity-info">
@@ -165,7 +165,7 @@
  */
 
 import { ref, computed, onMounted } from 'vue'
-import { onShow, onBackPress } from '@dcloudio/uni-app'
+import { onBackPress } from '@dcloudio/uni-app'
 import {
   createPost,
   uploadPostImage,
@@ -174,6 +174,7 @@ import {
 } from '@/api/modules/post'
 import { track, EventName, trackPageEnter } from '@/utils/tracking'
 import { useUserStore } from '@/stores/user'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import AIPolishCard from '@/components/square/AIPolishCard.vue'
 
 // ==================== 响应式状态 ====================
@@ -197,7 +198,7 @@ const anonNickname = ref('')
 const anonPersona = ref('')
 
 /** 匿名头像颜色 */
-const anonAvatarColor = ref('#A89CF5')
+const anonAvatarColor = ref('#E72F8C')
 
 /** 是否正在提交 */
 const isSubmitting = ref(false)
@@ -258,14 +259,14 @@ function generateAnonIdentityPreview(): void {
 
   // 头像颜色
   const colors = [
-    '#FFB5BA',
-    '#8B9DC3',
-    '#7CB9A0',
-    '#A89CF5',
-    '#FFB88A',
-    '#A5C0D6',
-    '#D4A5D9',
-    '#8B6C9A',
+    '#FF9A5C',
+    '#838383',
+    '#01BEFF',
+    '#E72F8C',
+    '#01BEFF',
+    '#3D7EFF',
+    '#892FE8',
+    '#5F7E8B',
   ]
   const seed = Date.now()
   anonAvatarColor.value = colors[seed % colors.length]
@@ -501,7 +502,7 @@ function handleBack(): void {
       title: '提示',
       content: '内容尚未发布，确定要退出吗？',
       confirmText: '退出',
-      confirmColor: '#F87171',
+      confirmColor: '#E83A30',
       cancelText: '继续编辑',
       success: (res) => {
         if (res.confirm) {
@@ -521,8 +522,10 @@ onMounted(() => {
   generateAnonIdentityPreview()
 })
 
-onShow(() => {
-  trackPageEnter('square_publish')
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('square_publish')
+  }
 })
 
 /**
@@ -536,7 +539,7 @@ onBackPress(() => {
       title: '提示',
       content: '内容尚未发布，确定要退出吗？',
       confirmText: '退出',
-      confirmColor: '#F87171',
+      confirmColor: '#E83A30',
       cancelText: '继续编辑',
       success: (res) => {
         if (res.confirm) {
@@ -559,7 +562,7 @@ onBackPress(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 顶部导航栏 ====================
@@ -569,9 +572,8 @@ onBackPress(() => {
   align-items: center;
   justify-content: space-between;
   height: 88rpx;
-  padding: 0 var(--space-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border-primary);
+  padding: 0 24rpx;
+  background: linear-gradient(135deg, #FBDA61, #F3683A);
 }
 
 .back-btn {
@@ -587,14 +589,14 @@ onBackPress(() => {
 }
 
 .back-icon {
-  font-size: var(--font-size-xl);
-  color: var(--text-primary);
+  font-size: 40rpx;
+  color: #FFFFFF;
 }
 
 .header-title {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-actions {
@@ -606,26 +608,28 @@ onBackPress(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xs) var(--space-md);
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-md);
+  padding: 8rpx 24rpx;
+  background: linear-gradient(135deg, #FBDA61, #F3683A);
+  border-radius: 5000rpx;
+  box-shadow: 0rpx 4rpx 12rpx 0rpx rgba(243, 104, 58, 0.3);
 
   &:active {
     opacity: 0.8;
   }
 
   &.is-disabled {
-    background-color: var(--bg-tertiary);
+    background: #F4F4F5;
+    box-shadow: none;
 
     .publish-text {
-      color: var(--text-tertiary);
+      color: #838383;
     }
   }
 }
 
 .publish-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-on-brand);
+  font-size: 26rpx;
+  color: #FFFFFF;
   font-weight: 500;
 }
 
@@ -633,27 +637,29 @@ onBackPress(() => {
 
 .page-content {
   flex: 1;
-  padding: var(--space-md);
+  padding: 24rpx;
+  box-sizing: border-box;
 }
 
 // ==================== 身份预览 ====================
 
 .identity-section {
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .identity-card {
   display: flex;
   align-items: center;
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  padding: 16rpx 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
 }
 
 .avatar-wrapper {
   width: 64rpx;
   height: 64rpx;
-  margin-right: var(--space-sm);
+  margin-right: 16rpx;
 }
 
 .avatar {
@@ -669,12 +675,12 @@ onBackPress(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--brand-primary);
+  background-color: #01BEFF;
 }
 
 .avatar-icon {
-  font-size: var(--font-size-base);
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 30rpx;
+  color: #FFFFFF;
 }
 
 .identity-info {
@@ -684,74 +690,75 @@ onBackPress(() => {
 }
 
 .nickname {
-  font-size: var(--font-size-sm);
+  font-size: 26rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .identity-type {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .persona-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .hint-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 内容输入 ====================
 
 .content-section {
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .content-input {
   width: 100%;
   min-height: 300rpx;
-  padding: var(--space-md);
-  font-size: var(--font-size-base);
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  padding: 24rpx;
+  font-size: 30rpx;
+  color: #080808;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
   line-height: 1.6;
 }
 
 .input-placeholder {
-  color: var(--text-tertiary);
+  color: #838383;
 }
 
 .input-footer {
   display: flex;
   justify-content: flex-end;
-  margin-top: var(--space-xs);
+  margin-top: 8rpx;
 }
 
 .char-count {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== 图片上传 ====================
 
 .image-section {
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .section-label {
-  font-size: var(--font-size-sm);
-  color: var(--text-tertiary);
-  margin-bottom: var(--space-sm);
+  font-size: 26rpx;
+  color: #838383;
+  margin-bottom: 16rpx;
 }
 
 .image-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
+  gap: 16rpx;
 }
 
 .image-item {
@@ -763,8 +770,8 @@ onBackPress(() => {
 .preview-image {
   width: 100%;
   height: 100%;
-  border-radius: var(--radius-md);
-  background-color: var(--bg-tertiary);
+  border-radius: 20rpx;
+  background-color: #F4F4F5;
 }
 
 .remove-btn {
@@ -776,13 +783,13 @@ onBackPress(() => {
   justify-content: center;
   width: 40rpx;
   height: 40rpx;
-  background-color: var(--color-error);
+  background-color: #E83A30;
   border-radius: 50%;
 }
 
 .remove-icon {
-  font-size: var(--font-size-sm);
-  color: #fff;
+  font-size: 26rpx;
+  color: #FFFFFF;
 }
 
 .image-add-btn {
@@ -792,9 +799,9 @@ onBackPress(() => {
   justify-content: center;
   width: 200rpx;
   height: 200rpx;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
-  border: 1px dashed var(--border-primary);
+  background-color: #F8F8FA;
+  border-radius: 20rpx;
+  border: 2rpx dashed #F4F4F5;
 
   &:active {
     opacity: 0.8;
@@ -802,14 +809,14 @@ onBackPress(() => {
 }
 
 .add-icon {
-  font-size: var(--font-size-xl);
-  color: var(--text-tertiary);
-  margin-bottom: var(--space-xs);
+  font-size: 40rpx;
+  color: #838383;
+  margin-bottom: 8rpx;
 }
 
 .add-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-tertiary);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // 失败图片重试提示
@@ -817,21 +824,21 @@ onBackPress(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--color-warning-bg);
-  border-radius: var(--radius-md);
+  margin-top: 16rpx;
+  padding: 16rpx 24rpx;
+  background-color: rgba(255, 190, 40, 0.1);
+  border-radius: 20rpx;
 }
 
 .failed-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-warning);
+  font-size: 26rpx;
+  color: #FFBE28;
 }
 
 .retry-btn {
   padding: 8rpx 20rpx;
-  background-color: var(--color-warning);
-  border-radius: var(--radius-sm);
+  background-color: #FFBE28;
+  border-radius: 20rpx;
 
   &.is-loading {
     opacity: 0.6;
@@ -839,8 +846,8 @@ onBackPress(() => {
 }
 
 .retry-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-inverse);
+  font-size: 26rpx;
+  color: #FFFFFF;
 }
 
 // ==================== 工具栏 ====================
@@ -849,21 +856,22 @@ onBackPress(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-md);
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
+  margin-bottom: 24rpx;
 }
 
 .tool-left {
   display: flex;
-  gap: var(--space-md);
+  gap: 24rpx;
 }
 
 .tool-btn {
   display: flex;
   align-items: center;
-  padding: var(--space-xs) var(--space-sm);
+  padding: 8rpx 16rpx;
 
   &:active {
     opacity: 0.8;
@@ -875,8 +883,8 @@ onBackPress(() => {
 }
 
 .tool-icon {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  font-size: 26rpx;
+  color: #333333;
 }
 
 .tool-right {
@@ -887,7 +895,7 @@ onBackPress(() => {
 .anonymous-toggle {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 16rpx;
 
   &:active {
     opacity: 0.8;
@@ -900,12 +908,12 @@ onBackPress(() => {
   width: 80rpx;
   height: 48rpx;
   padding: 4rpx;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-full);
+  background-color: #F4F4F5;
+  border-radius: 5000rpx;
   transition: background-color 0.2s;
 
   &.is-active {
-    background-color: var(--brand-primary);
+    background-color: #01BEFF;
     justify-content: flex-end;
   }
 }
@@ -913,13 +921,13 @@ onBackPress(() => {
 .toggle-dot {
   width: 40rpx;
   height: 40rpx;
-  background-color: #fff;
+  background-color: #F8F8FA;
   border-radius: 50%;
 }
 
 .toggle-label {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  font-size: 26rpx;
+  color: #333333;
 }
 
 // ==================== 匿名提示 ====================
@@ -927,21 +935,21 @@ onBackPress(() => {
 .anonymous-hint {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  background-color: rgba(251, 191, 36, 0.1);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-md);
+  gap: 16rpx;
+  padding: 16rpx 24rpx;
+  background-color: rgba(255, 190, 40, 0.1);
+  border-radius: 20rpx;
+  margin-bottom: 24rpx;
 }
 
 .hint-icon {
-  font-size: var(--font-size-base);
-  color: var(--color-warning);
+  font-size: 30rpx;
+  color: #FFBE28;
 }
 
 .hint-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-warning);
+  font-size: 26rpx;
+  color: #FFBE28;
 }
 
 // ==================== 安全区 ====================

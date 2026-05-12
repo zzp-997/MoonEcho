@@ -18,6 +18,9 @@ const BASE_URL: string = import.meta.env.VITE_API_BASE_URL || 'http://localhost:
 /** 默认超时时间 */
 const DEFAULT_TIMEOUT = 30000
 
+/** 是否开启调试模式 */
+const DEBUG = import.meta.env.VITE_DEBUG === 'true'
+
 /** 是否正在刷新Token */
 let isRefreshing = false
 
@@ -207,8 +210,23 @@ function request<T = any>(
         // HTTP 200 - 检查业务响应
         if (statusCode === 200) {
           const responseData = res.data as ApiResponse<T>
+
+          // 调试日志
+          if (DEBUG) {
+            console.log('[API] Response:', {
+              url,
+              statusCode,
+              responseData
+            })
+          }
+
           if (responseData.success) {
-            resolve(responseData.data as T)
+            // 分页接口返回 { data, pagination }，非分页接口只返回 data
+            if (responseData.pagination) {
+              resolve({ data: responseData.data, pagination: responseData.pagination } as T)
+            } else {
+              resolve(responseData.data as T)
+            }
           } else {
             // 业务错误处理
             const errorCode = responseData.error?.code || 'UNKNOWN'
@@ -235,7 +253,11 @@ function request<T = any>(
                         success: (retryRes) => {
                           const retryData = retryRes.data as ApiResponse<T>
                           if (retryData.success) {
-                            retryResolve(retryData.data as T)
+                            if (retryData.pagination) {
+                              retryResolve({ data: retryData.data, pagination: retryData.pagination } as T)
+                            } else {
+                              retryResolve(retryData.data as T)
+                            }
                           } else {
                             retryReject(new Error(retryData.error?.message || '请求失败'))
                           }
@@ -258,7 +280,7 @@ function request<T = any>(
               }
             }
 
-            reject(new Error(errorMessage || getErrorMessage(errorCode)))
+            reject(new Error(errorMessage || getErrorMessage(errorCode) || '操作失败'))
           }
         } else if (statusCode === 401) {
           // HTTP 401 - Token失效
@@ -277,7 +299,11 @@ function request<T = any>(
                     success: (retryRes) => {
                       const retryData = retryRes.data as ApiResponse<T>
                       if (retryData.success) {
-                        retryResolve(retryData.data as T)
+                        if (retryData.pagination) {
+                          retryResolve({ data: retryData.data, pagination: retryData.pagination } as T)
+                        } else {
+                          retryResolve(retryData.data as T)
+                        }
                       } else {
                         retryReject(new Error(retryData.error?.message || '请求失败'))
                       }

@@ -375,7 +375,7 @@ async function handleDeleteFriend(): Promise<void> {
   uni.showModal({
     title: '确认删除',
     content: '确定要删除好友吗？删除后对方将无法继续和你聊天。',
-    confirmColor: '#F87171',
+    confirmColor: '#E83A30',
     success: async (res) => {
       if (res.confirm) {
         try {
@@ -509,7 +509,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -519,10 +519,9 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  padding-top: calc(env(safe-area-inset-top) + var(--space-md));
-  background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-standard);
+  padding: 24rpx;
+  padding-top: calc(env(safe-area-inset-top) + 24rpx);
+  background: linear-gradient(135deg, #E72F8C, #F360A7);
 }
 
 .back-btn {
@@ -534,14 +533,14 @@ onMounted(() => {
 }
 
 .back-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
+  font-size: 34rpx;
+  color: #FFFFFF;
 }
 
 .title {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .more-btn {
@@ -553,8 +552,8 @@ onMounted(() => {
 }
 
 .more-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
+  font-size: 34rpx;
+  color: #FFFFFF;
 }
 
 // ==================== 加载状态 ====================
@@ -563,7 +562,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl);
+  padding: 60rpx;
 }
 
 // ==================== 用户信息卡片 ====================
@@ -572,25 +571,26 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-xl) var(--space-md);
-  margin: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  padding: 40rpx 24rpx;
+  margin: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
 }
 
 .user-avatar {
   width: 160rpx;
   height: 160rpx;
-  border-radius: var(--radius-full);
-  background-color: var(--bg-tertiary);
-  margin-bottom: var(--space-md);
+  border-radius: 5000rpx;
+  background-color: #F4F4F5;
+  margin-bottom: 24rpx;
 }
 
 .user-nickname {
-  font-size: var(--font-size-xl);
+  font-size: 40rpx;
   font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-md);
+  color: #080808;
+  margin-bottom: 24rpx;
 }
 
 // ==================== AI画像标签 ====================
@@ -600,76 +600,77 @@ onMounted(() => {
 }
 
 .tags-header {
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 }
 
 .tags-title {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .tags-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-xs);
+  gap: 8rpx;
 }
 
 .user-tag {
-  font-size: var(--font-size-xs);
-  color: var(--text-secondary);
-  background-color: var(--bg-tertiary);
+  font-size: 22rpx;
+  color: #333333;
+  background-color: #F4F4F5;
   padding: 8rpx 16rpx;
-  border-radius: var(--radius-full);
+  border-radius: 5000rpx;
 
   &.tag-emotion {
-    background-color: rgba(251, 146, 60, 0.15);
-    color: #fb923c;
+    background-color: rgba(255,154,92,0.1);
+    color: #FF9A5C;
   }
 
   &.tag-social {
-    background-color: rgba(96, 165, 250, 0.15);
-    color: #60a5fa;
+    background-color: rgba(131,131,131,0.1);
+    color: #838383;
   }
 
   &.tag-interest {
-    background-color: var(--brand-light);
-    color: var(--brand-primary);
+    background-color: rgba(1,190,255,0.1);
+    color: #01BEFF;
   }
 }
 
 .no-tags {
-  padding: var(--space-sm) 0;
+  padding: 16rpx 0;
 }
 
 .no-tags-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 // ==================== 公开动态 ====================
 
 .posts-section {
-  padding: var(--space-md);
+  padding: 24rpx;
 }
 
 .section-title {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  color: #080808;
+  margin-bottom: 16rpx;
 }
 
 .posts-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: 16rpx;
 }
 
 .post-item {
-  padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
 
   &:active {
     opacity: 0.9;
@@ -677,23 +678,23 @@ onMounted(() => {
 }
 
 .post-content {
-  font-size: var(--font-size-sm);
-  color: var(--text-primary);
+  font-size: 26rpx;
+  color: #080808;
   line-height: 1.6;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 }
 
 .post-images {
   display: flex;
   gap: 8rpx;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 }
 
 .post-image {
   width: 200rpx;
   height: 200rpx;
-  border-radius: var(--radius-sm);
-  background-color: var(--bg-tertiary);
+  border-radius: 20rpx;
+  background-color: #F4F4F5;
 }
 
 .post-meta {
@@ -704,25 +705,25 @@ onMounted(() => {
 
 .post-stats {
   display: flex;
-  gap: var(--space-sm);
+  gap: 16rpx;
 }
 
 .stat-item {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .post-time {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .load-more {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-md);
-  margin-top: var(--space-sm);
+  padding: 24rpx;
+  margin-top: 16rpx;
 
   &:active {
     opacity: 0.9;
@@ -730,8 +731,8 @@ onMounted(() => {
 }
 
 .load-more-text {
-  font-size: var(--font-size-sm);
-  color: var(--brand-primary);
+  font-size: 26rpx;
+  color: #01BEFF;
 }
 
 // ==================== 空状态 ====================
@@ -740,18 +741,18 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl);
+  padding: 60rpx;
 }
 
 .empty-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 // ==================== 操作按钮 ====================
 
 .action-area {
-  padding: var(--space-lg) var(--space-md);
+  padding: 30rpx 24rpx;
   margin-top: auto;
 }
 
@@ -759,33 +760,34 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
 }
 
 .status-badge {
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 }
 
 .status-icon {
-  font-size: var(--font-size-xl);
-  color: var(--color-success);
+  font-size: 40rpx;
+  color: #36B349;
 }
 
 .status-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-  margin-bottom: var(--space-md);
+  font-size: 26rpx;
+  color: #333333;
+  margin-bottom: 24rpx;
 }
 
 .chat-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-sm) var(--space-lg);
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-full);
+  padding: 16rpx 30rpx;
+  background: linear-gradient(135deg, #01BEFF, #0AA8E8);
+  border-radius: 5000rpx;
 
   &:active {
     opacity: 0.9;
@@ -793,8 +795,8 @@ onMounted(() => {
 }
 
 .chat-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-on-brand);
+  font-size: 26rpx;
+  color: #FFFFFF;
 }
 
 .pending-status {
@@ -807,14 +809,14 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 96rpx;
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-md);
+  background-color: #F4F4F5;
+  border-radius: 20rpx;
   width: 100%;
 }
 
 .pending-text {
-  font-size: var(--font-size-md);
-  color: var(--text-muted);
+  font-size: 30rpx;
+  color: #838383;
 }
 
 .action-btn {
@@ -822,8 +824,8 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 96rpx;
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #E72F8C, #F360A7);
+  border-radius: 5000rpx;
 
   &:active {
     opacity: 0.9;
@@ -831,42 +833,42 @@ onMounted(() => {
 }
 
 .btn-text {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-on-brand);
+  color: #FFFFFF;
 }
 
 // ==================== 更多操作 ====================
 
 .more-options {
-  padding: var(--space-md);
-  padding-bottom: calc(env(safe-area-inset-bottom) + var(--space-md));
+  padding: 24rpx;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 24rpx);
 }
 
 .more-option {
   display: flex;
   align-items: center;
-  padding: var(--space-md);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-sm);
+  padding: 24rpx;
+  border-radius: 20rpx;
+  margin-bottom: 16rpx;
 
   &:active {
-    background-color: var(--bg-tertiary);
+    background-color: #F4F4F5;
   }
 
   &.danger .option-text {
-    color: var(--color-error);
+    color: #E83A30;
   }
 }
 
 .option-icon {
-  font-size: var(--font-size-md);
-  color: var(--text-secondary);
-  margin-right: var(--space-sm);
+  font-size: 30rpx;
+  color: #333333;
+  margin-right: 16rpx;
 }
 
 .option-text {
-  font-size: var(--font-size-md);
-  color: var(--text-primary);
+  font-size: 30rpx;
+  color: #080808;
 }
 </style>

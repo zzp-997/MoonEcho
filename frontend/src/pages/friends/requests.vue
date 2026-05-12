@@ -55,7 +55,6 @@
  */
 
 import { ref, onMounted } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
 import {
   getFriendRequests,
   acceptFriendRequest,
@@ -63,6 +62,7 @@ import {
   type FriendRequest,
 } from '@/api/modules/friend'
 import { track, EventName, trackPageEnter } from '@/utils/tracking'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import RequestCard from '@/components/friends/RequestCard.vue'
 
 // ==================== 响应式状态 ====================
@@ -200,8 +200,10 @@ onMounted(() => {
   loadRequests()
 })
 
-onShow(() => {
-  trackPageEnter('friend-requests')
+usePageVisibleRefresh({
+  onVisible() {
+    trackPageEnter('friend-requests')
+  }
 })
 </script>
 
@@ -210,7 +212,7 @@ onShow(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 顶部导航栏 ====================
@@ -219,9 +221,9 @@ onShow(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-standard);
+  padding: 24rpx;
+  padding-top: calc(env(safe-area-inset-top) + 24rpx);
+  background: linear-gradient(135deg, #E72F8C, #F360A7);
 }
 
 .back-btn {
@@ -233,14 +235,14 @@ onShow(() => {
 }
 
 .back-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
+  font-size: 34rpx;
+  color: #FFFFFF;
 }
 
 .title {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .placeholder {
@@ -251,7 +253,7 @@ onShow(() => {
 
 .requests-container {
   flex: 1;
-  padding: var(--space-md);
+  padding: 24rpx;
 }
 
 .requests-list {
@@ -266,17 +268,17 @@ onShow(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl) 0;
+  padding: 60rpx 0;
 }
 
 .empty-icon {
   font-size: 64rpx;
-  margin-bottom: var(--space-md);
+  margin-bottom: 24rpx;
 }
 
 .empty-text {
-  font-size: var(--font-size-md);
-  color: var(--text-secondary);
+  font-size: 30rpx;
+  color: #333333;
 }
 
 // ==================== 加载状态 ====================
@@ -286,13 +288,13 @@ onShow(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-lg) 0;
+  padding: 30rpx 0;
 }
 
 .loading-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-  margin-top: var(--space-sm);
+  font-size: 26rpx;
+  color: #838383;
+  margin-top: 16rpx;
 }
 
 // ==================== 安全区 ====================

@@ -262,7 +262,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 顶部导航栏 ====================
@@ -271,9 +271,9 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-standard);
+  padding: 24rpx;
+  padding-top: calc(env(safe-area-inset-top) + 24rpx);
+  background: linear-gradient(135deg, #E72F8C, #F360A7);
 }
 
 .back-btn {
@@ -285,14 +285,14 @@ onMounted(() => {
 }
 
 .back-icon {
-  font-size: var(--font-size-lg);
-  color: var(--text-primary);
+  font-size: 34rpx;
+  color: #FFFFFF;
 }
 
 .title {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .placeholder {
@@ -304,18 +304,19 @@ onMounted(() => {
 .user-info-card {
   display: flex;
   align-items: center;
-  padding: var(--space-lg) var(--space-md);
-  margin: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  padding: 30rpx 24rpx;
+  margin: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
 }
 
 .user-avatar {
   width: 120rpx;
   height: 120rpx;
-  border-radius: var(--radius-full);
-  background-color: var(--bg-tertiary);
-  margin-right: var(--space-md);
+  border-radius: 5000rpx;
+  background-color: #F4F4F5;
+  margin-right: 24rpx;
 }
 
 .user-info {
@@ -323,10 +324,10 @@ onMounted(() => {
 }
 
 .user-nickname {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: var(--space-xs);
+  color: #080808;
+  margin-bottom: 8rpx;
 }
 
 .user-tags {
@@ -336,49 +337,50 @@ onMounted(() => {
 }
 
 .user-tag {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  background-color: var(--bg-tertiary);
+  font-size: 22rpx;
+  color: #838383;
+  background-color: #F4F4F5;
   padding: 4rpx 12rpx;
-  border-radius: var(--radius-xs);
+  border-radius: 10rpx;
 }
 
 // ==================== 打招呼语输入 ====================
 
 .greeting-section {
-  padding: var(--space-md);
-  margin: var(--space-sm) var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  padding: 24rpx;
+  margin: 16rpx 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
 }
 
 .section-title {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-  margin-bottom: var(--space-sm);
+  font-size: 26rpx;
+  color: #838383;
+  margin-bottom: 16rpx;
 }
 
 .greeting-input {
   width: 100%;
   min-height: 120rpx;
-  padding: var(--space-sm);
-  background-color: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-md);
-  color: var(--text-primary);
+  padding: 16rpx;
+  background-color: #F4F4F5;
+  border-radius: 20rpx;
+  font-size: 30rpx;
+  color: #080808;
   line-height: 1.6;
 }
 
 .input-placeholder {
-  color: var(--text-muted);
+  color: #838383;
 }
 
 .char-count {
   display: block;
   text-align: right;
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  margin-top: var(--space-xs);
+  font-size: 22rpx;
+  color: #838383;
+  margin-top: 8rpx;
 }
 
 // ==================== AI 辅助 ====================
@@ -387,16 +389,16 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-sm) var(--space-md);
+  padding: 16rpx 24rpx;
 }
 
 .ai-btn {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  background-color: var(--brand-light);
-  border-radius: var(--radius-full);
+  gap: 8rpx;
+  padding: 16rpx 24rpx;
+  background-color: rgba(1,190,255,0.1);
+  border-radius: 5000rpx;
 
   &:active {
     opacity: 0.9;
@@ -410,8 +412,8 @@ onMounted(() => {
 .ai-icon-wrapper {
   width: 32rpx;
   height: 32rpx;
-  border-radius: var(--radius-xs);
-  background-color: var(--brand-primary);
+  border-radius: 10rpx;
+  background-color: #01BEFF;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -425,55 +427,56 @@ onMounted(() => {
 }
 
 .ai-text {
-  font-size: var(--font-size-sm);
-  color: var(--brand-light);
+  font-size: 26rpx;
+  color: #01BEFF;
 }
 
 .ai-quota {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 // ==================== AI 建议 ====================
 
 .greeting-suggestions {
-  padding: var(--space-sm) var(--space-md);
+  padding: 16rpx 24rpx;
 }
 
 .suggestions-title {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
-  margin-bottom: var(--space-sm);
+  font-size: 26rpx;
+  color: #838383;
+  margin-bottom: 16rpx;
 }
 
 .suggestions-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 8rpx;
 }
 
 .suggestion-item {
-  padding: var(--space-sm);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-sm);
-  border: 1rpx solid var(--border-standard);
+  padding: 16rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  border: 1rpx solid #F4F4F5;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
 
   &:active {
     opacity: 0.9;
-    border-color: var(--brand-primary);
+    border-color: #01BEFF;
   }
 }
 
 .suggestion-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-primary);
+  font-size: 26rpx;
+  color: #080808;
   line-height: 1.5;
 }
 
 // ==================== 发送按钮 ====================
 
 .action-area {
-  padding: var(--space-lg) var(--space-md);
+  padding: 30rpx 24rpx;
   margin-top: auto;
 }
 
@@ -482,25 +485,25 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 88rpx;
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #01BEFF, #0AA8E8);
+  border-radius: 5000rpx;
 
   &:active {
     opacity: 0.9;
   }
 
   &.is-disabled {
-    background-color: var(--bg-tertiary);
+    background: #F4F4F5;
   }
 }
 
 .send-text {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-on-brand);
+  color: #FFFFFF;
 }
 
 .send-btn.is-disabled .send-text {
-  color: var(--text-muted);
+  color: #838383;
 }
 </style>

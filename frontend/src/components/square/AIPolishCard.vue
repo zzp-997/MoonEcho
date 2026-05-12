@@ -387,13 +387,13 @@ function handleClose(): void {
   font-size: var(--font-size-xs);
   color: var(--brand-primary);
   padding: var(--space-xs) var(--space-sm);
-  background-color: rgba(124, 111, 224, 0.1);
+  background-color: var(--brand-light);
   border-radius: var(--radius-full);
 }
 
 .polished {
-  background-color: rgba(124, 111, 224, 0.05);
-  border: 1px solid rgba(124, 111, 224, 0.2);
+  background-color: var(--brand-light);
+  border: 1px solid var(--brand-light);
 }
 
 .loading-state {
@@ -453,7 +453,7 @@ function handleClose(): void {
 
   &.tertiary {
     flex: 0.8;
-    background-color: rgba(124, 111, 224, 0.1);
+    background-color: var(--brand-light);
 
     .btn-text {
       color: var(--brand-primary);

@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <view class="page-header">
       <view class="back-btn" @tap="handleBack">
-        <wd-icon name="arrow-left" size="20px" color="var(--text-primary)" />
+        <wd-icon name="arrow-left" size="20px" color="#080808" />
       </view>
       <text class="header-title">编辑资料</text>
       <view class="save-btn" :class="{ 'is-disabled': !canSave }" @tap="handleSave">
@@ -41,7 +41,7 @@
       <view class="form-item" @tap="handleSelectCity">
         <text class="form-label">城市</text>
         <text class="form-value">{{ formData.city || '请选择' }}</text>
-        <wd-icon class="form-arrow" name="arrow-right" size="16px" color="var(--text-muted)" />
+        <wd-icon class="form-arrow" name="arrow-right" size="16px" color="#838383" />
       </view>
 
       <!-- 职业 -->
@@ -98,7 +98,7 @@
       <view class="section-header">
         <text class="section-title">兴趣标签</text>
         <view class="add-tag-btn" @tap="handleAddInterestTag">
-          <wd-icon name="add" size="14px" color="var(--brand-primary)" /><text class="add-text">添加</text>
+          <wd-icon name="add" size="14px" color="#01BEFF" /><text class="add-text">添加</text>
         </view>
       </view>
 
@@ -109,7 +109,7 @@
           class="interest-tag"
         >
           <text class="interest-tag-text">{{ tag.tag_value }}</text>
-          <wd-icon class="interest-tag-delete" name="close" size="14px" color="var(--text-muted)" @tap="handleDeleteInterestTag(tag.id)" />
+          <wd-icon class="interest-tag-delete" name="close" size="14px" color="#838383" @tap="handleDeleteInterestTag(tag.id)" />
         </view>
       </view>
       <view v-else class="empty-interest">
@@ -442,7 +442,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #FFFFFF;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -452,10 +452,10 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  padding-top: calc(env(safe-area-inset-top) + var(--space-md));
-  background-color: var(--bg-primary);
-  border-bottom: 1rpx solid var(--border-standard);
+  padding: 24rpx;
+  padding-top: calc(env(safe-area-inset-top) + 24rpx);
+  background-color: #FFFFFF;
+  border-bottom: 1rpx solid #E0E0E0;
 }
 
 .back-btn {
@@ -471,21 +471,21 @@ onMounted(() => {
 }
 
 .header-title {
-  font-size: var(--font-size-lg);
+  font-size: 34rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .save-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xs) var(--space-md);
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-full);
+  padding: 8rpx 24rpx;
+  background-color: #01BEFF;
+  border-radius: 5000rpx;
 
   &.is-disabled {
-    background-color: var(--bg-tertiary);
+    background-color: #F4F4F5;
   }
 
   &:active:not(.is-disabled) {
@@ -494,11 +494,11 @@ onMounted(() => {
 }
 
 .save-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-on-brand);
+  font-size: 26rpx;
+  color: #FFFFFF;
 
   .is-disabled & {
-    color: var(--text-disabled);
+    color: #AAAAAA;
   }
 }
 
@@ -508,44 +508,44 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-xl) var(--space-md);
+  padding: 40rpx 24rpx;
 }
 
 .avatar-image {
   width: 160rpx;
   height: 160rpx;
-  border-radius: var(--radius-full);
-  background-color: var(--bg-tertiary);
-  margin-bottom: var(--space-sm);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5000rpx;
+  background-color: #F4F4F5;
+  margin-bottom: 16rpx;
+  box-shadow: none;
 }
 
 .avatar-hint {
-  padding: var(--space-xs) var(--space-sm);
-  background-color: var(--brand-light);
-  border-radius: var(--radius-full);
+  padding: 8rpx 16rpx;
+  background-color: rgba(1,190,255,0.1);
+  border-radius: 5000rpx;
 }
 
 .hint-text {
-  font-size: var(--font-size-xs);
-  color: var(--brand-primary);
+  font-size: 22rpx;
+  color: #01BEFF;
 }
 
 // ==================== 表单 ====================
 
 .form-section {
-  margin: 0 var(--space-md);
-  background-color: var(--bg-elevated);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  margin: 0 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 30rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
   overflow: hidden;
 }
 
 .form-item {
   display: flex;
   align-items: center;
-  padding: var(--space-md);
-  border-bottom: 1rpx solid var(--border-standard);
+  padding: 24rpx;
+  border-bottom: 1rpx solid #E0E0E0;
 
   &:last-child {
     border-bottom: none;
@@ -554,78 +554,78 @@ onMounted(() => {
 
 .form-label {
   width: 120rpx;
-  font-size: var(--font-size-md);
-  color: var(--text-primary);
+  font-size: 30rpx;
+  color: #080808;
 }
 
 .form-input {
   flex: 1;
-  font-size: var(--font-size-md);
-  color: var(--text-primary);
+  font-size: 30rpx;
+  color: #080808;
   text-align: right;
 }
 
 .form-value {
   flex: 1;
-  font-size: var(--font-size-md);
-  color: var(--text-secondary);
+  font-size: 30rpx;
+  color: #333333;
   text-align: right;
 }
 
 .form-count {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  margin-left: var(--space-xs);
+  font-size: 22rpx;
+  color: #838383;
+  margin-left: 8rpx;
 }
 
 .form-arrow {
-  margin-left: var(--space-xs);
+  margin-left: 8rpx;
 }
 
 // ==================== AI画像标签 ====================
 
 .profile-tags-section {
-  margin: var(--space-lg) var(--space-md);
+  margin: 30rpx 24rpx;
 }
 
 .section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16rpx;
 }
 
 .section-title {
-  font-size: var(--font-size-md);
+  font-size: 30rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
 }
 
 .section-hint {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .loading-area {
   display: flex;
   justify-content: center;
-  padding: var(--space-lg);
+  padding: 30rpx;
 }
 
 .tags-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: 16rpx;
 }
 
 .tag-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  background-color: var(--bg-elevated);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0,0,0,0.05);
 
   &.is-hidden {
     opacity: 0.6;
@@ -638,75 +638,75 @@ onMounted(() => {
 }
 
 .tag-type {
-  font-size: var(--font-size-xs);
-  color: var(--brand-primary);
+  font-size: 22rpx;
+  color: #01BEFF;
   margin-bottom: 4rpx;
 }
 
 .tag-value {
-  font-size: var(--font-size-md);
-  color: var(--text-primary);
+  font-size: 30rpx;
+  color: #080808;
 }
 
 .tag-visibility {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 8rpx;
 }
 
 .visibility-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .empty-tags {
-  padding: var(--space-lg);
+  padding: 30rpx;
   text-align: center;
 }
 
 .empty-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 // ==================== 兴趣标签 ====================
 
 .interest-tags-section {
-  margin: 0 var(--space-md) var(--space-lg);
+  margin: 0 24rpx 30rpx;
 }
 
 .add-tag-btn {
   display: flex;
   align-items: center;
   gap: 4rpx;
-  padding: var(--space-xs) var(--space-sm);
-  background-color: var(--brand-light);
-  border-radius: var(--radius-full);
+  padding: 8rpx 16rpx;
+  background-color: rgba(1,190,255,0.1);
+  border-radius: 5000rpx;
 }
 
 .add-text {
-  font-size: var(--font-size-xs);
-  color: var(--brand-primary);
+  font-size: 22rpx;
+  color: #01BEFF;
 }
 
 .interest-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
+  gap: 16rpx;
 }
 
 .interest-tag {
   display: flex;
   align-items: center;
-  padding: var(--space-xs) var(--space-sm);
-  background-color: var(--brand-light);
-  border-radius: var(--radius-full);
+  padding: 8rpx 16rpx;
+  background-color: rgba(1,190,255,0.1);
+  border-radius: 5000rpx;
 }
 
 .interest-tag-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-primary);
-  margin-right: var(--space-xs);
+  font-size: 26rpx;
+  color: #080808;
+  margin-right: 8rpx;
 }
 
 .interest-tag-delete {
@@ -714,9 +714,9 @@ onMounted(() => {
 }
 
 .empty-interest {
-  padding: var(--space-md);
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  padding: 24rpx;
+  background-color: #F8F8FA;
+  border-radius: 20rpx;
   text-align: center;
 }
 </style>

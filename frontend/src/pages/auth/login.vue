@@ -1,84 +1,75 @@
 <template>
   <view class="login-page">
-    <!-- 背景装饰 -->
-    <view class="bg-decor">
-      <view class="bg-circle bg-circle-1" />
-      <view class="bg-circle bg-circle-2" />
+    <!-- 顶部背景装饰 -->
+    <view class="top-bg">
+      <image class="bg-img" src="https://resource.tuniaokj.com/images/login/1/login_top2.jpg" mode="aspectFill" />
+      <view class="deco-circle deco-circle-1 tn-shadow-blur" />
+      <view class="deco-circle deco-circle-2 tn-shadow-blur" />
     </view>
 
-    <!-- 内容区 - flex 垂直居中 -->
-    <view class="login-content">
-      <!-- Logo 区域 -->
-      <view class="logo-section">
-        <image class="logo" src="/static/images/logo.png" mode="aspectFit" />
+    <!-- 内容区 -->
+    <view class="login-wrapper">
+      <!-- 品牌区域 -->
+      <view class="brand-section">
+        <view class="brand-icon tn-shadow-blur">
+          <text class="brand-icon-text">回</text>
+        </view>
         <text class="brand-name">回声</text>
-        <text class="brand-slogan">深夜情绪急救站，随时陪伴</text>
+        <text class="brand-slogan">这里听得见你</text>
       </view>
 
       <!-- 表单卡片 -->
-      <view class="form-card">
-        <text class="welcome-text">您好，欢迎回来</text>
-
-        <!-- 手机号输入 -->
-        <view class="input-group">
-          <view class="input-label">手机号</view>
-          <view class="input-wrapper" :class="{ focused: phoneFocused }">
-            <text class="input-prefix">+86</text>
+      <view class="form-card tn-shadow-card">
+        <!-- 手机号 -->
+        <view class="field-item">
+          <view class="field-icon">
+            <text style="font-size: 40rpx;">📱</text>
+          </view>
+          <view class="field-content">
             <input
               v-model="phoneNumber"
               type="number"
               placeholder="请输入手机号"
               :maxlength="11"
               :disabled="isPhoneDisabled"
-              class="input-field"
-              placeholder-class="input-placeholder"
-              @focus="phoneFocused = true"
-              @blur="phoneFocused = false; validatePhone()"
+              class="field-input"
+              placeholder-class="field-placeholder"
             />
-            <view v-if="phoneNumber && !isPhoneDisabled" class="clear-btn" @tap="clearPhone">
-              <wd-icon name="close" size="14px" color="var(--text-muted)" />
-            </view>
+          </view>
+          <view v-if="phoneNumber && !isPhoneDisabled" class="field-clear" @tap="clearPhone">
+            <text style="font-size: 28rpx; color: #AAAAAA;">✕</text>
           </view>
         </view>
 
-        <!-- 验证码输入 -->
-        <view class="input-group">
-          <view class="input-label">验证码</view>
-          <view class="input-wrapper code-wrapper" :class="{ focused: codeFocused }">
+        <!-- 验证码 -->
+        <view class="field-item">
+          <view class="field-icon">
+            <text style="font-size: 40rpx;">🔐</text>
+          </view>
+          <view class="field-content field-content--code">
             <input
               v-model="codeInput"
               type="number"
               placeholder="请输入验证码"
               :maxlength="6"
-              class="input-field"
-              placeholder-class="input-placeholder"
-              @focus="codeFocused = true"
-              @blur="codeFocused = false"
+              class="field-input"
+              placeholder-class="field-placeholder"
             />
-            <view
-              class="code-btn"
-              :class="{ disabled: !canGetCode || isCounting }"
-              @tap="handleGetCode"
-            >
-              <text>{{ displayText }}</text>
-            </view>
+          </view>
+          <view class="code-btn" :class="{ 'is-disabled': !canGetCode || isCounting }" @tap="handleGetCode">
+            <text class="code-btn-text">{{ displayText }}</text>
           </view>
         </view>
 
         <!-- 错误提示 -->
-        <view v-if="errorMsg" class="error-tip">
-          <wd-icon name="close-outline" size="14px" color="var(--color-error)" />
+        <view v-if="errorMsg" class="error-row">
           <text class="error-text">{{ errorMsg }}</text>
         </view>
 
-        <!-- 隐私政策 -->
+        <!-- 隐私协议 -->
         <view class="privacy-row">
-          <view
-            class="checkbox-wrapper"
-            :class="{ checked: agreedPrivacy }"
-            @tap="agreedPrivacy = !agreedPrivacy"
-          >
-            <wd-icon v-if="agreedPrivacy" name="check" size="12px" color="#ffffff" />
+          <view class="checkbox" :class="{ 'is-checked': agreedPrivacy }" @tap="agreedPrivacy = !agreedPrivacy">
+            <text v-if="agreedPrivacy" class="checkbox-icon">✓</text>
           </view>
           <text class="privacy-text">
             我已阅读并同意
@@ -88,38 +79,33 @@
           </text>
         </view>
 
-        <!-- 自动注册提示 -->
-        <view class="auto-register-hint">
-          <text>首次登录即自动注册</text>
+        <!-- 登录按钮 -->
+        <view class="submit-btn" :class="{ 'is-active': canSubmit }" @tap="handleLogin">
+          <wd-loading v-if="isLoading" size="18px" color="#FFFFFF" />
+          <text v-else class="submit-btn-text">进 入 回 声</text>
         </view>
 
-        <!-- 登录按钮 -->
-        <view
-          class="login-btn"
-          :class="{ active: canSubmit }"
-          @tap="handleLogin"
-        >
-          <wd-loading v-if="isLoading" size="18px" color="#ffffff" />
-          <text v-else class="login-btn-text">登录</text>
+        <!-- 自动注册提示 -->
+        <text class="auto-hint">首次登录即自动注册</text>
+      </view>
+
+      <!-- 其他登录方式 -->
+      <view class="other-login">
+        <text class="other-login-title">其他登录方式</text>
+        <view class="other-login-icons">
+          <view class="login-icon login-icon--wechat tn-shadow-blur">
+            <text style="font-size: 44rpx;">💬</text>
+          </view>
+          <view class="login-icon login-icon--apple tn-shadow-blur">
+            <text style="font-size: 44rpx;">🍎</text>
+          </view>
         </view>
       </view>
     </view>
-
-    <!-- 底部 -->
-    <view class="footer safe-area-bottom">
-      <text class="footer-text">登录即代表同意相关协议</text>
-    </view>
-
-    <wd-toast />
   </view>
 </template>
 
 <script setup lang="ts">
-/**
- * 回声 - 登录页
- * 设计风格：纯净白 · 暖橘
- */
-
 import { ref, computed, onMounted, watch } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import { useCountdown } from '@/composables/useCountdown'
@@ -221,371 +207,381 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-// ==================== 页面容器 - 暖橘渐变背景 ====================
-
 .login-page {
+  min-height: 100vh;
+  background-color: #F8F7F8;
   position: relative;
-  height: 100vh;
   overflow: hidden;
-  background: linear-gradient(165deg, #FFF5ED 0%, #FFE8D6 40%, #FFDCC4 100%);
 }
 
-// ==================== 背景装饰圆 ====================
+// ==================== 顶部背景 ====================
 
-.bg-decor {
+.top-bg {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  pointer-events: none;
+  height: 520rpx;
   overflow: hidden;
-}
 
-.bg-circle {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.35;
-}
+  .bg-img {
+    width: 100%;
+    height: 100%;
+    opacity: 0.85;
+  }
 
-.bg-circle-1 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(255, 154, 92, 0.3), transparent 70%);
-  top: -80px;
-  right: -60px;
-}
+  .deco-circle {
+    position: absolute;
+    border-radius: 50%;
 
-.bg-circle-2 {
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(255, 154, 92, 0.2), transparent 70%);
-  bottom: 60px;
-  left: -40px;
-}
+    &-1 {
+      width: 260rpx;
+      height: 260rpx;
+      top: 60rpx;
+      right: -60rpx;
+      background: linear-gradient(135deg, rgba(231, 47, 140, 0.6), rgba(243, 96, 167, 0.4));
+      box-shadow: 16rpx 16rpx 24rpx rgba(231, 47, 140, 0.3);
+    }
 
-// ==================== 内容区 - 一屏居中 ====================
-
-.login-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: var(--space-lg);
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: calc(60px + env(safe-area-inset-bottom));
-  box-sizing: border-box;
-}
-
-// ==================== Logo 区域 ====================
-
-.logo-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: var(--space-xl);
-}
-
-.logo {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-sm);
-  box-shadow: 0 4px 16px rgba(255, 154, 92, 0.25);
-}
-
-.brand-name {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: #2d2a26;
-  margin-bottom: 4px;
-  letter-spacing: -0.5px;
-}
-
-.brand-slogan {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-regular);
-  color: #8a7a6a;
-}
-
-// ==================== 表单卡片 - 白色浮层 ====================
-
-.form-card {
-  width: 100%;
-  max-width: 380px;
-  background-color: var(--bg-elevated);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg) var(--space-lg) var(--space-md);
-  box-shadow: 0 4px 24px rgba(180, 120, 60, 0.1), 0 1px 4px rgba(0, 0, 0, 0.04);
-}
-
-.welcome-text {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
-  margin-bottom: var(--space-lg);
-  display: block;
-}
-
-// ==================== 输入框组 ====================
-
-.input-group {
-  margin-bottom: var(--space-md);
-}
-
-.input-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-secondary);
-  margin-bottom: var(--space-xs);
-}
-
-.input-wrapper {
-  display: flex;
-  align-items: center;
-  background-color: var(--bg-secondary);
-  border: 1.5px solid var(--border-standard);
-  border-radius: var(--radius-sm);
-  padding: 0 var(--space-sm);
-  height: 46px;
-  transition: all 0.2s ease;
-
-  &.focused {
-    border-color: var(--brand-primary);
-    box-shadow: 0 0 0 3px rgba(255, 154, 92, 0.12);
-    background-color: var(--bg-elevated);
+    &-2 {
+      width: 180rpx;
+      height: 180rpx;
+      top: 200rpx;
+      left: -40rpx;
+      background: linear-gradient(135deg, rgba(1, 190, 255, 0.5), rgba(61, 126, 255, 0.35));
+      box-shadow: 12rpx 12rpx 20rpx rgba(1, 190, 255, 0.25);
+    }
   }
 }
 
-.code-wrapper {
-  padding-right: var(--space-2xs);
+// ==================== 内容区 ====================
+
+.login-wrapper {
+  position: relative;
+  z-index: 1;
+  padding: 0 30rpx;
+  padding-top: 100rpx;
 }
 
-.input-prefix {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-muted);
-  margin-right: var(--space-xs);
-  flex-shrink: 0;
+// ==================== 品牌区域 ====================
+
+.brand-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60rpx;
 }
 
-.input-field {
-  flex: 1;
-  height: 100%;
-  color: var(--text-primary);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-regular);
-  background: transparent;
-  border: none;
-  outline: none;
-}
-
-.input-placeholder {
-  color: var(--text-muted);
-}
-
-.clear-btn {
-  width: 28px;
-  height: 28px;
+.brand-icon {
+  width: 130rpx;
+  height: 130rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E72F8C, #F360A7);
+  box-shadow: 16rpx 16rpx 24rpx rgba(231, 47, 140, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 28rpx;
+}
+
+.brand-icon-text {
+  font-size: 54rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.brand-name {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #080808;
+  margin-bottom: 12rpx;
+  letter-spacing: 4rpx;
+}
+
+.brand-slogan {
+  font-size: 28rpx;
+  color: #838383;
+  letter-spacing: 2rpx;
+}
+
+// ==================== 表单卡片 ====================
+
+.form-card {
+  margin: 0 10rpx;
+  padding: 50rpx 40rpx;
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  box-shadow: 0rpx 0rpx 80rpx 0rpx rgba(0, 0, 0, 0.07);
+}
+
+.field-item {
+  display: flex;
+  align-items: center;
+  height: 100rpx;
+  margin-top: 30rpx;
+  padding: 0 24rpx;
+  border: 2rpx solid #E4E9EC;
+  border-radius: 50rpx;
+  background-color: #FAFBFC;
+  transition: all 0.2s ease;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:active {
+    border-color: #01BEFF;
+    background-color: #FFFFFF;
+  }
+}
+
+.field-icon {
+  width: 60rpx;
+  font-size: 40rpx;
+  color: #78909C;
+  flex-shrink: 0;
+}
+
+.field-content {
+  flex: 1;
+  padding-left: 16rpx;
+
+  &--code {
+    flex: 0 1 55%;
+  }
+}
+
+.field-input {
+  width: 100%;
+  height: 100rpx;
+  font-size: 30rpx;
+  color: #080808;
+}
+
+.field-placeholder {
+  color: #AAAAAA;
+}
+
+.field-clear {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F4F4F5;
+  border-radius: 50%;
   flex-shrink: 0;
 }
 
 // ==================== 验证码按钮 ====================
 
 .code-btn {
-  padding: var(--space-xs) var(--space-sm);
-  background-color: var(--brand-primary);
-  border-radius: var(--radius-sm);
-  color: #ffffff;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  white-space: nowrap;
   flex-shrink: 0;
-  margin-left: var(--space-xs);
-  transition: all 0.2s ease;
+  margin-left: 16rpx;
+  padding: 14rpx 24rpx;
+  background: linear-gradient(135deg, #01BEFF, #3D7EFF);
+  border-radius: 50rpx;
+  box-shadow: 8rpx 8rpx 16rpx rgba(1, 190, 255, 0.2);
 
-  &:active {
-    background-color: var(--brand-hover);
-    transform: scale(0.97);
+  &.is-disabled {
+    background: #E4E9EC;
+    box-shadow: none;
   }
+}
 
-  &.disabled {
-    background-color: var(--bg-tertiary);
-    color: var(--text-disabled);
-
-    &:active {
-      transform: none;
-      background-color: var(--bg-tertiary);
-    }
-  }
+.code-btn-text {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #FFFFFF;
+  white-space: nowrap;
 }
 
 // ==================== 错误提示 ====================
 
-.error-tip {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  margin-bottom: var(--space-sm);
+.error-row {
+  margin-top: 20rpx;
+  padding: 16rpx 24rpx;
+  background: rgba(232, 58, 48, 0.08);
+  border-radius: 12rpx;
 }
 
 .error-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-error);
+  font-size: 24rpx;
+  color: #E83A30;
 }
 
-// ==================== 隐私政策 ====================
+// ==================== 隐私协议 ====================
 
 .privacy-row {
   display: flex;
   align-items: flex-start;
-  margin-bottom: var(--space-xs);
+  margin-top: 40rpx;
 }
 
-.checkbox-wrapper {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  border: 1.5px solid var(--border-interactive);
-  background-color: var(--bg-elevated);
+.checkbox {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 8rpx;
+  border: 3rpx solid #01BEFF;
+  background-color: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-right: var(--space-xs);
-  margin-top: 2px;
-  transition: all 0.2s ease;
+  margin-right: 12rpx;
+  margin-top: 4rpx;
+  transition: all 0.15s ease;
 
-  &.checked {
-    background-color: var(--brand-primary);
-    border-color: var(--brand-primary);
+  &.is-checked {
+    background-color: #01BEFF;
+    border-color: #01BEFF;
   }
+}
+
+.checkbox-icon {
+  font-size: 24rpx;
+  color: #FFFFFF;
+  font-weight: 700;
 }
 
 .privacy-text {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  line-height: 1.6;
   flex: 1;
+  font-size: 24rpx;
+  color: #838383;
+  line-height: 1.6;
 }
 
 .privacy-link {
-  color: var(--brand-primary);
-
-  &:active {
-    opacity: 0.7;
-  }
-}
-
-// ==================== 自动注册提示 ====================
-
-.auto-register-hint {
-  margin-bottom: var(--space-md);
-
-  text {
-    font-size: var(--font-size-xs);
-    color: var(--text-disabled);
-  }
+  color: #01BEFF;
 }
 
 // ==================== 登录按钮 ====================
 
-.login-btn {
-  width: 100%;
-  height: 46px;
-  border-radius: var(--radius-sm);
-  background-color: var(--bg-tertiary);
-  color: var(--text-disabled);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+.submit-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  width: 100%;
+  height: 100rpx;
+  margin-top: 50rpx;
+  background: linear-gradient(135deg, #E4E9EC, #D8DDE0);
+  border-radius: 50rpx;
+  transition: all 0.3s ease;
+  letter-spacing: 6rpx;
 
-  &.active {
-    background-color: var(--brand-primary);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(255, 154, 92, 0.3);
+  &.is-active {
+    background: linear-gradient(135deg, #01BEFF, #3D7EFF);
+    box-shadow: 0rpx 16rpx 48rpx 0rpx rgba(1, 190, 255, 0.35);
+
+    .submit-btn-text {
+      color: #FFFFFF;
+    }
 
     &:active {
-      background-color: var(--brand-hover);
-      transform: scale(0.98);
+      transform: scale(0.97);
     }
   }
 }
 
-.login-btn-text {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  color: inherit;
+.submit-btn-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #AAAAAA;
+  letter-spacing: 8rpx;
 }
 
-// ==================== 底部 ====================
+// ==================== 自动注册提示 ====================
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.auto-hint {
+  display: block;
+  margin-top: 24rpx;
   text-align: center;
-  padding-bottom: env(safe-area-inset-bottom);
+  font-size: 24rpx;
+  color: #AAAAAA;
 }
 
-.footer-text {
-  font-size: var(--font-size-xs);
-  color: rgba(100, 80, 60, 0.4);
+// ==================== 其他登录方式 ====================
+
+.other-login {
+  margin-top: 80rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-// ==================== 响应式 - 小屏适配 ====================
+.other-login-title {
+  font-size: 24rpx;
+  color: #AAAAAA;
+  margin-bottom: 30rpx;
+}
+
+.other-login-icons {
+  display: flex;
+  gap: 40rpx;
+}
+
+.login-icon {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    border-radius: inherit;
+    opacity: 1;
+    transform: scale(1);
+    background-size: 100% 100%;
+    background-image: url(https://resource.tuniaokj.com/images/cool_bg_image/icon_bg5.png);
+  }
+
+  &--wechat {
+    background: linear-gradient(135deg, #2DE8BD, #24F083);
+    box-shadow: 12rpx 12rpx 16rpx rgba(45, 232, 189, 0.25);
+  }
+
+  &--apple {
+    background: linear-gradient(135deg, #080808, #333333);
+    box-shadow: 12rpx 12rpx 16rpx rgba(0, 0, 0, 0.2);
+  }
+}
+
+// ==================== 小屏适配 ====================
 
 @media screen and (max-height: 680px) {
-  .login-content {
-    justify-content: flex-start;
-    padding-top: calc(40px + env(safe-area-inset-top));
+  .login-wrapper {
+    padding-top: 60rpx;
   }
 
-  .logo-section {
-    margin-bottom: var(--space-md);
+  .brand-section {
+    margin-bottom: 40rpx;
   }
 
-  .logo {
-    width: 44px;
-    height: 44px;
-    margin-bottom: var(--space-xs);
+  .brand-icon {
+    width: 100rpx;
+    height: 100rpx;
+  }
+
+  .brand-icon-text {
+    font-size: 44rpx;
   }
 
   .brand-name {
-    font-size: var(--font-size-xl);
+    font-size: 40rpx;
   }
 
-  .brand-slogan {
-    font-size: var(--font-size-xs);
-  }
-
-  .form-card {
-    padding: var(--space-md);
-  }
-
-  .welcome-text {
-    font-size: var(--font-size-lg);
-    margin-bottom: var(--space-md);
-  }
-
-  .input-group {
-    margin-bottom: var(--space-sm);
-  }
-}
-
-@media screen and (max-width: 375px) {
-  .form-card {
-    padding: var(--space-md);
+  .other-login {
+    margin-top: 50rpx;
   }
 }
 </style>

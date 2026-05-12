@@ -228,8 +228,7 @@ onMounted(() => {
   width: 80rpx;
   height: 80rpx;
   margin-right: var(--space-md);
-  background-color: var(--brand-primary);
-  background-color: rgba(124, 111, 224, 0.15);
+  background-color: var(--brand-light);
   border-radius: 50%;
 }
 

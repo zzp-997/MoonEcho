@@ -151,7 +151,7 @@ function handleConfirm(): void {
   right: 0;
   bottom: 0;
   z-index: var(--z-modal);
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -179,7 +179,7 @@ function handleConfirm(): void {
   width: 100rpx;
   height: 100rpx;
   border-radius: var(--radius-full);
-  background-color: rgba(255, 181, 186, 0.2);
+  background-color: var(--ai-xiaowen-bg);
   display: flex;
   align-items: center;
   justify-content: center;

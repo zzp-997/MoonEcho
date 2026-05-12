@@ -165,6 +165,10 @@ class PostService:
         if now is None:
             now = datetime.now(timezone.utc)
 
+        # 数据库返回 naive datetime，统一转为 UTC aware
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=timezone.utc)
+
         hours_elapsed = (now - created_at).total_seconds() / 3600
         hours_for_calc = min(hours_elapsed, DECAY_HOURS_LIMIT)
         return 1.0 / (hours_for_calc + 1)
@@ -545,6 +549,7 @@ class PostService:
         )
         db.add(post)
         await db.flush()
+        await db.refresh(post)
 
         now = datetime.now(timezone.utc)
         logger.info(

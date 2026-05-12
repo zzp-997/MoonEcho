@@ -111,8 +111,8 @@ export function getNotifications(params: GetNotificationsParams = {}) {
 /**
  * 获取未读数量
  */
-export function getUnreadCount() {
-  return api.get<UnreadCountResult>('/notifications/unread-count')
+export function getUnreadCount(config?: any) {
+  return api.get<UnreadCountResult>('/notifications/unread-count', {}, config)
 }
 
 /**

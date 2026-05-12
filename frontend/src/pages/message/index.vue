@@ -5,7 +5,7 @@
       <view class="header-title">消息</view>
       <view class="header-right">
         <view class="settings-btn" @click="handleGoSettings">
-          <wd-icon name="setting" size="20px" color="var(--text-secondary)" />
+          <wd-icon name="setting" size="20px" color="#333333" />
         </view>
       </view>
     </view>
@@ -42,14 +42,14 @@
       <!-- 快捷操作 -->
       <view v-if="hasUnread" class="quick-actions">
         <view class="action-btn" @click="handleMarkAllRead">
-          <wd-icon name="check-circle" size="16px" color="var(--brand-primary)" />
+          <wd-icon name="check-circle" size="16px" color="#01BEFF" />
           <text class="action-text">全部标记已读</text>
         </view>
       </view>
 
       <!-- 空状态 -->
       <view v-if="!isLoading && notificationList.length === 0" class="empty-state">
-        <wd-icon name="message" size="64px" color="var(--text-muted)" />
+        <wd-icon name="message" size="64px" color="#838383" />
         <text class="empty-text">暂无通知</text>
       </view>
 
@@ -80,7 +80,7 @@
           </view>
 
           <!-- 右箭头 -->
-          <wd-icon name="arrow-right" size="16px" color="var(--text-muted)" />
+          <wd-icon name="arrow-right" size="16px" color="#838383" />
         </view>
 
         <!-- 加载更多 -->
@@ -103,7 +103,7 @@
       scroll-y
     >
       <view class="empty-state">
-        <wd-icon name="info-circle" size="64px" color="var(--text-muted)" />
+        <wd-icon name="info-circle" size="64px" color="#838383" />
         <text class="empty-text">暂无系统消息</text>
       </view>
     </scroll-view>
@@ -120,8 +120,8 @@
  * 说明：通知和系统消息入口页面
  */
 import { ref, onMounted } from 'vue'
-import { onShow, onHide } from '@dcloudio/uni-app'
 import { useNotification } from '@/composables/useNotification'
+import { usePageVisibleRefresh } from '@/composables/usePageVisibleRefresh'
 import type { NotificationItem } from '@/api/modules/notification'
 import { getNotificationJumpUrl, getNotificationIcon } from '@/api/modules/notification'
 import { track, EventName } from '@/utils/tracking'
@@ -155,13 +155,14 @@ onMounted(() => {
   loadNotifications()
 })
 
-onShow(() => {
-  track(EventName.PAGE_VIEW, { page: 'message' })
-  startPolling(30000)
-})
-
-onHide(() => {
-  stopPolling()
+usePageVisibleRefresh({
+  onVisible() {
+    track(EventName.PAGE_VIEW, { page: 'message' })
+    startPolling(30000)
+  },
+  onHidden() {
+    stopPolling()
+  }
 })
 
 // ==================== 数据加载 ====================
@@ -230,7 +231,7 @@ function formatTime(time: string): string {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #F8F8FA;
 }
 
 // ==================== 头部 ====================
@@ -241,14 +242,14 @@ function formatTime(time: string): string {
   justify-content: space-between;
   height: 88rpx;
   padding: 0 32rpx;
-  padding-top: var(--status-bar-height, 44rpx);
-  background-color: var(--bg-primary);
+  padding-top: calc(env(safe-area-inset-top));
+  background: linear-gradient(135deg, #FFBE28, #FF9A5C);
 }
 
 .header-title {
-  font-size: var(--font-size-xl);
+  font-size: 40rpx;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #FFFFFF;
 }
 
 .header-right {
@@ -265,7 +266,8 @@ function formatTime(time: string): string {
 .message-tabs {
   display: flex;
   padding: 0 32rpx;
-  border-bottom: 1rpx solid var(--border-standard);
+  border-bottom: 1rpx solid #F4F4F5;
+  background-color: #FFFFFF;
 }
 
 .tab-item {
@@ -273,12 +275,12 @@ function formatTime(time: string): string {
   display: flex;
   align-items: center;
   padding: 24rpx 32rpx;
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
+  font-size: 28rpx;
+  color: #333333;
   transition: color 0.2s;
 
   &.active {
-    color: var(--text-primary);
+    color: #080808;
     font-weight: 500;
 
     &::after {
@@ -289,7 +291,7 @@ function formatTime(time: string): string {
       transform: translateX(-50%);
       width: 40rpx;
       height: 4rpx;
-      background-color: var(--brand-primary);
+      background-color: #01BEFF;
       border-radius: 2rpx;
     }
   }
@@ -303,11 +305,11 @@ function formatTime(time: string): string {
   min-width: 32rpx;
   height: 32rpx;
   padding: 0 8rpx;
-  font-size: var(--font-size-xs);
+  font-size: 22rpx;
   line-height: 32rpx;
   text-align: center;
-  color: #fff;
-  background-color: var(--color-error);
+  color: #FFFFFF;
+  background-color: #E83A30;
   border-radius: 16rpx;
 }
 
@@ -324,13 +326,13 @@ function formatTime(time: string): string {
   align-items: center;
   gap: 8rpx;
   padding: 12rpx 24rpx;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-full);
+  background-color: #F8F8FA;
+  border-radius: 5000rpx;
 }
 
 .action-text {
-  font-size: var(--font-size-sm);
-  color: var(--brand-primary);
+  font-size: 26rpx;
+  color: #01BEFF;
 }
 
 // ==================== 滚动容器 ====================
@@ -352,8 +354,8 @@ function formatTime(time: string): string {
 
 .empty-text {
   margin-top: 24rpx;
-  font-size: var(--font-size-base);
-  color: var(--text-muted);
+  font-size: 28rpx;
+  color: #838383;
 }
 
 // ==================== 通知列表 ====================
@@ -368,12 +370,12 @@ function formatTime(time: string): string {
   align-items: center;
   padding: 24rpx;
   margin-top: 24rpx;
-  background-color: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  background-color: #F8F8FA;
+  border-radius: 20rpx;
 
   &.unread {
-    background-color: var(--bg-secondary);
-    border-left: 4rpx solid var(--brand-primary);
+    background-color: #F8F8FA;
+    border-left: 4rpx solid #01BEFF;
   }
 }
 
@@ -383,7 +385,7 @@ function formatTime(time: string): string {
   left: 24rpx;
   width: 12rpx;
   height: 12rpx;
-  background-color: var(--brand-primary);
+  background-color: #01BEFF;
   border-radius: 50%;
 }
 
@@ -394,40 +396,40 @@ function formatTime(time: string): string {
   width: 72rpx;
   height: 72rpx;
   margin-right: 20rpx;
-  background-color: var(--bg-tertiary);
+  background-color: #F4F4F5;
   border-radius: 50%;
 
   &.type-crisis_alert,
   &.type-crisis_follow {
-    background-color: var(--color-error-bg);
-    color: var(--color-error);
+    background-color: rgba(232,58,48,0.1);
+    color: #E83A30;
   }
 
   &.type-ai_care {
-    background-color: rgba(255, 181, 186, 0.15);
-    color: var(--ai-xiaowen);
+    background-color: rgba(231,47,140,0.1);
+    color: #E72F8C;
   }
 
   &.type-friend_request,
   &.type-friend_accept {
-    background-color: rgba(124, 111, 224, 0.1);
-    color: var(--brand-primary);
+    background-color: rgba(1,190,255,0.1);
+    color: #01BEFF;
   }
 
   &.type-treehole_reply {
-    background-color: var(--mood-calm-bg);
-    color: var(--mood-calm);
+    background-color: rgba(1,190,255,0.1);
+    color: #01BEFF;
   }
 
   &.type-square_comment,
   &.type-square_like {
-    background-color: var(--color-warning-bg);
-    color: var(--color-warning);
+    background-color: rgba(255,190,40,0.1);
+    color: #FFBE28;
   }
 
   &.type-weekly_report {
-    background-color: var(--mood-warm-bg);
-    color: var(--mood-warm);
+    background-color: rgba(255,154,92,0.1);
+    color: #FF9A5C;
   }
 }
 
@@ -445,9 +447,9 @@ function formatTime(time: string): string {
 }
 
 .item-title {
-  font-size: var(--font-size-base);
+  font-size: 28rpx;
   font-weight: 500;
-  color: var(--text-primary);
+  color: #080808;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -455,13 +457,13 @@ function formatTime(time: string): string {
 
 .item-time {
   flex-shrink: 0;
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: 22rpx;
+  color: #838383;
 }
 
 .item-desc {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
+  font-size: 26rpx;
+  color: #333333;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -478,15 +480,15 @@ function formatTime(time: string): string {
 }
 
 .loading-text {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .no-more {
   text-align: center;
   padding: 32rpx 0;
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: 26rpx;
+  color: #838383;
 }
 
 .page-loading {
